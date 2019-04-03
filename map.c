@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "map.h"
+#define NO_COMPARES -1
 
 typedef struct node_map {
     MapKeyElement key;
@@ -9,7 +11,7 @@ typedef struct node_map {
 } *NodeMap;
 
 typedef struct Map_t {
-    NodeMap first;
+    NodeMap head;
     NodeMap iterator;
     copyMapDataElements copyDataElement;
     copyMapKeyElements copyKeyElement;
@@ -18,7 +20,7 @@ typedef struct Map_t {
     compareMapKeyElements compareKeyElements;
 } *Map;
 
-//
+//assistance functions
 NodeMap nodeCreate ();
 
 Map mapCreate(copyMapDataElements copyDataElement,
@@ -69,21 +71,39 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     if (map == NULL || keyElement == NULL || dataElement == NULL) return NULL;
     // copy data with the user's function
     MapDataElement new_data = map->copyDataElement(dataElement);
-    //check the first element in the map with user's compare function and if negative:
-    if (map.compareKeyElements(keyElement, map->first->key) < 0)
-
-    //allocate and replace first element
     //iterate on the map and compare with the user's function the first parameter is keyelemt and second paramenter is the next node's key
-    //while the user's function return positive numbers and not in the end of the map
+    NodeMap tmp_iterator = map->first;
+    int compare_result = NO_COMPARES;
+    do {
+        if (tmp_iterator == NULL) break;
+        compare_result = map->compareKeyElements(keyElement, tmp_iterator->key);
+        tmp_iterator = tmp_iterator->next;
+        //while the user's function return positive numbers and not in the end of the map
+    } while (compare_result > 0);
+
     //if 0 free the current node data with user's function,
     //update the data in the node
+    if (compare_result == 0) {
+        map->freeDataElement(tmp_iterator->data);
+        tmp_iterator->data = new_data;
+    }
+
     //if negative or end of loop enter new node:
+    assert (compare_result < 0);
     //allocate new node and check allocation if fail return MAP_OUT_OF_MEMORY
+    NodeMap new_node = nodeCreate();
+    if (new_node == NULL) return MAP_OUT_OF_MEMORY;
     //  copy key with user's function
+    keyElement new_key = map->copyKeyElement(keyElement);
     // insert the data and key to the node
+    new_node->data = new_data;
+    new_node->key = new_key;
     //the new node next  = "pointer"'s next
+    new_node->next = tmp_iterator->next;
     //"pointer"'s next = new node address
+    tmp_iterator->next = new_node;
     //return MAP_SUCCESS
+    return MAP_SUCCESS;
 }
 
 MapDataElement mapGet(Map map, MapKeyElement keyElement){
@@ -124,3 +144,8 @@ MapResult mapClear(Map map) {
     //return MAP_SUCCESS
 }
 
+NodeMap nodeCreate () {
+    NodeMap new_node = malloc(sizeof(*NodeMap));
+    if (new_node == NULL) return NULL;
+    return new_node;
+}
