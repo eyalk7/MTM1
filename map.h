@@ -48,7 +48,6 @@ typedef enum MapResult_t {
 } MapResult;
 
 /** Data element data type for map container */
-    // ???????? why twice?
 typedef void *MapDataElement;
 
 /** Key element data type for map container */
