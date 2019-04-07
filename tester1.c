@@ -91,10 +91,10 @@ int main() {
         printf("%d) %s, ", i+1 , books[i]);
     }
     printf("\nChecking if Harry Potter is borrowed:\n...");
-    if (mapContains(book_borrowing_list, "harry potter")) {
-        printf("%s is borrowed by %s\n", "harry potter", (char*)mapGet(book_borrowing_list,"Harry Potter"));
+    if (mapContains(book_borrowing_list, "Harry Potter")) {
+        printf("%s is borrowed by %s\n", "Harry Potter", (char*)mapGet(book_borrowing_list,"Harry Potter"));
     } else {
-        printf("%s isn't borrowed\n", "harry potter");
+        printf("%s isn't borrowed\n", "Harry Potter");
     }
 
     printf("\nIterating on the whole borrowing list and print the keys...\n");
