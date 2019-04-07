@@ -166,8 +166,7 @@ MapDataElement mapGet(Map map, MapKeyElement keyElement){
     //return NULL if NULL
     if (map == NULL || keyElement == NULL) return NULL;
     //iterate on the map and compare the key for each with the user's function
-    MapNode tmp_iterator = map->head;
-    while (tmp_iterator != NULL) {
+    for (MapNode tmp_iterator = map->head; tmp_iterator; tmp_iterator = tmp_iterator->next) {
         //return the mapDataElement if found
         if (map->compareKeyElements(keyElement, tmp_iterator->key) == 0) {
             return tmp_iterator->data;
