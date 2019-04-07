@@ -124,7 +124,7 @@ bool mapContains(Map map, MapKeyElement element) {
 
 MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) {
     //if NULL return MAP_NULL_ARGUMENT
-    if (map == NULL || keyElement == NULL || dataElement == NULL) return NULL;
+    if (map == NULL || keyElement == NULL || dataElement == NULL) return MAP_NULL_ARGUMENT;
     // copy data with the user's function
     MapDataElement new_data = map->copyDataElement(dataElement);
     //iterate on the map and compare with the user's function the head parameter is keyelemt and second paramenter is the next node's key
