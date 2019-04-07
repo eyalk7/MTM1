@@ -90,13 +90,11 @@ int main() {
     for (int i=0; i < BOOKS_NUM; i++) {
         printf("%d) %s, ", i+1 , books[i]);
     }
-    printf("\nChoose book to check if borrowed:\n...");
-    char to_check[100] = {0};
-    scanf("%s", to_check);
-    if (mapContains(book_borrowing_list, to_check)) {
-        printf("%s is borrowed by %s\n", (char*)to_check, (char*)mapGet(book_borrowing_list,to_check));
+    printf("\nChecking if Harry Potter is borrowed:\n...");
+    if (mapContains(book_borrowing_list, "harry potter")) {
+        printf("%s is borrowed by %s\n", "harry potter", (char*)mapGet(book_borrowing_list,to_check));
     } else {
-        printf("%s isn't borrowed\n", to_check);
+        printf("%s isn't borrowed\n", "harry potter");
     }
 
     printf("\nIterating on the whole borrowing list and print the keys...\n");
