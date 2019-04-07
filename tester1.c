@@ -92,7 +92,7 @@ int main() {
     }
     printf("\nChecking if Harry Potter is borrowed:\n...");
     if (mapContains(book_borrowing_list, "harry potter")) {
-        printf("%s is borrowed by %s\n", "harry potter", (char*)mapGet(book_borrowing_list,to_check));
+        printf("%s is borrowed by %s\n", "harry potter", (char*)mapGet(book_borrowing_list,"Harry Potter"));
     } else {
         printf("%s isn't borrowed\n", "harry potter");
     }
