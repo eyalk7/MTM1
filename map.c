@@ -208,7 +208,7 @@ MapKeyElement mapGetFirst(Map map) {
     // set internal iterator to head
     map->iterator = map->head;
     // return map head
-    return map->head;
+    return map->head->key;
 }
 
 MapKeyElement mapGetNext(Map map) {
@@ -217,7 +217,7 @@ MapKeyElement mapGetNext(Map map) {
     // set internal iterator to next node
     map->iterator = map->iterator->next;
     //return next node
-    return map->iterator;
+    return map->iterator->key;
 }
 
 MapResult mapClear(Map map) {
