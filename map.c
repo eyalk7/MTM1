@@ -148,7 +148,10 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
         new_node->data = new_data;
         new_node->key = new_key;
         //the new node next  = "pointer"'s next
-        if (tmp_iterator != NULL) {
+        if (map->head == tmp_iterator) {
+            new_node->next = tmp_iterator;
+            map->head = new_node;
+        } else if (tmp_iterator != NULL) {
             new_node->next = tmp_iterator->next;
             tmp_iterator->next = new_node;
         } else {
@@ -249,16 +252,13 @@ void nodeDestroy (MapNode node) {
 }
 
 int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode tmp_iterator) {
-    int compare_result = NO_COMPARES;
-    do {
-        if (tmp_iterator == NULL) {
-            compare_result = END_OF_LOOP;
-            break;
-        }
-
-        compare_result = map->compareKeyElements(keyElement, tmp_iterator->key);
-        tmp_iterator = tmp_iterator->next;
+    if (tmp_iterator == NULL) {
+        return END_OF_LOOP;
+    }
+    int compare_result = map->compareKeyElements(keyElement, tmp_iterator->key);
+    for ( ; compare_result > 0 && tmp_iterator->next != NULL; tmp_iterator = tmp_iterator->next) {
+        compare_result = map->compareKeyElements(keyElement, tmp_iterator->next->key);
         //while the user's function return positive numbers and not in the end of the map
-    } while (compare_result > 0);
+    }
     return compare_result;
 }
