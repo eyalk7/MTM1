@@ -217,7 +217,6 @@ MapResult mapRemove(Map map, MapKeyElement keyElement){
     }
 
     return MAP_SUCCESS;
-    }
 }
 
 MapKeyElement mapGetFirst(Map map) {
