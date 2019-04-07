@@ -73,7 +73,7 @@ Map mapCopy(Map map) {
         return NULL;    // return null if memory allocation failed
 
     //iterate on the map and copy all pairs
-    for (NodeMap ptr = map->head; ptr ; ptr = ptr->next) {
+    for (MapNode ptr = map->head; ptr ; ptr = ptr->next) {
 
         // add a copy of each node to the map copy
         // (uses the user's function to copy the key and data)
@@ -97,7 +97,7 @@ int mapGetSize(Map map) {
 
     //iterate on the map and count until NULL
     int count = 0;
-    for (NodeMap ptr = map->head; ptr ; ptr = ptr->next) {
+    for (MapNode ptr = map->head; ptr ; ptr = ptr->next) {
         count++;
     }
 
@@ -109,7 +109,7 @@ bool mapContains(Map map, MapKeyElement element) {
         return false;   // NULL pointer was sent
 
     //iterate on the map and compare each key with the element using the user's function
-    NodeMap ptr;
+    MapNode ptr;
      for (ptr = map->head; ptr && map->compareKeyElements(element, ptr->key) > 0; ptr = ptr->next) {
         }
         if (!ptr)
