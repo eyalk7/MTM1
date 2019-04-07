@@ -41,7 +41,7 @@ Map mapCreate(copyMapDataElements copyDataElement,
         return NULL;    // if allocate failed, return NULL
 
     // initialize empty map
-    map->first = NULL;
+    map->head = NULL;
     map->iterator = NULL;
 
     // set function pointers as given in parameters
@@ -73,7 +73,7 @@ Map mapCopy(Map map) {
         return NULL;    // return null if memory allocation failed
 
     //iterate on the map and copy all pairs
-    for (NodeMap ptr = map->first; ptr ; ptr = ptr->next) {
+    for (NodeMap ptr = map->head; ptr ; ptr = ptr->next) {
 
         // add a copy of each node to the map copy
         // (uses the user's function to copy the key and data)
@@ -97,7 +97,7 @@ int mapGetSize(Map map) {
 
     //iterate on the map and count until NULL
     int count = 0;
-    for (NodeMap ptr = map->first; ptr ; ptr = ptr->next) {
+    for (NodeMap ptr = map->head; ptr ; ptr = ptr->next) {
         count++;
     }
 
@@ -110,7 +110,7 @@ bool mapContains(Map map, MapKeyElement element) {
 
     //iterate on the map and compare each key with the element using the user's function
     NodeMap ptr;
-     for (ptr = map->first; ptr && map->compareKeyElements(element, ptr->key) > 0; ptr = ptr->next) {
+     for (ptr = map->head; ptr && map->compareKeyElements(element, ptr->key) > 0; ptr = ptr->next) {
         }
         if (!ptr)
             return false;   // end of map, element not found
@@ -127,8 +127,8 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     if (map == NULL || keyElement == NULL || dataElement == NULL) return NULL;
     // copy data with the user's function
     MapDataElement new_data = map->copyDataElement(dataElement);
-    //iterate on the map and compare with the user's function the first parameter is keyelemt and second paramenter is the next node's key
-    MapNode tmp_iterator = map->first;
+    //iterate on the map and compare with the user's function the head parameter is keyelemt and second paramenter is the next node's key
+    MapNode tmp_iterator = map->head;
     int compare_result = mapIterateAndCompare(map, keyElement, tmp_iterator);
     //if 0 free the current node data with user's function,
     //update the data in the node
@@ -158,7 +158,7 @@ MapDataElement mapGet(Map map, MapKeyElement keyElement){
     //return NULL if NULL
     if (map == NULL || keyElement == NULL) return NULL;
     //iterate on the map and compare the key for each with the user's function
-    MapNode tmp_iterator = map->first;
+    MapNode tmp_iterator = map->head;
     while (tmp_iterator != NULL) {
         //return the mapDataElement if found
         if (map->compareKeyElements(keyElement, tmp_iterator->key) == 0) {
@@ -172,8 +172,8 @@ MapDataElement mapGet(Map map, MapKeyElement keyElement){
 MapResult mapRemove(Map map, MapKeyElement keyElement){
     //if NULL return MAP_NULL_ARGUMENT
     if (map == NULL || keyElement == NULL) return MAP_NULL_ARGUMENT;
-    //iterate on the map and compare with the user's function the first parameter is keyelemt and second paramenter is the next node's key
-    MapNode tmp_iterator = map->first;
+    //iterate on the map and compare with the user's function the head parameter is keyelemt and second paramenter is the next node's key
+    MapNode tmp_iterator = map->head;
     int compare_result = mapIterateAndCompare(map, keyElement, tmp_iterator);
     //if 0:
     if (compare_result == 0) {
