@@ -91,23 +91,18 @@ int main() {
         printf("%d) %s, ", i+1 , books[i]);
     }
     printf("\nChoose book to check if borrowed:\n...");
-    char *to_check = 0;
-    char answer = 0;
-    do {
-        scanf("%s", to_check);
-        if (mapContains(book_borrowing_list, to_check)) {
-            printf("%s is borrowed by %s\n", to_check, mapGet(book_borrowing_list,to_check));
-        } else {
-            printf("%s isn't borrowed\n", to_check);
-        }
-        printf("Want to check another book?\n y / n ...\n");
-        scanf("%c", &answer);
-    } while (answer == 'y' || answer == 'Y');
+    char to_check[100] = {0};
+    scanf("%s", to_check);
+    if (mapContains(book_borrowing_list, to_check)) {
+        printf("%s is borrowed by %s\n", (char*)to_check, (char*)mapGet(book_borrowing_list,to_check));
+    } else {
+        printf("%s isn't borrowed\n", to_check);
+    }
 
     printf("\nIterating on the whole borrowing list and print the keys...\n");
     int i=0;
     MAP_FOREACH(void*, my_iterator, book_borrowing_list){
-        printf("%d) %s\n", i, my_iterator);
+        printf("%d) %s\n", i, (char*)my_iterator);
         i++;
     }
 
