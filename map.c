@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "map.h"
+
 #define NO_COMPARES -1
 #define END_OF_LOOP -1
 
@@ -31,42 +32,94 @@ Map mapCreate(copyMapDataElements copyDataElement,
               freeMapDataElements freeDataElement,
               freeMapKeyElements freeKeyElement,
               compareMapKeyElements compareKeyElements) {
-    // NULL check for parameters if NULL return NULL
-    //allocate memory for new map
-    //check successfull allocate, if fail return NuLL
-    //insert function pointers to the map srtuct
-    //put NULL in first_pair and itertor
-    //return map
+    // NULL check for parameters
+    if (!copyDataElement || !copyKeyElement || !freeDataElement || !freeKeyElement || !compareKeyElements)
+        return NULL;
+
+    Map map = malloc(sizeof(*map));    // allocate memory for new map
+    if (!map)
+        return NULL;    // if allocate failed, return NULL
+
+    // initialize empty map
+    map->first = NULL;
+    map->iterator = NULL;
+
+    // set function pointers as given in parameters
+    map->copyDataElement = copyDataElement;
+    map->copyKeyElement = copyKeyElement;
+    map->freeDataElement = freeDataElement;
+    map->freeKeyElement = freeKeyElement;
+
+    return map; // return map pointer
 }
 
 void mapDestroy(Map map) {
-    //mapClear
-    //free the map
+    // call mapClear function to deallocate all the nodes in the map
+    MapResult result = mapClear(map);
+
+    if (result == MAP_SUCCESS)  // if nodes deallocation was successful
+        free(map);  // deallocate the map
+
+    // else, if a null pointer was sent we do nothing
 }
 
 Map mapCopy(Map map) {
-    //if map is NULL return
-    //interate on the map and copy all pairs:
-    //aloocate memory for each new node
-    //check allocate if NULL return NULL
-    //link the nodes (need to elaborate)
-    //on each pair copy the key and data with the user's function on put on the new node
-    //go to next until the next is NULL
+    if (!map)
+        return NULL;    // return NULL if null pointer was sent
+
+    // create map copy
+    Map copy = mapCreate(map->copyDataElement, map->copyKeyElement, map->freeDataElement, map->freeKeyElement, map->compareKeyElements);
+    if (!copy)
+        return NULL;    // return null if memory allocation failed
+
+    //iterate on the map and copy all pairs
+    for (NodeMap ptr = map->first; ptr ; ptr = ptr->next) {
+
+        // add a copy of each node to the map copy
+        // (uses the user's function to copy the key and data)
+        MapResult result = mapPut(copy, ptr->key, ptr->data);
+
+        /* assert(result != MAP_NULL_ARGUMENT) */
+
+        if (result == MAP_OUT_OF_MEMORY)
+            return NULL;    // if allocate failed return NULL
+    }
+
     //in the last node put NULL in "next"
-    //return the new Map
+    // mapPut sets the "next"s correctly so the last node gets NULL
+
+    return copy;    // return the copy pointer
 }
 
-int mapGetSize(Map map){
-    //return -1 if NULL
+int mapGetSize(Map map) {
+    if (!map)
+        return -1;  // return -1 if NULL
+
     //iterate on the map and count until NULL
-    //return count
+    int count = 0;
+    for (NodeMap ptr = map->first; ptr ; ptr = ptr->next) {
+        count++;
+    }
+
+    return count;    // return count
 }
 
 bool mapContains(Map map, MapKeyElement element) {
-    //return false if map or element NULL
-    //iterate on the map and compare each key with the element with the user's function
-    //return true if the user's function return 0
-    //return falsr otherwise
+    if (!map || !element)
+        return false;   // NULL pointer was sent
+
+    //iterate on the map and compare each key with the element using the user's function
+    NodeMap ptr;
+     for (ptr = map->first; ptr && map->compareKeyElements(element, ptr->key) > 0; ptr = ptr->next) {
+        }
+        if (!ptr)
+            return false;   // end of map, element not found
+
+        if (map->compareKeyElements(element, ptr->key) == 0)
+            return true;    // element found
+     
+
+    return false;   // element not found
 }
 
 MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) {
