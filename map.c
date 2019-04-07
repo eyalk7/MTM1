@@ -111,14 +111,14 @@ bool mapContains(Map map, MapKeyElement element) {
 
     //iterate on the map and compare each key with the element using the user's function
     MapNode ptr;
-     for (ptr = map->head; ptr && map->compareKeyElements(element, ptr->key) > 0; ptr = ptr->next) {
-        }
-        if (!ptr)
-            return false;   // end of map, element not found
+    for (ptr = map->head; ptr && map->compareKeyElements(element, ptr->key) > 0; ptr = ptr->next) {
+    }
+    if (!ptr)
+        return false;   // end of map, element not found
 
-        if (map->compareKeyElements(element, ptr->key) == 0)
-            return true;    // element found
-     
+    if (map->compareKeyElements(element, ptr->key) == 0)
+        return true;    // element found
+
 
     return false;   // element not found
 }
@@ -131,14 +131,13 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     //iterate on the map and compare with the user's function the head parameter is keyelemt and second paramenter is the next node's key
     MapNode tmp_iterator = map->head;
     int compare_result = mapIterateAndCompare(map, keyElement, tmp_iterator);
+
     //if 0 free the current node data with user's function,
     //update the data in the node
     if (compare_result == 0) {
         map->freeDataElement(tmp_iterator->data);
         tmp_iterator->data = new_data;
-    }
-    //if negative or end of loop enter new node:
-    else {
+    } else {
         //if negative or end of loop enter new node:
         //allocate new node and check allocation if fail return MAP_OUT_OF_MEMORY
         MapNode new_node = nodeCreate();
@@ -256,6 +255,7 @@ int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode tmp_iterato
             compare_result = END_OF_LOOP;
             break;
         }
+
         compare_result = map->compareKeyElements(keyElement, tmp_iterator->key);
         tmp_iterator = tmp_iterator->next;
         //while the user's function return positive numbers and not in the end of the map

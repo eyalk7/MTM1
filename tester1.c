@@ -23,20 +23,20 @@ int compareKeys(MapKeyElement key_a, MapKeyElement key_b);
 
 int main() {
     char *books[BOOKS_NUM] = { "Harry Potter",
-                                "The Bible",
-                                "C Programing",
-                                "book4",
-                                "book5",
-                                "book6",
-                                "book7",
-                                "book8",
-                                "book9",
-                                "book10" };
+                               "The Bible",
+                               "C Programing",
+                               "book4",
+                               "book5",
+                               "book6",
+                               "book7",
+                               "book8",
+                               "book9",
+                               "book10" };
     char *people[PEOPLE_NUM] = {"Avi",
-                                 "Yosi",
-                                 "Pnina",
-                                 "Amos",
-                                 "Hana" };
+                                "Yosi",
+                                "Pnina",
+                                "Amos",
+                                "Hana" };
 
     printf("Creating map for book borrowing list...\n");
     Map book_borrowing_list = mapCreate(&copyData, &copyKey, &freeData, &freeKey, &compareKeys);
