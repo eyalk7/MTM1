@@ -142,7 +142,7 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     MapNode new_node = nodeCreate();
     if (new_node == NULL) return MAP_OUT_OF_MEMORY;
     //  copy key with user's function
-    keyElement new_key = map->copyKeyElement(keyElement);
+    MapKeyElement new_key = map->copyKeyElement(keyElement);
     // insert the data and key to the node
     new_node->data = new_data;
     new_node->key = new_key;
@@ -231,7 +231,7 @@ MapResult mapClear(Map map) {
 }
 
 MapNode nodeCreate () {
-    MapNode new_node = malloc(sizeof(*MapNode));
+    MapNode new_node = malloc(sizeof(*new_node));
     if (new_node == NULL) return NULL;
     return new_node;
 }
@@ -244,7 +244,7 @@ int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode tmp_iterato
     int compare_result = NO_COMPARES;
     do {
         if (tmp_iterator == NULL) {
-            compare_result == END_OF_LOOP;
+            compare_result = END_OF_LOOP;
             break;
         }
         compare_result = map->compareKeyElements(keyElement, tmp_iterator->key);
