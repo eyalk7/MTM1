@@ -49,6 +49,7 @@ Map mapCreate(copyMapDataElements copyDataElement,
     map->copyKeyElement = copyKeyElement;
     map->freeDataElement = freeDataElement;
     map->freeKeyElement = freeKeyElement;
+    map->compareKeyElements = compareKeyElements;
 
     return map; // return map pointer
 }
