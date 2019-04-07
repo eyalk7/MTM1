@@ -9,7 +9,7 @@
 typedef struct MapNode_t {
     MapKeyElement key;
     MapDataElement data;
-    struct node_map *next;
+    struct MapNode_t *next;
 } *MapNode;
 
 struct Map_t {
