@@ -22,21 +22,21 @@ void freeKey(MapKeyElement to_delete);
 int compareKeys(MapKeyElement key_a, MapKeyElement key_b);
 
 int main() {
-    char *books[BOOKS_NUM] = { {"Harry Potter"},
-                                {"The Bible"},
-                                {"C Programing"},
-                                {"book4"},
-                                {"book5"},
-                                {"book6"},
-                                {"book7"},
-                                {"book8"},
-                                {"book9"},
-                                {"book10"} };
-    char *people[PEOPLE_NUM] = {{"Avi"},
-                                 {"Yosi"},
-                                 {"Pnina"},
-                                 {"Amos"},
-                                 {"Hana"} };
+    char *books[BOOKS_NUM] = { "Harry Potter",
+                                "The Bible",
+                                "C Programing",
+                                "book4",
+                                "book5",
+                                "book6",
+                                "book7",
+                                "book8",
+                                "book9",
+                                "book10" };
+    char *people[PEOPLE_NUM] = {"Avi",
+                                 "Yosi",
+                                 "Pnina",
+                                 "Amos",
+                                 "Hana" };
 
     printf("Creating map for book borrowing list...\n");
     Map book_borrowing_list = mapCreate(&copyData, &copyKey, &freeData, &freeKey, &compareKeys);
@@ -48,17 +48,17 @@ int main() {
 
     printf("Inserting data and keys to the map...\n");
     int put_results[5] = {0};
-    int put_results[0] = mapPut(book_borrowing_list, books[0], people[2]);
-    int put_results[1] = mapPut(book_borrowing_list, books[1], people[4]);
-    int put_results[2] = mapPut(book_borrowing_list, books[5], people[0]);
-    int put_results[3] = mapPut(book_borrowing_list, books[2], people[0]);
-    int put_results[4] = mapPut(NULL, books[2], people[0]);
+    put_results[0] = mapPut(book_borrowing_list, books[0], people[2]);
+    put_results[1] = mapPut(book_borrowing_list, books[1], people[4]);
+    put_results[2] = mapPut(book_borrowing_list, books[5], people[0]);
+    put_results[3] = mapPut(book_borrowing_list, books[2], people[0]);
+    put_results[4] = mapPut(NULL, books[2], people[0]);
     for (int i=0; i<5; i++) {
         switch (put_results[i]) {
             case MAP_NULL_ARGUMENT: printf("error: NULL was sent as map in pair #%d\n", i+1); break;
             case MAP_OUT_OF_MEMORY: printf("error: allocation failed in pair #%d\n", i+1); break;
             case MAP_SUCCESS: printf("#%d pair's elements had been inserted successfully", i+1); break;
-            case default: printf("mapPut Error\n");
+            default: printf("mapPut Error\n");
         }
     }
 
@@ -80,7 +80,7 @@ int main() {
             case MAP_NULL_ARGUMENT: printf("error: NULL was sent as map in pair #%d\n", i+1); break;
             case MAP_ITEM_DOES_NOT_EXIST: printf("error: item does not already exists in the map in key #%d\n", i+1); break;
             case MAP_SUCCESS: printf("#%d pair's elements had been inserted successfully", i+1); break;
-            case default: printf("mapRemove Error\n");
+            default: printf("mapRemove Error\n");
         }
     }
 
@@ -92,6 +92,7 @@ int main() {
     }
     printf("\nChoose book to check if borrowed:\n...");
     char *to_check = 0;
+    char answer = 0;
     do {
         scanf("%s", to_check);
         if (mapContains(book_borrowing_list, to_check)) {
@@ -100,7 +101,6 @@ int main() {
             printf("%s isn't borrowed\n", to_check);
         }
         printf("Want to check another book?\n y / n ...\n");
-        char answer = 0;
         scanf("%c", &answer);
     } while (answer == 'y' || answer == 'Y');
 
