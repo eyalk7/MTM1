@@ -203,8 +203,8 @@ MapResult mapRemove(Map map, MapKeyElement keyElement){
 }
 
 MapKeyElement mapGetFirst(Map map) {
-    //if map is NULL return NULL
-    if (map == NULL) return NULL;
+    //if map is NULL or empty return NULL
+    if (map == NULL || map->head == NULL) return NULL;
     // set internal iterator to head
     map->iterator = map->head;
     // return map head
@@ -212,8 +212,8 @@ MapKeyElement mapGetFirst(Map map) {
 }
 
 MapKeyElement mapGetNext(Map map) {
-    //if map is NULL return NULL
-    if (map == NULL) return NULL;
+    //if map is NULL or empty return NULL
+    if (map == NULL || map->head == NULL) return NULL;
     // set internal iterator to next node
     map->iterator = map->iterator->next;
     //return next node
