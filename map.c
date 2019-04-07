@@ -138,23 +138,26 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
         tmp_iterator->data = new_data;
     }
     //if negative or end of loop enter new node:
-    assert(compare_result < 0);
-    //allocate new node and check allocation if fail return MAP_OUT_OF_MEMORY
-    MapNode new_node = nodeCreate();
-    if (new_node == NULL) return MAP_OUT_OF_MEMORY;
-    //  copy key with user's function
-    MapKeyElement new_key = map->copyKeyElement(keyElement);
-    // insert the data and key to the node
-    new_node->data = new_data;
-    new_node->key = new_key;
-    //the new node next  = "pointer"'s next
-    if (tmp_iterator!=NULL) {
-        new_node->next = tmp_iterator->next;
-        map->head = new_node;
-    } else {
-        //"pointer"'s next = new node address
-        new_node->next = NULL;
-        tmp_iterator->next = new_node;
+    else {
+        //if negative or end of loop enter new node:
+        //allocate new node and check allocation if fail return MAP_OUT_OF_MEMORY
+        MapNode new_node = nodeCreate();
+        if (new_node == NULL) return MAP_OUT_OF_MEMORY;
+        //  copy key with user's function
+        MapKeyElement new_key = map->copyKeyElement(keyElement);
+        // insert the data and key to the node
+        new_node->data = new_data;
+        new_node->key = new_key;
+        //the new node next  = "pointer"'s next
+        if (tmp_iterator != NULL) {
+            new_node->next = tmp_iterator->next;
+            tmp_iterator->next = new_node;
+        } else {
+            //"pointer"'s next = new node address
+            new_node->next = NULL;
+            map->head = new_node;
+            // printf("map->head: %d", map->head);
+        }
     }
     //return MAP_SUCCESS
     return MAP_SUCCESS;
