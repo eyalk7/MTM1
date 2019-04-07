@@ -147,9 +147,14 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     new_node->data = new_data;
     new_node->key = new_key;
     //the new node next  = "pointer"'s next
-    new_node->next = tmp_iterator->next;
-    //"pointer"'s next = new node address
-    tmp_iterator->next = new_node;
+    if (tmp_iterator!=NULL) {
+        new_node->next = tmp_iterator->next;
+        map->head = new_node;
+    } else {
+        //"pointer"'s next = new node address
+        new_node->next = NULL;
+        tmp_iterator->next = new_node;
+    }
     //return MAP_SUCCESS
     return MAP_SUCCESS;
 }
