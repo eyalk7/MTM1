@@ -3,6 +3,10 @@
 #include <stdbool.h>
 #include "map.h"
 #include "eurovision.h"
+#include "list.h"
+
+ListElement copyString(ListElement str);
+void freeString(ListElement str);
 
 struct eurovision_t {
     Map States; // keys = StateId, data = StateData
@@ -117,7 +121,7 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
 }
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
-
+    //ListCreate
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
@@ -125,5 +129,13 @@ List eurovisionRunAudienceFavorite(Eurovision eurovision) {
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
+
+}
+
+ListElement copyString(ListElement str) {
+
+}
+
+void freeString(ListElement str) {
 
 }
