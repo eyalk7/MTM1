@@ -111,7 +111,7 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
     //check return value and return if don't exist
     //with the stateDate go to the votes map
     //with mapGet check how much votes there is for the stateGiver (key) id (or if not at all)
-    //check return value if doesn't exist return
+    //check return value if doesn't exist return success
     //with mapPut update the vote count for the stateGiver(key) current votes-1 (data)
     //check return value
 }
