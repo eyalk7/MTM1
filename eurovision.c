@@ -97,12 +97,12 @@ EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
     //check NULL
     //check if id's < 0
     //check if stategiver != stateTaker
-    //in the State map send stateTake to mapGet
+    //in the State map send stateGiver to mapGet
     //check return value and return if don't exist
-    //with the stateDate go to the votes map
-    //with mapGet check how much votes there is for the stateGiver (key) id (or if not at all)
+    //with the stateData go to the votes map
+    //with mapGet check how much votes there is for the stateTaker (key) id (or if not at all)
     //check return value
-    //with mapPut add/update the vote count for the stateGiver(key) current votes+1 (data)
+    //with mapPut add/update the vote count for the stateTaker(key) current votes+1 (data)
     //check return value
 }
 
@@ -111,12 +111,12 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
     //check NULL
     //check if id's < 0
     //check if stategiver != stateTaker
-    //in the State map send stateTake to mapGet
+    //in the State map send stateGiver to mapGet
     //check return value and return if don't exist
     //with the stateDate go to the votes map
-    //with mapGet check how much votes there is for the stateGiver (key) id (or if not at all)
+    //with mapGet check how much votes there is for the stateTaker (key) id (or if not at all)
     //check return value if doesn't exist return success
-    //with mapPut update the vote count for the stateGiver(key) current votes-1 (data)
+    //with mapPut update the vote count for the stateTaker(key) current votes-1 (data)
     //check return value
 }
 
@@ -154,13 +154,19 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
-
+    //create based on the above function (runConstest)
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
-
+    //create based on the above function
+    //in each state after finished the "state_vote" array (sorted)
+    //two dimensinal array left cullumn stateId, right column the no. 1 of that state
+    //iterate on the array and check for each row if "it's a match"
+    //if it is a match save the states pair on another array (check for duplications)
+    //print it how they wanted
 }
 
+//Functions for List
 ListElement copyString(ListElement str) {
 
 }
