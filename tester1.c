@@ -107,6 +107,13 @@ int main() {
     printf("Clearing backup list...\n");
     mapClear(backup_list);
 
+    printf("\nIterating on the whole backup list and print the keys...\n\n");
+    i=0;
+    MAP_FOREACH(void*, my_iterator, backup_list){
+        printf("%d) %s\n", i, (char*)my_iterator);
+        i++;
+    }
+
     printf("Deleting both maps...\n");
     mapDestroy(backup_list);
     mapDestroy(book_borrowing_list);

@@ -258,7 +258,7 @@ MapKeyElement mapGetNext(Map map) {
 }
 
 MapResult mapClear(Map map) {
-    //return MAP_NULL_ARGUMENT - if a NULL pointer was sent.
+    // return MAP_NULL_ARGUMENT if a NULL pointer was sent.
     if (map == NULL) {
         return MAP_NULL_ARGUMENT;
     }
@@ -273,6 +273,7 @@ MapResult mapClear(Map map) {
         tmp_iterator = tmp_iterator->next;
         nodeDestroy(node_to_destroy);
     }
+    map->head = NULL;
     //return MAP_SUCCESS
     return MAP_SUCCESS;
 }
