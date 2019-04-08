@@ -3,7 +3,13 @@
 #include <assert.h>
 #include "map.h"
 
-enum {EQUAL, EQUAL_TO_FIRST, START_OF_MAP, END_OF_MAP, MIDDLE_OF_MAP};
+enum {
+    EQUAL, 
+    EQUAL_TO_FIRST, 
+    START_OF_MAP, 
+    END_OF_MAP, 
+    MIDDLE_OF_MAP
+};
 
 typedef struct MapNode_t {
     MapKeyElement key;
