@@ -124,7 +124,9 @@ bool mapContains(Map map, MapKeyElement element) {
 
 MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) {
     // NULL check for parameters
-    if (map == NULL || keyElement == NULL || dataElement == NULL) return MAP_NULL_ARGUMENT;
+    if (map == NULL || keyElement == NULL || dataElement == NULL) {
+        return MAP_NULL_ARGUMENT;
+    }
     // copy data
     MapDataElement new_data = map->copyDataElement(dataElement);
 
@@ -145,7 +147,9 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
 
     // if key dosn't exist, create new node
     MapNode new_node = nodeCreate();
-    if (new_node == NULL) return MAP_OUT_OF_MEMORY;
+    if (new_node == NULL) {
+        return MAP_OUT_OF_MEMORY;
+    }
     MapKeyElement new_key = map->copyKeyElement(keyElement);
     new_node->data = new_data;
     new_node->key = new_key;
@@ -174,7 +178,9 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
 
 MapDataElement mapGet(Map map, MapKeyElement keyElement){
     //return NULL if NULL
-    if (map == NULL || keyElement == NULL) return NULL;
+    if (map == NULL || keyElement == NULL) {
+        return NULL;
+    }
     //iterate on the map and compare the key for each with the user's function
 
     for (MapNode tmp_iterator = map->head; tmp_iterator != NULL; tmp_iterator=tmp_iterator->next) {
@@ -189,7 +195,9 @@ MapDataElement mapGet(Map map, MapKeyElement keyElement){
 
 MapResult mapRemove(Map map, MapKeyElement keyElement){
     // NULL check for parameters
-    if (map == NULL || keyElement == NULL) return MAP_NULL_ARGUMENT;
+    if (map == NULL || keyElement == NULL) {
+        return MAP_NULL_ARGUMENT;
+    }
 
     // iterate on the map and compare
     MapNode tmp_iterator = map->head;
@@ -221,7 +229,9 @@ MapResult mapRemove(Map map, MapKeyElement keyElement){
 
 MapKeyElement mapGetFirst(Map map) {
     //if map is NULL or empty return NULL
-    if (map == NULL || map->head == NULL) return NULL;
+    if (map == NULL || map->head == NULL) {
+        return NULL;
+    }
     // set internal iterator to head
     map->iterator = map->head;
     // return map head
@@ -230,16 +240,23 @@ MapKeyElement mapGetFirst(Map map) {
 
 MapKeyElement mapGetNext(Map map) {
     //if map is NULL or empty return NULL
-    if (map == NULL || map->head == NULL) return NULL;
+    if (map == NULL || map->head == NULL) {
+        return NULL;
+    }
     // set internal iterator to next node
     map->iterator = map->iterator->next;
     //return next node
+    if (map->iterator == NULL) {
+        return NULL;
+    }
     return map->iterator->key;
 }
 
 MapResult mapClear(Map map) {
     //return MAP_NULL_ARGUMENT - if a NULL pointer was sent.
-    if (map == NULL) return MAP_NULL_ARGUMENT;
+    if (map == NULL) {
+        return MAP_NULL_ARGUMENT;
+    }
     //iterate on the map and free all pairs
     MapNode tmp_iterator = map->head;
     while (tmp_iterator != NULL) {
@@ -257,7 +274,9 @@ MapResult mapClear(Map map) {
 
 MapNode nodeCreate () {
     MapNode new_node = malloc(sizeof(*new_node));
-    if (new_node == NULL) return NULL;
+    if (new_node == NULL) {
+        return NULL;
+    }
     return new_node;
 }
 
