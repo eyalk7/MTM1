@@ -24,7 +24,7 @@ struct Map_t {
 //assistance functions
 MapNode nodeCreate ();
 void nodeDestroy (MapNode node);
-int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode tmp_iterator);
+int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator);
 
 Map mapCreate(copyMapDataElements copyDataElement,
               copyMapKeyElements copyKeyElement,
@@ -130,7 +130,7 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
 
     // iterate on the map and compare
     MapNode tmp_iterator = map->head;
-    int compare_result = mapIterateAndCompare(map, keyElement, tmp_iterator);
+    int compare_result = mapIterateAndCompare(map, keyElement, &tmp_iterator);
 
     // if key exist, update the key's data
     if (compare_result == EQUAL) {
@@ -193,7 +193,7 @@ MapResult mapRemove(Map map, MapKeyElement keyElement){
 
     // iterate on the map and compare
     MapNode tmp_iterator = map->head;
-    int compare_result = mapIterateAndCompare(map, keyElement, tmp_iterator);
+    int compare_result = mapIterateAndCompare(map, keyElement, &tmp_iterator);
 
     //  if didn't find matching key
     if (compare_result != EQUAL && compare_result != EQUAL_TO_FIRST) {
@@ -265,30 +265,30 @@ void nodeDestroy (MapNode node) {
     free(node);
 }
 
-int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode tmp_iterator) {
+int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator) {
     // if smallest key return START_OF_MAP
-    if (tmp_iterator == NULL || map->compareKeyElements(keyElement, tmp_iterator->key) < 0) {
+    if ((*tmp_iterator) == NULL || map->compareKeyElements(keyElement, (*tmp_iterator)->key) < 0) {
         return START_OF_MAP;
     }
 
     // if equal to the first
-    if (map->compareKeyElements(keyElement, tmp_iterator->key) == EQUAL) {
+    if (map->compareKeyElements(keyElement, (*tmp_iterator)->key) == EQUAL) {
         return EQUAL_TO_FIRST;
     }
 
     // iterate and compare
-    while (tmp_iterator->next != NULL && map->compareKeyElements(keyElement, tmp_iterator->next->key) > 0) {
-        tmp_iterator = tmp_iterator->next;
-    }
-
-    // equality
-    if (map->compareKeyElements(keyElement, tmp_iterator->next->key) == EQUAL) {
-        return EQUAL;
+    while ((*tmp_iterator)->next != NULL && map->compareKeyElements(keyElement, (*tmp_iterator)->next->key) > 0) {
+        (*tmp_iterator) = (*tmp_iterator)->next;
     }
 
     // reached end of map
-    if (tmp_iterator->next == NULL) {
+    if ((*tmp_iterator)->next == NULL) {
         return END_OF_MAP;
+    }
+
+    // equality
+    if (map->compareKeyElements(keyElement, (*tmp_iterator)->next->key) == EQUAL) {
+        return EQUAL;
     }
 
     return MIDDLE_OF_MAP;
