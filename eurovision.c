@@ -12,11 +12,12 @@ typedef struct JudgeData_t {
 typedef struct StateData_t {
     char *name;
     char *song_name;
-    Map votes;
+    Map votes; // key = stateId, data = no. of votes this state received
 } *StateData;
 
 struct eurovision_t {
-
+    Map States;
+    Map Judges;
 };
 
 main () {
@@ -24,8 +25,7 @@ main () {
 }
 
 Eurovision eurovisionCreate() {
-    Map States;
-    Map Judges;
+
 }
 
 void eurovisionDestroy(Eurovision eurovision) {

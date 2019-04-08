@@ -30,6 +30,7 @@ struct Map_t {
 //assistance functions
 MapNode nodeCreate ();
 void nodeDestroy (MapNode node);
+
 int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator);
 
 Map mapCreate(copyMapDataElements copyDataElement,
