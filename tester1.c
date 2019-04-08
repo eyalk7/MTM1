@@ -27,7 +27,7 @@ int main() {
                                "C Programing",
                                "book4",
                                "book5",
-                               "book6",
+                               "Book6",
                                "book7",
                                "book8",
                                "book9",
@@ -55,10 +55,10 @@ int main() {
     put_results[4] = mapPut(NULL, books[2], people[0]);
     for (int i=0; i<5; i++) {
         switch (put_results[i]) {
-            case MAP_NULL_ARGUMENT: printf("error: NULL was sent as map in pair #%d\n", i+1); break;
-            case MAP_OUT_OF_MEMORY: printf("error: allocation failed in pair #%d\n", i+1); break;
-            case MAP_SUCCESS: printf("#%d pair's elements had been inserted successfully", i+1); break;
-            default: printf("mapPut Error\n");
+            case MAP_NULL_ARGUMENT: printf("\nerror: NULL was sent as map in pair #%d\n", i+1); break;
+            case MAP_OUT_OF_MEMORY: printf("\nerror: allocation failed in pair #%d\n", i+1); break;
+            case MAP_SUCCESS: printf("\n#%d pair's elements had been inserted successfully\n", i+1); break;
+            default: printf("\nmapPut Error\n");
         }
     }
 
@@ -90,11 +90,11 @@ int main() {
     for (int i=0; i < BOOKS_NUM; i++) {
         printf("%d) %s, ", i+1 , books[i]);
     }
-    printf("\nChecking if Harry Potter is borrowed:\n...");
-    if (mapContains(book_borrowing_list, "Harry Potter")) {
-        printf("%s is borrowed by %s\n", "Harry Potter", (char*)mapGet(book_borrowing_list,"Harry Potter"));
+    printf("\nChecking if book6 is borrowed:\n...");
+    if (mapContains(book_borrowing_list, "book6")) {
+        printf("%s is borrowed by %s\n", "book6", (char*)mapGet(book_borrowing_list,"book6"));
     } else {
-        printf("%s isn't borrowed\n", "Harry Potter");
+        printf("%s isn't borrowed\n", "book6");
     }
 
     printf("\nIterating on the whole borrowing list and print the keys...\n");

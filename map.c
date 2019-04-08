@@ -118,7 +118,6 @@ bool mapContains(Map map, MapKeyElement element) {
     if (map->compareKeyElements(element, ptr->key) == 0)
         return true;    // element found
 
-
     return false;   // element not found
 }
 
