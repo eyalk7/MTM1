@@ -121,7 +121,36 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
 }
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
-    //ListCreate
+    // eurovision NULL check
+    //check precent (1-100) else return NULL
+
+    //getSize of States map - num_of_states
+    // if state map is empty return empty List
+
+    //create int array audience_grades[2][num_of_states], initialize to zero
+    //iterate with MAP_FOREACH in the States map:
+        // add stateId in int array
+    //iterate with MAP_FOREACH in the States map:
+        //iterate in the votes map of that State
+            //create array of struct for id+votes state_votes[num_of_states] array initialize to 0
+            //iterate on the vote map, save the id and the vote_count on the array
+                //sort the array if same grade, sort by stateId
+            //update the audience_grades array by the ten most voted
+            //enum {FIRST_PLACE, SECOND_PLACE....
+    //create int array judges_grades[2][num_of_states], initialize to zero
+        //iterate with MAP_FOREACH in the States map:
+        // add stateId in int array
+    //iterate on Judges map and for each judge
+        //update the judges_grades array by the judge's results
+        //enum {FIRST_PLACE, SECOND_PLACE....
+    //special struct array final_grades[num_of_states], intialize to 0
+        //run on the audience_grades and judges grades and add the :
+            //stateId, and the calculated grade by the precentage
+        //sort the array if same grade, sort by stateId
+
+    //ListCreate with copyString and freeString functions
+    //insert the top ten of final_grade array names to the list (with mapGet)
+
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
