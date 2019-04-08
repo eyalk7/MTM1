@@ -49,7 +49,18 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 }
 
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
-
+    //check NULL eurovision
+    // check if ID < 0
+    //check with mapContain if state exists
+    //iterate on the States map of eurovision with MAP_FOREACH:
+        // in each State mapRemove from Votes map the given stateId
+        //check return value
+    //iterate on the Judges map of eurovision with MAP_FOREACH:
+        // in each judge outside function - resultsContain(eurovision, judge id, state id
+        // if true - call eurovisionRemoveJudge for this judgeId
+        // check return value
+    // mapRemove from States map the stateId
+    //check return value
 }
 
 EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
@@ -71,17 +82,38 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
 }
 
 EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
-
+    //check if < 0
+    //check NULL
+    //mapRemove with judgeId
+    //check return value
 }
 
 EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
                                    int stateTaker) {
-
+    //check NULL
+    //check if id's < 0
+    //check if stategiver != stateTaker
+    //in the State map send stateTake to mapGet
+    //check return value and return if don't exist
+    //with the stateDate go to the votes map
+    //with mapGet check how much votes there is for the stateGiver (key) id (or if not at all)
+    //check return value
+    //with mapPut add/update the vote count for the stateGiver(key) current votes+1 (data)
+    //check return value
 }
 
 EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
                                       int stateTaker) {
-
+    //check NULL
+    //check if id's < 0
+    //check if stategiver != stateTaker
+    //in the State map send stateTake to mapGet
+    //check return value and return if don't exist
+    //with the stateDate go to the votes map
+    //with mapGet check how much votes there is for the stateGiver (key) id (or if not at all)
+    //check return value if doesn't exist return
+    //with mapPut update the vote count for the stateGiver(key) current votes-1 (data)
+    //check return value
 }
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
