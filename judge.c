@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "functions.h"
 #include "judges.h"
 
+#define NUMBER_OF_STATES_TO_RANK 10
+
 struct JudgeData_t {
     char *name;
-    unsigned int results[10];   // list of stateIds in order of points to give
+    unsigned int states[NUMBER_OF_STATES_TO_RANK];   // list of stateIds in order of ranking
 };
 
 
 // copyJudgeDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
-JudgeData copyJudgeDataElement(JudgeData data) {
+JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     //memory allocation for the JudgeData and check
     JudgeData copy = malloc(sizeof(*copy));
     if (!copy) return NULL;
@@ -21,8 +24,13 @@ JudgeData copyJudgeDataElement(JudgeData data) {
         free(copy);
         return NULL;
     }
-    //initialize results - all ids = 0
-    copy->results = { 0 };
+    //copy name and results
+    strcpy(copy->name, ((JudgeData)data)->name);
+    
+    for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        copy->states[i] = ((JudgeData)data)->states[i];
+    }
+    
     //return address
     return copy;
 }
