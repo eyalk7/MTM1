@@ -3,8 +3,8 @@
 
 typedef struct StateData_t *StateData;
 
-typedef void* stateDataElement;
-typedef void* stateKeyElement;
+typedef void* StateDataElement;
+typedef void* StateKeyElement;
 
 StateData copyStateDataElement(StateData data);
 int* copyStateKeyElement(int* key);
