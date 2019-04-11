@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "map.h"
 #include "functions.h"
+#include "state.h"
 
 struct StateData_t {
     char *name;
