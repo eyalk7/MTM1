@@ -37,7 +37,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
 
 // copyJudgeKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
 int* copyJudgeKeyElement(int* key) {
-    return createIntegerCopy(*key);
+    return copyInteger(*key);
 }
 
 // freeJudgeDataElement - Function pointer to be used for removing data elements from the map
