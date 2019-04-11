@@ -4,7 +4,7 @@
 typedef struct JudgeData_t *JudgeData;
 
 typedef void* JudgeDataElement
-typedef void* JugeKeyElement
+typedef void* JudgeKeyElement
 
 
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data);
