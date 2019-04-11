@@ -1,5 +1,5 @@
-#ifndef HW1_MTM_FUNCTIONS_H
-#define HW1_MTM_FUNCTIONS_H
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
 
 #include <stdbool.h>
 #include "map.h"
@@ -13,4 +13,4 @@ bool checkValidName(char* name);
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
 
-#endif //HW1_MTM_FUNCTIONS_H
+#endif //FUNCTIONS_H
