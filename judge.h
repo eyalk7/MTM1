@@ -3,15 +3,14 @@
 
 typedef struct JudgeData_t *JudgeData;
 
-typedef void* JudgeDataElement
-typedef void* JudgeKeyElement
-
+typedef void* JudgeDataElement;
+typedef void* JudgeKeyElement;
 
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data);
-int* copyJudgeKeyElement(int* key);
-void freeJudgeDataElement(JudgeData data);
-void freeJudgeKeyElement(int* key);
-int compareJudgeKeyElements(int* key1, int* key2);
+JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key);
+void freeJudgeDataElement(JudgeDataElement data);
+void freeJudgeKeyElement(JudgeKeyElement key);
+int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2);
 
 
 #endif //HW1_MTM_JUDGES_H
