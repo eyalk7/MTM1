@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include "map.h"
-#include "functions.h"
 #include "state.h"
+#include "functions.h"
 
 struct StateData_t {
     char *name;
@@ -55,17 +55,24 @@ StateKeyElement copyStateKeyElement(StateKeyElement key) {
 }
 // freeStateDataElement - Function pointer to be used for removing data elements from the map
 void freeStateDataElement(StateDataElement data) {
+    StateData tmp = (StateData)data;
     //mapDestroy the Votes map
+    mapDestroy(tmp->votes);
     //free strings alocations
+    free(tmp->name);
+    free(tmp->song_name);
     //free stateData alocation
+    free(tmp);
 }
 // freeStateKeyElement - Function pointer to be used for removing key elements from the map
 void freeStateKeyElement(StateKeyElement key) {
     //free allocation
+    free(key);
 }
 // compareStateKeyElements - Function pointer to be used for comparing key elements inside the map. Used to check if new elements already exist in the map.
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     //outside function
+    return compareIntegers(*((int*)key1), *((int*)key2));
 }
 
 /***************************************************** VOTE MAP FUNCTIONS ************************************************************/
@@ -73,20 +80,24 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
 // copyVotesDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 VoteDataElement copyVoteDataElement(VoteDataElement data) {
     //outside function
+    return copyInteger(*((int*)data));
 }
 // copyVotesKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
 VoteKeyElement copyVoteKeyElement(VoteKeyElement key) {
     //outside function
+    return copyInteger(*((int*)key));
 }
 // freeVotesDataElement - Function pointer to be used for removing data elements from the map
 void freeVoteDataElement(VoteDataElement data) {
     //free
+    free(data);
 }
 // freeVotesKeyElement - Function pointer to be used for removing key elements from the map
 void freeVoteKeyElement(VoteKeyElement key) {
     //free
+    free(key);
 }
 // compareVotesKeyElements - Function pointer to be used for comparing key elements inside the map. Used to check if new elements already exist in the map.
 int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2) {
-    //outside function
+    return compareIntegers(*((int*)key1), *((int*)key2));
 }
