@@ -5,15 +5,13 @@
 #include "map.h"
 #include "eurovision.h"
 #include "list.h"
+#include "functions.h"
+#include "judges.h"
+#include "states.h"
 
-#define SPACE ' '
 
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
-
-bool isIDValid(Map map, int id);
-bool isLowerCase(char c);
-bool checkValidName(char* name);
 
 
 struct eurovision_t {
@@ -27,7 +25,13 @@ int main () {
 
 Eurovision eurovisionCreate() {
     // memory alocation for the struct and check
+    Eurovision eurovision = malloc(sizeof(*eurovision));
+    if (!eurovision) return NULL;
+
     // mapCreate for the states and judges with functions for the States and Judges maps
+    //eurovision->States = mapCreate(copyJudgeDataElement, copyJudgeKeyElement, freeJudgeDataElement, freeJudgeKeyElement, compareJudgeKeyElements);
+
+
     //check mapCreate return value
     //initialize the parameretes of eurovision with the maps
     // return pointer
@@ -175,23 +179,4 @@ ListElement copyString(ListElement str) {
 
 void freeString(ListElement str) {
 
-}
-
-// Other Outside Functions
-bool isIDValid(Map map, int id) {
-    //check ID >= 0
-    //check with mapContain if Id already exist
-    return (id >= 0) && !mapContains(map, &id);
-}
-
-bool isLowerCase(char c) {
-    return ('a' <= c && c <= 'z');
-}
-
-bool checkValidName(char* name) {
-    //check the given string only contains small letters and spaces
-    for (int i = 0; i < strlen(name); i++) {
-        if (!isLowerCase(name[i]) && name[i] != SPACE) return false;
-    }
-    return true;
 }
