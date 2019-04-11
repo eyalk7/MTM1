@@ -3,7 +3,11 @@
 
 typedef struct JudgeData_t *JudgeData;
 
-JudgeData copyJudgeDataElement(JudgeData data);
+typedef void* JudgeDataElement
+typedef void* JugeKeyElement
+
+
+JudgeDataElement copyJudgeDataElement(JudgeDataElement data);
 int* copyJudgeKeyElement(int* key);
 void freeJudgeDataElement(JudgeData data);
 void freeJudgeKeyElement(int* key);
