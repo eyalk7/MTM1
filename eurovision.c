@@ -6,8 +6,8 @@
 #include "eurovision.h"
 #include "list.h"
 #include "functions.h"
-#include "judges.h"
-#include "states.h"
+#include "judge.h"
+#include "state.h"
 
 
 ListElement copyString(ListElement str);
@@ -29,7 +29,7 @@ Eurovision eurovisionCreate() {
     if (!eurovision) return NULL;
 
     // mapCreate for the states and judges with functions for the States and Judges maps
-    //eurovision->States = mapCreate(copyJudgeDataElement, copyJudgeKeyElement, freeJudgeDataElement, freeJudgeKeyElement, compareJudgeKeyElements);
+    eurovision->States = mapCreate(copyJudgeDataElement, copyJudgeKeyElement, freeJudgeDataElement, freeJudgeKeyElement, compareJudgeKeyElements);
 
 
     //check mapCreate return value
