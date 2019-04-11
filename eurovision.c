@@ -29,7 +29,8 @@ Eurovision eurovisionCreate() {
     if (!eurovision) return NULL;
 
     // mapCreate for the states and judges with functions for the States and Judges maps
-    eurovision->States = mapCreate(copyJudgeDataElement, copyJudgeKeyElement, freeJudgeDataElement, freeJudgeKeyElement, compareJudgeKeyElements);
+    eurovision->States = mapCreate(copyStateDataElement, copyStateKeyElement, freeStateDataElement, freeStateKeyElement, compareStateKeyElements);
+    eurovision->Judges = mapCreate(copyJudgeDataElement, copyJudgeKeyElement, freeJudgeDataElement, freeJudgeKeyElement, compareJudgeKeyElements);
 
 
     //check mapCreate return value
@@ -62,7 +63,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     //check NULL eurovision
-    //outside function - isIDValid(Map map, int id)
+    // check if id < 0
     //iterate on the States map of eurovision with MAP_FOREACH:
     // in each State mapRemove from Votes map the given stateId
     //check return value
@@ -92,7 +93,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
 }
 
 EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
-    //check if < 0
+    //check if id < 0
     //check NULL
     //mapRemove with judgeId
     //check return value
