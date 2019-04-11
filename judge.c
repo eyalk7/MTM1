@@ -34,24 +34,24 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     //return address
     return copy;
 }
-
 // copyJudgeKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
 JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
     return copyInteger(*((int*)key));
 }
-
 // freeJudgeDataElement - Function pointer to be used for removing data elements from the map
 void freeJudgeDataElement(JudgeDataElement data) {
+    JudgeData tmp = (JudgeData)data;
     //free strings allocation
+    free(tmp->name);
     //free judgeData allocation
+    free(tmp);
 }
-
 // freeJudgeKeyElement - Function pointer to be used for removing key elements from the map
 void freeJudgeKeyElement(JudgeKeyElement key) {
     //free allocation
+    free(key);
 }
-
 // compareJudgeKeyElements - Function pointer to be used for comparing key elements inside the map. Used to check if new elements already exist in the map.
-int compareJudgeKeyElements(int* key1, int* key2) {
-    return compareIntegers(*key1, *key2);
+int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
+    return compareIntegers(*((int*)key1), *((int*)key2));
 }
