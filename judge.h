@@ -1,5 +1,5 @@
 #ifndef JUDGES_H
-#define_JUDGES_H
+#define JUDGES_H
 
 typedef struct JudgeData_t *JudgeData;
 
