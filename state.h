@@ -6,16 +6,19 @@ typedef struct StateData_t *StateData;
 typedef void* StateDataElement;
 typedef void* StateKeyElement;
 
-StateData copyStateDataElement(StateData data);
-int* copyStateKeyElement(int* key);
-void freeStateDataElement(StateData data);
-void freeStateKeyElement(int* key);
-int compareStateKeyElements(int* key1, int* key2);
+typedef void* VoteDataElement;
+typedef void* VoteKeyElement;
 
-int* copyVoteDataElement(int* data);
-int* copyVoteKeyElement(int* key);
-void freeVoteDataElement(int* data);
-void freeVoteKeyElement(int* key);
-int compareVoteKeyElements(int* key1, int* key2);
+StateDataElement copyStateDataElement(StateDataElement data);
+StateKeyElement copyStateKeyElement(StateKeyElement key);
+void freeStateDataElement(StateDataElement data);
+void freeStateKeyElement(StateKeyElement key);
+int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
+
+VoteDataElement copyVoteDataElement(VoteDataElement data);
+VoteKeyElement copyVoteKeyElement(VoteKeyElement key);
+void freeVoteDataElement(VoteDataElement data);
+void freeVoteKeyElement(VoteKeyElement key);
+int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2);
 
 #endif //HW1_MTM_STATES_H
