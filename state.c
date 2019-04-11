@@ -58,10 +58,10 @@ void freeStateDataElement(StateDataElement data) {
     StateData tmp = (StateData)data;
     //mapDestroy the Votes map
     mapDestroy(tmp->votes);
-    //free strings alocations
+    //free strings allocations
     free(tmp->name);
     free(tmp->song_name);
-    //free stateData alocation
+    //free stateData allocation
     free(tmp);
 }
 // freeStateKeyElement - Function pointer to be used for removing key elements from the map
