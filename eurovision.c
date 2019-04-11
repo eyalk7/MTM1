@@ -1,24 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "map.h"
 #include "eurovision.h"
 #include "list.h"
 
+#define SPACE ' '
+
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
+
+bool isIDValid(Map map, int id);
+bool isLowerCase(char c);
+bool checkValidName(char* name);
+
 
 struct eurovision_t {
     Map States; // keys = StateId, data = StateData
     Map Judges; // keys = JudgeId, data = JudgeData
 };
 
-main () {
+int main () {
 
 }
 
 Eurovision eurovisionCreate() {
     // memory alocation for the struct and check
+
     // mapCreate for the states and judges with functions for the States and Judges maps
     //check mapCreate return value
     //initialize the parameretes of eurovision with the maps
@@ -34,12 +43,8 @@ void eurovisionDestroy(Eurovision eurovision) {
 EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
                                     const char *stateName,
                                     const char *songName) {
-    //outside functions - validState()
-        //check valid state ID >= 0 and numbers
-        //check with mapContain in States map if stateId already exist
-
-    //outside function checkValidName()
-        //check the state name and song name - only small letters and spaces
+    //outside function - isIDValid(Map map, int id)
+    //outside function - checkValidName(char* name)
 
     //memory aloctation for the tmp_stateData and check
     //mapCreate for the tmp_votes and add votes functions
@@ -54,15 +59,14 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     //check NULL eurovision
-    // check if ID < 0
-    //check with mapContain if state exists
+    //outside function - isIDValid(Map map, int id)
     //iterate on the States map of eurovision with MAP_FOREACH:
-        // in each State mapRemove from Votes map the given stateId
-        //check return value
+    // in each State mapRemove from Votes map the given stateId
+    //check return value
     //iterate on the Judges map of eurovision with MAP_FOREACH:
-        // in each judge outside function - resultsContain(eurovision, judge id, state id
-        // if true - call eurovisionRemoveJudge for this judgeId
-        // check return value
+    // in each judge outside function - resultsContain(eurovision, judge id, state id
+    // if true - call eurovisionRemoveJudge for this judgeId
+    // check return value
     // mapRemove from States map the stateId
     //check return value
 }
@@ -71,10 +75,9 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
                                     const char *judgeName,
                                     int *judgeResults) {
     //outside functions:
-        //check valid judge ID >= 0 and numbers
-            //check judges results- existing stateIds with mapContain
-        //outside function checkValidName():
-            //check the judge name only small letters and spaces
+    //outside function - isIDValid(Map map, int id)
+    //check judges results- existing stateIds with mapContain
+    //outside function - checkValidName(char* name)
 
     //check with mapContain in Judges map if judgeId already exist
     //memory aloctation for the tmp_judgeData and check
@@ -95,7 +98,7 @@ EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
 EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
                                    int stateTaker) {
     //check NULL
-    //check if id's < 0
+    // outside function - isIDValid(Map map, int id) on both id's (giver and taker)
     //check if stategiver != stateTaker
     //in the State map send stateGiver to mapGet
     //check return value and return if don't exist
@@ -129,24 +132,24 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 
     //create int array audience_grades[2][num_of_states], initialize to zero
     //iterate with MAP_FOREACH in the States map:
-        // add stateId in int array
+    // add stateId in int array
     //iterate with MAP_FOREACH in the States map:
-        //iterate in the votes map of that State
-            //create array of struct for id+votes state_votes[num_of_states] array initialize to 0
-            //iterate on the vote map, save the id and the vote_count on the array
-                //sort the array if same grade, sort by stateId
-            //update the audience_grades array by the ten most voted
-            //enum {FIRST_PLACE, SECOND_PLACE....
+    //iterate in the votes map of that State
+    //create array of struct for id+votes state_votes[num_of_states] array initialize to 0
+    //iterate on the vote map, save the id and the vote_count on the array
+    //sort the array if same grade, sort by stateId
+    //update the audience_grades array by the ten most voted
+    //enum {FIRST_PLACE, SECOND_PLACE....
     //create int array judges_grades[2][num_of_states], initialize to zero
-        //iterate with MAP_FOREACH in the States map:
-        // add stateId in int array
+    //iterate with MAP_FOREACH in the States map:
+    // add stateId in int array
     //iterate on Judges map and for each judge
-        //update the judges_grades array by the judge's results
-        //enum {FIRST_PLACE, SECOND_PLACE....
+    //update the judges_grades array by the judge's results
+    //enum {FIRST_PLACE, SECOND_PLACE....
     //special struct array final_grades[num_of_states], intialize to 0
-        //run on the audience_grades and judges grades and add the :
-            //stateId, and the calculated grade by the precentage
-        //sort the array if same grade, sort by stateId
+    //run on the audience_grades and judges grades and add the :
+    //stateId, and the calculated grade by the precentage
+    //sort the array if same grade, sort by stateId
 
     //ListCreate with copyString and freeString functions
     //insert the top ten of final_grade array names to the list (with mapGet)
@@ -173,4 +176,23 @@ ListElement copyString(ListElement str) {
 
 void freeString(ListElement str) {
 
+}
+
+// Other Outside Functions
+bool isIDValid(Map map, int id) {
+    //check ID >= 0
+    //check with mapContain if Id already exist
+    return (id >= 0) && !mapContains(map, &id);
+}
+
+bool isLowerCase(char c) {
+    return ('a' <= c && c <= 'z');
+}
+
+bool checkValidName(char* name) {
+    //check the given string only contains small letters and spaces
+    for (int i = 0; i < strlen(name); i++) {
+        if (!isLowerCase(name[i]) && name[i] != SPACE) return false;
+    }
+    return true;
 }
