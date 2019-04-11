@@ -20,7 +20,7 @@ bool checkValidName(char* name) {
     return true;
 }
 
-int* createInteger(int num) {
+int* copyInteger(int num) {
     //allocation for int
     int* copy = malloc(sizeof(*copy));
     //initialize the int
