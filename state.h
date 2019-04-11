@@ -1,5 +1,5 @@
-#ifndef HW1_MTM_STATES_H
-#define HW1_MTM_STATES_H
+#ifndef STATES_H
+#define STATES_H
 
 typedef struct StateData_t *StateData;
 
@@ -21,4 +21,4 @@ void freeVoteDataElement(VoteDataElement data);
 void freeVoteKeyElement(VoteKeyElement key);
 int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2);
 
-#endif //HW1_MTM_STATES_H
+#endif //STATES_H
