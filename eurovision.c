@@ -24,24 +24,42 @@ int main () {
 }
 
 Eurovision eurovisionCreate() {
-    // memory alocation for the struct and check
+    // memory allocation for the struct and check
     Eurovision eurovision = malloc(sizeof(*eurovision));
     if (!eurovision) return NULL;
 
     // mapCreate for the states and judges with functions for the States and Judges maps
+    //initialize the parameters of eurovision with the maps
+
     eurovision->States = mapCreate(copyStateDataElement, copyStateKeyElement, freeStateDataElement, freeStateKeyElement, compareStateKeyElements);
+    if (!eurovision->States) {
+        free(eurovision);
+        return NULL;
+    }
+
     eurovision->Judges = mapCreate(copyJudgeDataElement, copyJudgeKeyElement, freeJudgeDataElement, freeJudgeKeyElement, compareJudgeKeyElements);
 
-
     //check mapCreate return value
-    //initialize the parameretes of eurovision with the maps
+    if (!eurovision->Judges) {
+        mapDestroy(eurovision->States);
+        free(eurovision);
+        return NULL;
+    }
+
     // return pointer
+    return eurovision;
 }
 
 void eurovisionDestroy(Eurovision eurovision) {
-    //mapDestroy for the states votes map if exists
-    //mapDestroy for the States and Judges maps
-    //free eurovision
+    if (eurovision) {
+        //mapDestroy for the states votes map if exists
+        //mapDestroy for the States and Judges maps
+        mapDestroy(eurovision->States); // (votes map is destroyed on freeStateDataElement function)
+        mapDestroy(eurovision->Judges);
+        //free eurovision
+        free(eurovision);
+    }
+    // else: do nothing
 }
 
 EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
