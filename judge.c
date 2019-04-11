@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "functions.h"
-#include "judges.h"
+#include "judge.h"
 
 #define NUMBER_OF_STATES_TO_RANK 10
 
