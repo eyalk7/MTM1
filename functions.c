@@ -34,4 +34,5 @@ int compareIntegers(int a, int b) {
     //return 0 if equal
     //return bigger than 0 if first is bigger
     //else the small than 0
+    return a - b;
 }
