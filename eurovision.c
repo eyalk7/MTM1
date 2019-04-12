@@ -238,12 +238,12 @@ EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
         return EUROVISION_NULL_ARGUMENT;
     }
     EurovisionResult id_validation1 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
-    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
     assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
-    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) {
         return id_validation1;
     }
+    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
+    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) {
         return id_validation2;
     }
@@ -253,29 +253,64 @@ EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
         return EUROVISION_SAME_STATE;
     }
 
-    //in the State map send stateGiver to mapGet
+    // check current num of votes for stateTaker in stateGiver's votes map
     StateData giver_data = mapGet(eurovision->States, &stateGiver);
     assert(giver_data != NULL);
-    //with the stateData go to the votes map
-    //with mapGet check how much votes there is for the stateTaker (key) id (or if not at all)
-    int votes_num = giver_data->
-    //check return value
-    //with mapPut add/update the vote count for the stateTaker(key) current votes+1 (data)
-    //check return value
+    int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
+
+    // if no votes - give 1 vote, else add 1 vote. update the votes map
+    if (cur_votes_num == NULL) {
+        int new_votes_num = 1;
+    } else {
+        int new_votes_num = (*cur_votes_num) + 1;
+    }
+
+    if (mapPut(giver_data->votes, &stateTaker, &new_votes_num) == MAP_OUT_OF_MEMORY) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
+
+    return EUROVISION_SUCCESS;
 }
 
 EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
                                       int stateTaker) {
-    //check NULL
-    //check if id's < 0
-    //check if stategiver != stateTaker
-    //in the State map send stateGiver to mapGet
-    //check return value and return if don't exist
-    //with the stateDate go to the votes map
-    //with mapGet check how much votes there is for the stateTaker (key) id (or if not at all)
-    //check return value if doesn't exist return success
-    //with mapPut update the vote count for the stateTaker(key) current votes-1 (data)
-    //check return value
+    // check valid arguments
+    if (eurovision == NULL) {
+        return EUROVISION_NULL_ARGUMENT;
+    }
+    EurovisionResult id_validation1 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
+    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
+    if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) {
+        return id_validation1;
+    }
+    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
+    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
+    if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) {
+        return id_validation2;
+    }
+
+    // check that stategiver != stateTaker
+    if (stateGiver == stateTaker) {
+        return EUROVISION_SAME_STATE;
+    }
+
+    // check current num of votes for stateTaker in stateGiver's votes map
+    StateData giver_data = mapGet(eurovision->States, &stateGiver);
+    assert(giver_data != NULL);
+    int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
+
+    // if no votes - return SUCCESS, else subtract 1 vote. update the votes map
+    if (cur_votes_num == NULL) {
+        return EUROVISION_SUCCESS;
+    } else {
+        int new_votes_num = (*cur_votes_num) - 1;
+    }
+
+    if (mapPut(giver_data->votes, &stateTaker, &new_votes_num) == MAP_OUT_OF_MEMORY) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
+
+    return EUROVISION_SUCCESS;
 }
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
