@@ -2,10 +2,16 @@
 #include <stdlib.h>
 #include "functions.h"
 
-bool isIDValid(Map map, int id) {
+EurovisionResult isIDValid(Map map, int id) {
     //check ID >= 0
     //check with mapContain if Id already exist
-    return (id >= 0) && !mapContains(map, &id);
+    if (id < 0) {
+        return EUROVISION_INVALID_ID;
+    } else if (mapContains(map, &id)) {
+        return EUROVISION_STATE_ALREADY_EXIST;
+    }
+    // else state not exist
+    return EUROVISION_STATE_NOT_EXIST;
 }
 
 bool isLowerCase(char c) {
@@ -36,3 +42,5 @@ int compareIntegers(int a, int b) {
     //else the small than 0
     return a - b;
 }
+
+

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <assert.h>
 #include "map.h"
 #include "eurovision.h"
 #include "list.h"
@@ -65,30 +66,74 @@ void eurovisionDestroy(Eurovision eurovision) {
 EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
                                     const char *stateName,
                                     const char *songName) {
-    //outside function - isIDValid(Map map, int id)
-    //outside function - checkValidName(char* name)
+    // check valid arguments
+    if (eurovision == NULL || stateId == NULL || stateName == NULL || songName == NULL) {
+        return EUROVISION_NULL_ARGUMENT;
+    }
+    EurovisionResult id_validation = isIDValid(eurovision->States, stateId);
+    if (id_validation != EUROVISION_STATE_NOT_EXIST) {
+        return id_validation;
+    }
+    if (!checkValidName(stateName) || !checkValidName(songName)) {
+        return EUROVISION_INVALID_NAME;
+    }
 
-    //memory aloctation for the tmp_stateData and check
-    //mapCreate for the tmp_votes and add votes functions
-    //check mapCreate return value
-    //initalize the tmp_stateData element with name(by pointer), song name (by pointer) and tmp_votes map (by pointer)
-    //mapPut in the States map with stateId (send as pointer!) as key and tmp_stateData element as data
-    //check mapPut return value
-    //free alocation of tmp_stateDate element
-    //mapDestroy for tmp_votes map
-    //return success
+    // memory alloctation for the tmp_state_data and check
+    StateData tmp_state_data = malloc(sizeof(*tmp_state_data));
+    if (tmp_state_data == NULL) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
+
+    // Create tmp_votes and add votes functions,
+    Map tmp_votes = mapCreate(copyVoteDataElement, copyVoteKeyElement, freeVoteDataElement, freeVoteKeyElement, compareVoteKeyElements);
+    if (tmp_votes == NULL) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
+
+    // initalize the tmp_state_data element
+    tmp_state_data->name = stateName;
+    tmp_state_data->song_name = songName;
+    tmp_state_data->votes = tmp_votes;
+
+    // add the state to the "States" map in "eurovision"
+    assert(eurovision->States != NULL && &stateId != NULL && tmp_state_data != NULL);
+    if (mapPut(eurovision->States, &stateId, tmp_state_data) == MAP_OUT_OF_MEMORY) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
+
+    // free allocation of tmp_state_data & destroy tmp_votes
+    free (tmp_state_data);
+    mapDestroy(tmp_votes);
+
+    return EUROVISION_SUCCESS;
 }
 
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
-    //check NULL eurovision
-    // check if id < 0
+    // check valid arguments
+    if (eurovision == NULL || stateId == NULL) {
+        return EUROVISION_NULL_ARGUMENT;
+    }
+    EurovisionResult id_validation = isIDValid(eurovision->States, stateId);
+    if (id_validation != EUROVISION_STATE_ALREADY_EXIST) {
+        return id_validation;
+    }
+
     //iterate on the States map of eurovision with MAP_FOREACH:
     // in each State mapRemove from Votes map the given stateId
-    //check return value
+    MAP_FOREACH(int *, iterator, eurovision->States) {
+        assert(iterator->votes != NULL && &stateId !=NULL);
+        mapRemove(iterator->votes, &stateId);
+    }
+
     //iterate on the Judges map of eurovision with MAP_FOREACH:
     // in each judge outside function - resultsContain(eurovision, judge id, state id
     // if true - call eurovisionRemoveJudge for this judgeId
     // check return value
+    MAP_FOREACH(int *, iterator, eurovision->States) {
+        assert(iterator->votes != NULL && &stateId !=NULL);
+        mapRemove(iterator->votes, &stateId);
+    }
+
     // mapRemove from States map the stateId
     //check return value
 }
