@@ -89,30 +89,42 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
         free (tmp_state_data);
         return EUROVISION_OUT_OF_MEMORY;
     }
+    char *tmp_songName = malloc(strlen(songName) + 1);
+    if (tmp_songName == NULL) {
+        free (tmp_state_data);
+        free(tmp_stateName);
+        return EUROVISION_OUT_OF_MEMORY;
+    }
 
     // Create tmp_votes and add votes functions,
     Map tmp_votes = mapCreate(copyVoteDataElement, copyVoteKeyElement, freeVoteDataElement, freeVoteKeyElement, compareVoteKeyElements);
     if (tmp_votes == NULL) {
         free (tmp_state_data);
         free(tmp_stateName);
+        free(tmp_songName);
         return EUROVISION_OUT_OF_MEMORY;
     }
 
     // initalize the tmp_state_data element
-    tmp_state_data->name = stateName;
-    tmp_state_data->song_name = songName;
+    strcpy(tmp_stateName, stateName);
+    strcpy(tmp_songName, songName);
+    tmp_state_data->name = tmp_stateName;
+    tmp_state_data->song_name = tmp_songName;
     tmp_state_data->votes = tmp_votes;
 
     // add the state to the "States" map in "eurovision"
-    assert(eurovision->States != NULL && &stateId != NULL && tmp_state_data != NULL);
     if (mapPut(eurovision->States, &stateId, tmp_state_data) == MAP_OUT_OF_MEMORY) {
         free(tmp_state_data);
+        free(tmp_stateName);
+        free(tmp_songName);
         mapDestroy(tmp_votes);
         return EUROVISION_OUT_OF_MEMORY;
     }
 
-    // free allocation of tmp_state_data & destroy tmp_votes
+    // free tmp memory allocations
     free (tmp_state_data);
+    free(tmp_stateName);
+    free(tmp_songName);
     mapDestroy(tmp_votes);
 
     return EUROVISION_SUCCESS;
@@ -128,25 +140,20 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
         return id_validation;
     }
 
-    //iterate on the States map of eurovision with MAP_FOREACH:
-    // in each State mapRemove from Votes map the given stateId
+    //iterate on "States" map & remove from each state's "Votes" map the given stateId
     MAP_FOREACH(int *, iterator, eurovision->States) {
-        assert(iterator->votes != NULL && &stateId !=NULL);
+        assert(iterator->votes != NULL);
         mapRemove(iterator->votes, &stateId);
     }
 
-    //iterate on the Judges map of eurovision with MAP_FOREACH:
-    // in each judge outside function - resultsContain(eurovision, judge id, state id
-    // if true - call eurovisionRemoveJudge for this judgeId
-    // check return value
+    //iterate on "Judges" map & remove judges that voted for the given stateId
     MAP_FOREACH(int *, iterator, eurovision->Judges) {
         if (resultsContain(eurovision, *iterator, stateId)) {
             eurovisionRemoveJudge(eurovision, *iterator);
         }
     }
 
-    // mapRemove from States map the stateId
-    //check return value
+    // remove the state from "States" map
     mapRemove(eurovision->States, &stateId);
 
     return EUROVISION_SUCCESS;
@@ -175,19 +182,36 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
         }
     }
 
-    // memory alloctation for the tmp_judge_data and check
+    // memory alloctation for the tmp_judge_data & for name and check
     JudgeData tmp_judge_data = malloc(sizeof(*tmp_judge_data));
     if (tmp_judge_data == NULL) {
         return EUROVISION_OUT_OF_MEMORY;
     }
+    char *tmp_judgeName = malloc(strlen(judgeName) + 1);
+    if (tmp_judgeName == NULL) {
+        free(tmp_judge_data);
+        return EUROVISION_OUT_OF_MEMORY;
+    }
 
-    //initalize the tmp_judgeDate element with name, and results (by value)
-    tmp_judge_data->name = judgeName;
+    // initalize the tmp_judge_data element
+    strcpy(tmp_judgeName, judgeName);
+    tmp_judge_data->name = tmp_judgeName;
+    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        tmp_judge_data->states[i] = judgeResults[i];
+    }
 
-    //mapPut in the Judges map with judgeId (send as pointer!) as key and tmp_judgeData element as data
-    //check mapPut return value
-    //free alocation of tmp_judgeDate element
-    //return success
+    // add the judge to the "Judges" map in "eurovision"
+    if (mapPut(eurovision->Judges, &judgeId, tmp_judge_data) == MAP_OUT_OF_MEMORY) {
+        free(tmp_judge_data);
+        free(tmp_judgeName);
+        return EUROVISION_OUT_OF_MEMORY;
+    }
+
+    // free tmp memory allocations
+    free(tmp_judge_data);
+    free(tmp_judgeName);
+
+    return EUROVISION_SUCCESS;
 }
 
 EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
