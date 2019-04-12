@@ -43,4 +43,15 @@ int compareIntegers(int a, int b) {
     return a - b;
 }
 
-
+bool resultsContain (Eurovision eurovision, int judge_id, int state_id) {
+    assert(eurovision != NULL && isIDValid(eurovision->States, state_id) == EUROVISION_STATE_ALREADY_EXIST);
+    JudgeDataElement tmp_judge = mapGet(eurovision->Judges, &judge_id);
+    assert(tmp_judge != NULL);
+    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        if (tmp_judge->states[i] == state_id) {
+            return true;
+        }
+    }
+    // else
+    return false;
+}

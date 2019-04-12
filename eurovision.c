@@ -67,7 +67,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
                                     const char *stateName,
                                     const char *songName) {
     // check valid arguments
-    if (eurovision == NULL || stateId == NULL || stateName == NULL || songName == NULL) {
+    if (eurovision == NULL || stateName == NULL || songName == NULL) {
         return EUROVISION_NULL_ARGUMENT;
     }
     EurovisionResult id_validation = isIDValid(eurovision->States, stateId);
@@ -110,7 +110,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     // check valid arguments
-    if (eurovision == NULL || stateId == NULL) {
+    if (eurovision == NULL) {
         return EUROVISION_NULL_ARGUMENT;
     }
     EurovisionResult id_validation = isIDValid(eurovision->States, stateId);
@@ -129,19 +129,26 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     // in each judge outside function - resultsContain(eurovision, judge id, state id
     // if true - call eurovisionRemoveJudge for this judgeId
     // check return value
-    MAP_FOREACH(int *, iterator, eurovision->States) {
-        assert(iterator->votes != NULL && &stateId !=NULL);
-        mapRemove(iterator->votes, &stateId);
+    MAP_FOREACH(int *, iterator, eurovision->Judges) {
+        if (resultsContain(eurovision, *iterator, stateId)) {
+            eurovisionRemoveJudge(eurovision, *iterator);
+        }
     }
 
     // mapRemove from States map the stateId
     //check return value
+    mapRemove(eurovision->States, &stateId);
+
+    return EUROVISION_SUCCESS;
 }
 
 EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
                                     const char *judgeName,
                                     int *judgeResults) {
-    //outside functions:
+    // check valid arguments
+    if (eurovision == NULL || judgeName == NULL || judgeResults == NULL) {
+        return EUROVISION_NULL_ARGUMENT;
+    }
     //outside function - isIDValid(Map map, int id)
     //check judges results- existing stateIds with mapContain
     //outside function - checkValidName(char* name)

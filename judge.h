@@ -1,6 +1,8 @@
 #ifndef JUDGES_H
 #define JUDGES_H
 
+#define NUMBER_OF_STATES_TO_RANK 10
+
 typedef struct JudgeData_t *JudgeData;
 
 typedef void* JudgeDataElement;

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "map.h"
 #include "eurovision.h"
+#include "judge.h"
 
 #define SPACE ' '
 

@@ -5,8 +5,6 @@
 #include "functions.h"
 #include "judge.h"
 
-#define NUMBER_OF_STATES_TO_RANK 10
-
 struct JudgeData_t {
     char *name;
     unsigned int states[NUMBER_OF_STATES_TO_RANK];   // list of stateIds in order of points to give
