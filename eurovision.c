@@ -71,6 +71,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
         return EUROVISION_NULL_ARGUMENT;
     }
     EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, stateId);
+    assert(id_validation == EUROVISION_STATE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_STATE_NOT_EXIST);
     if (id_validation != EUROVISION_STATE_NOT_EXIST) {
         return id_validation;
     }
@@ -149,13 +150,28 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
     if (eurovision == NULL || judgeName == NULL || judgeResults == NULL) {
         return EUROVISION_NULL_ARGUMENT;
     }
-    //outside function - isIDValid(Map map, int id)
+    EurovisionResult id_validation = isIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
+    assert(id_validation == EUROVISION_JUDGE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_JUDGE_NOT_EXIST);
+    if (id_validation != EUROVISION_JUDGE_NOT_EXIST) {
+        return id_validation;
+    }
+    if (!checkValidName(judgeName)) {
+        return EUROVISION_INVALID_NAME;
+    }
+    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
+        assert(id_validation == EUROVISION_STATE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_STATE_NOT_EXIST);
+        if (id_validation != EUROVISION_STATE_ALREADY_EXIST) {
+            return id_validation;
+        }
+    }
 
-    //check judges results- existing stateIds with mapContain
-    //outside function - checkValidName(char* name)
+    // memory alloctation for the tmp_judge_data and check
+    JudgeData tmp_judge_data = malloc(sizeof(*tmp_judge_data));
+    if (tmp_judge_data == NULL) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
 
-    //check with mapContain in Judges map if judgeId already exist
-    //memory aloctation for the tmp_judgeData and check
     //initalize the tmp_judgeDate element with name, and results (by value)
     //mapPut in the Judges map with judgeId (send as pointer!) as key and tmp_judgeData element as data
     //check mapPut return value
