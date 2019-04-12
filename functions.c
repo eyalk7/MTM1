@@ -1,10 +1,13 @@
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "functions.h"
 
 EurovisionResult isIDValid(Map map, MapType type, int id) {
-    //check ID >= 0
-    //check with mapContain if Id already exist
+    // assert valid arguments (checked already in the sending function)
+    assert(map != NULL);
+    assert(type == STATES_MAP || type == JUDGES_MAP);
+    //check ID >= 0 & check if Id already exist in the given map
     if (id < 0) {
         return EUROVISION_INVALID_ID;
     }
@@ -55,14 +58,20 @@ int compareIntegers(int a, int b) {
 }
 
 bool resultsContain (Eurovision eurovision, int judge_id, int state_id) {
+    // assert valid arguments (checked already in the sending function)
     assert(eurovision != NULL && isIDValid(eurovision->States, STATES_MAP, state_id) == EUROVISION_STATE_ALREADY_EXIST);
+
+    // get the judge's data & assert judge_id exist in the map
     JudgeDataElement tmp_judge = mapGet(eurovision->Judges, &judge_id);
     assert(tmp_judge != NULL);
+
+    // iterate on the judge's results and check if state_id is there
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
         if (tmp_judge->states[i] == state_id) {
             return true;
         }
     }
-    // else
+
+    // state_id not on judge's results
     return false;
 }

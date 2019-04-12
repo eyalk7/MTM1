@@ -6,12 +6,6 @@
 #include "state.h"
 #include "functions.h"
 
-struct StateData_t {
-    char *name;
-    char *song_name;
-    Map votes; // key = stateId, data = no. of votes this state gives
-};
-
 /***************************************************** STATE MAP FUNCTIONS ************************************************************/
 
 // copyStateDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.

@@ -215,21 +215,50 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
 }
 
 EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
-    //check if id < 0
-    //check NULL
-    //mapRemove with judgeId
-    //check return value
+    // check valid arguments
+    if (eurovision == NULL) {
+        return EUROVISION_NULL_ARGUMENT;
+    }
+    EurovisionResult id_validation = isIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
+    assert(id_validation == EUROVISION_JUDGE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_JUDGE_NOT_EXIST);
+    if (id_validation != EUROVISION_STATE_ALREADY_EXIST) {
+        return id_validation;
+    }
+
+    // remove judge from "Judges" map
+    mapRemove(eurovision->Judges, &judgeId);
+
+    return EUROVISION_SUCCESS;
 }
 
 EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
                                    int stateTaker) {
-    //check NULL
-    // outside function - isIDValid(Map map, int id) on both id's (giver and taker)
-    //check if stategiver != stateTaker
+    // check valid arguments
+    if (eurovision == NULL) {
+        return EUROVISION_NULL_ARGUMENT;
+    }
+    EurovisionResult id_validation1 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
+    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
+    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
+    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
+    if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) {
+        return id_validation1;
+    }
+    if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) {
+        return id_validation2;
+    }
+
+    // check that stategiver != stateTaker
+    if (stateGiver == stateTaker) {
+        return EUROVISION_SAME_STATE;
+    }
+
     //in the State map send stateGiver to mapGet
-    //check return value and return if don't exist
+    StateData giver_data = mapGet(eurovision->States, &stateGiver);
+    assert(giver_data != NULL);
     //with the stateData go to the votes map
     //with mapGet check how much votes there is for the stateTaker (key) id (or if not at all)
+    int votes_num = giver_data->
     //check return value
     //with mapPut add/update the vote count for the stateTaker(key) current votes+1 (data)
     //check return value
