@@ -70,7 +70,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
     if (eurovision == NULL || stateName == NULL || songName == NULL) {
         return EUROVISION_NULL_ARGUMENT;
     }
-    EurovisionResult id_validation = isIDValid(eurovision->States, stateId);
+    EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, stateId);
     if (id_validation != EUROVISION_STATE_NOT_EXIST) {
         return id_validation;
     }
@@ -113,7 +113,7 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     if (eurovision == NULL) {
         return EUROVISION_NULL_ARGUMENT;
     }
-    EurovisionResult id_validation = isIDValid(eurovision->States, stateId);
+    EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, stateId);
     if (id_validation != EUROVISION_STATE_ALREADY_EXIST) {
         return id_validation;
     }
@@ -150,6 +150,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
         return EUROVISION_NULL_ARGUMENT;
     }
     //outside function - isIDValid(Map map, int id)
+
     //check judges results- existing stateIds with mapContain
     //outside function - checkValidName(char* name)
 

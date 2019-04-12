@@ -2,16 +2,27 @@
 #include <stdlib.h>
 #include "functions.h"
 
-EurovisionResult isIDValid(Map map, int id) {
+EurovisionResult isIDValid(Map map, MapType type, int id) {
     //check ID >= 0
     //check with mapContain if Id already exist
     if (id < 0) {
         return EUROVISION_INVALID_ID;
-    } else if (mapContains(map, &id)) {
-        return EUROVISION_STATE_ALREADY_EXIST;
     }
+
+    if (mapContains(map, &id)) {
+        if (type == STATES_MAP) {
+            return EUROVISION_STATE_ALREADY_EXIST;
+        }
+        // else type == JUDGES_MAP
+        return EUROVISION_JUDGE_ALREADY_EXIST;
+    }
+
     // else state not exist
-    return EUROVISION_STATE_NOT_EXIST;
+    if (type == STATES_MAP) {
+        return EUROVISION_STATE_NOT_EXIST;
+    }
+    // else type == JUDGES_MAP
+    return EUROVISION_JUDGE_NOT_EXIST;
 }
 
 bool isLowerCase(char c) {
@@ -44,7 +55,7 @@ int compareIntegers(int a, int b) {
 }
 
 bool resultsContain (Eurovision eurovision, int judge_id, int state_id) {
-    assert(eurovision != NULL && isIDValid(eurovision->States, state_id) == EUROVISION_STATE_ALREADY_EXIST);
+    assert(eurovision != NULL && isIDValid(eurovision->States, STATES_MAP, state_id) == EUROVISION_STATE_ALREADY_EXIST);
     JudgeDataElement tmp_judge = mapGet(eurovision->Judges, &judge_id);
     assert(tmp_judge != NULL);
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
