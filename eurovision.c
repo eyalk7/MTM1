@@ -79,15 +79,22 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
         return EUROVISION_INVALID_NAME;
     }
 
-    // memory alloctation for the tmp_state_data and check
+    // memory alloctation for the tmp_state_data & for names and check
     StateData tmp_state_data = malloc(sizeof(*tmp_state_data));
     if (tmp_state_data == NULL) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
+    char *tmp_stateName = malloc(strlen(stateName) + 1);
+    if (tmp_stateName == NULL) {
+        free (tmp_state_data);
         return EUROVISION_OUT_OF_MEMORY;
     }
 
     // Create tmp_votes and add votes functions,
     Map tmp_votes = mapCreate(copyVoteDataElement, copyVoteKeyElement, freeVoteDataElement, freeVoteKeyElement, compareVoteKeyElements);
     if (tmp_votes == NULL) {
+        free (tmp_state_data);
+        free(tmp_stateName);
         return EUROVISION_OUT_OF_MEMORY;
     }
 
@@ -99,6 +106,8 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
     // add the state to the "States" map in "eurovision"
     assert(eurovision->States != NULL && &stateId != NULL && tmp_state_data != NULL);
     if (mapPut(eurovision->States, &stateId, tmp_state_data) == MAP_OUT_OF_MEMORY) {
+        free(tmp_state_data);
+        mapDestroy(tmp_votes);
         return EUROVISION_OUT_OF_MEMORY;
     }
 
@@ -173,6 +182,8 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
     }
 
     //initalize the tmp_judgeDate element with name, and results (by value)
+    tmp_judge_data->name = judgeName;
+
     //mapPut in the Judges map with judgeId (send as pointer!) as key and tmp_judgeData element as data
     //check mapPut return value
     //free alocation of tmp_judgeDate element
