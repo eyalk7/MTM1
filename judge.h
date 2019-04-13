@@ -16,6 +16,11 @@ void freeJudgeDataElement(JudgeDataElement data);
 void freeJudgeKeyElement(JudgeKeyElement key);
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2);
 
+JudgeData createJudgeData();
+void setJudgeName(JudgeData data, char* name);
+void setJudgeResults(JudgeData data, int results[]);
+
+
 bool resultsContainState(JudgeDataElement judge, int stateId);
 
 #endif //JUDGES_H
