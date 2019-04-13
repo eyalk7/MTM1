@@ -1,6 +1,8 @@
 #ifndef STATES_H
 #define STATES_H
 
+#include "eurovision.h"
+
 typedef struct StateData_t *StateData;
 
 typedef void* StateDataElement;
@@ -14,6 +16,12 @@ StateKeyElement copyStateKeyElement(StateKeyElement key);
 void freeStateDataElement(StateDataElement data);
 void freeStateKeyElement(StateKeyElement key);
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
+
+StateData createStateData();
+void setStateName(StateData data, char* name);
+void setStateSong(StateData data, char* name);
+void setStateVotes(StateData data, Map votes);
+Map getStateVotes(StateData data);
 
 VoteDataElement copyVoteDataElement(VoteDataElement data);
 VoteKeyElement copyVoteKeyElement(VoteKeyElement key);
