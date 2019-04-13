@@ -78,18 +78,12 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareIntegers(*((int*)key1), *((int*)key2));
 }
 
-StateData createStateData() {
+StateData createStateData(char* name, char* song_name, Map votes) {
     StateData tmp_state_data = malloc(sizeof(*tmp_state_data));
+    tmp_state_data->name = name;
+    tmp_state_data->song_name = song_name;
+    tmp_state_data->votes = votes;
     return tmp_state_data;
-}
-void setStateName(StateData data, char* name) {
-    data->name = name;
-}
-void setStateSong(StateData data, char* name) {
-    data->song_name = name;
-}
-void setStateVotes(StateData data, Map votes) {
-    data->votes = votes;
 }
 
 Map getStateVotes(StateData data) {
