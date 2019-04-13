@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include "functions.h"
 #include "judge.h"
+
+struct JudgeData_t {
+    char *name;
+    unsigned int states[NUMBER_OF_STATES_TO_RANK];   // list of stateIds in order of points to give
+};
 
 // copyJudgeDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
@@ -47,3 +51,14 @@ void freeJudgeKeyElement(JudgeKeyElement key) {
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
     return compareIntegers(*((int*)key1), *((int*)key2));
 }
+
+bool resultsContainState(JudgeDataElement judge, int state_id) {
+    JudgeData tmp_judge = (JudgeData)judge;
+    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        if (tmp_judge->states[i] == state_id) {
+            return true;
+        }
+    }
+    return false;
+}
+
