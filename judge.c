@@ -9,6 +9,7 @@ struct JudgeData_t {
     unsigned int states[NUMBER_OF_STATES_TO_RANK];   // list of stateIds in order of points to give
 };
 
+
 // copyJudgeDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     //memory allocation for the JudgeData and check
@@ -62,3 +63,15 @@ bool resultsContainState(JudgeDataElement judge, int state_id) {
     return false;
 }
 
+JudgeData createJudgeData() {
+    JudgeData tmp_judge_data = malloc(sizeof(*tmp_judge_data));
+    return tmp_judge_data;
+}
+void setJudgeName(JudgeData data, char* name) {
+    data->name = name;
+}
+void setJudgeResults(JudgeData data, int results[]) {
+    for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        data->states[i] = results[i];
+    }
+}
