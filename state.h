@@ -1,11 +1,7 @@
 #ifndef STATES_H
 #define STATES_H
 
-typedef struct StateData_t {
-    char *name;
-    char *song_name;
-    Map votes; // key = stateId, data = no. of votes this state gives
-} *StateData;
+typedef struct StateData_t *StateData;
 
 typedef void* StateDataElement;
 typedef void* StateKeyElement;
