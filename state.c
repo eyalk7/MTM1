@@ -78,6 +78,24 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareIntegers(*((int*)key1), *((int*)key2));
 }
 
+StateData createStateData() {
+    StateData tmp_state_data = malloc(sizeof(*tmp_state_data));
+    return tmp_state_data;
+}
+void setStateName(StateData data, char* name) {
+    data->name = name;
+}
+void setStateSong(StateData data, char* name) {
+    data->song_name = name;
+}
+void setStateVotes(StateData data, Map votes) {
+    data->votes = votes;
+}
+
+Map getStateVotes(StateData data) {
+    return data->votes;
+}
+
 /***************************************************** VOTE MAP FUNCTIONS ************************************************************/
 
 // copyVotesDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
