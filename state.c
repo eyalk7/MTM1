@@ -6,10 +6,19 @@
 #include "state.h"
 #include "functions.h"
 
+struct StateData_t {
+    char *name;
+    char *song_name;
+    Map votes; // key = stateId, data = no. of votes this state gives
+};
+
 /***************************************************** STATE MAP FUNCTIONS ************************************************************/
 
 // copyStateDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 StateDataElement copyStateDataElement(StateDataElement data) {
+    // casting
+    StateData state_data = (StateData)data;
+
     //memory allocation for StateData element and check
     StateData copy = malloc(sizeof(*copy));
     if (!copy) return NULL;
@@ -28,7 +37,7 @@ StateDataElement copyStateDataElement(StateDataElement data) {
     }
 
     //mapCopy for tmp_votes maps and check
-    copy->votes = mapCopy(((StateData)data)->votes);
+    copy->votes = mapCopy(state_data->votes);
     if(!copy->votes) {
         free(copy->name);
         free(copy->song_name);
@@ -37,8 +46,8 @@ StateDataElement copyStateDataElement(StateDataElement data) {
     }
 
     //initialize the element
-    strcpy(copy->name, ((StateData)data)->name);
-    strcpy(copy->song_name, ((StateData)data)->song_name);
+    strcpy(copy->name, state_data->name);
+    strcpy(copy->song_name, state_data->song_name);
 
     //return address
     return copy;
@@ -49,14 +58,14 @@ StateKeyElement copyStateKeyElement(StateKeyElement key) {
 }
 // freeStateDataElement - Function pointer to be used for removing data elements from the map
 void freeStateDataElement(StateDataElement data) {
-    StateData tmp = (StateData)data;
+    StateData state_data = (StateData)data;
     //mapDestroy the Votes map
-    mapDestroy(tmp->votes);
+    mapDestroy(state_data->votes);
     //free strings allocations
-    free(tmp->name);
-    free(tmp->song_name);
+    free(state_data->name);
+    free(state_data->song_name);
     //free stateData allocation
-    free(tmp);
+    free(state_data);
 }
 // freeStateKeyElement - Function pointer to be used for removing key elements from the map
 void freeStateKeyElement(StateKeyElement key) {
