@@ -57,21 +57,14 @@ int compareIntegers(int a, int b) {
     return a - b;
 }
 
-bool resultsContain (Eurovision eurovision, int judge_id, int state_id) {
+bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
     // assert valid arguments (checked already in the sending function)
-    assert(eurovision != NULL && isIDValid(eurovision->States, STATES_MAP, state_id) == EUROVISION_STATE_ALREADY_EXIST);
+    assert(states != NULL && judges != NULL && isIDValid(states, STATES_MAP, state_id) == EUROVISION_STATE_ALREADY_EXIST);
 
     // get the judge's data & assert judge_id exist in the map
-    JudgeDataElement tmp_judge = mapGet(eurovision->Judges, &judge_id);
+    JudgeDataElement tmp_judge = mapGet(judges, &judge_id);
     assert(tmp_judge != NULL);
 
     // iterate on the judge's results and check if state_id is there
-    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        if (tmp_judge->states[i] == state_id) {
-            return true;
-        }
-    }
-
-    // state_id not on judge's results
-    return false;
+    return resultsContainState(tmp_judge, state_id);
 }
