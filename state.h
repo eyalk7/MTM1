@@ -17,10 +17,7 @@ void freeStateDataElement(StateDataElement data);
 void freeStateKeyElement(StateKeyElement key);
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
 
-StateData createStateData();
-void setStateName(StateData data, char* name);
-void setStateSong(StateData data, char* name);
-void setStateVotes(StateData data, Map votes);
+StateData createStateData(char* name, char* song_name, Map votes);
 Map getStateVotes(StateData data);
 
 VoteDataElement copyVoteDataElement(VoteDataElement data);
