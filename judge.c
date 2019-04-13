@@ -63,15 +63,13 @@ bool resultsContainState(JudgeDataElement judge, int state_id) {
     return false;
 }
 
-JudgeData createJudgeData() {
+JudgeData createJudgeData(char* name, int results[]) {
     JudgeData tmp_judge_data = malloc(sizeof(*tmp_judge_data));
-    return tmp_judge_data;
-}
-void setJudgeName(JudgeData data, char* name) {
-    data->name = name;
-}
-void setJudgeResults(JudgeData data, int results[]) {
+    tmp_judge_data->name = name;
+
     for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        data->states[i] = results[i];
+        tmp_judge_data->states[i] = results[i];
     }
+
+    return tmp_judge_data;
 }
