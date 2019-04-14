@@ -72,7 +72,9 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareIntegers(*((int*)key1), *((int*)key2));
 }
 
-int getFavoriteState(Map votes);
+int getFavoriteState(Map votes) {
+    // return most voted state's id
+}
 
 
 /***************************************************** VOTE MAP FUNCTIONS ************************************************************/
