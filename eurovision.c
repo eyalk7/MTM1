@@ -316,39 +316,42 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // eurovision NULL check
     //check precent (1-100) else return NULL
 
-    //getSize of States map - num_of_states
-    // if state map is empty return empty List
+        //outsize function - audiencePoints(eurovision) - returns CountData* array with all of the below:
+            //getSize of States map - num_of_states
+            // if state map is empty return empty List
 
-    //outside function - audience_points = countTableCreate(states map) - initialize to zero & add stateId
+            //outside function - audience_points = countTableCreate(states map) - initialize to zero & add stateId
 
-    //iterate with MAP_FOREACH in the States map:
-        //outside function - convertVotesToCountTable(votes map):
-        //use countTableCreate
-        //fill votes numbers for each id
-        //sort the array - from big to small - if same grade, sort by stateId - low before high (!!)
+            //iterate with MAP_FOREACH in the States map:
+                //outside function - convertVotesToCountTable(votes map):
+                //use countTableCreate
+                //fill votes numbers for each id
+                //outside function - sort the array - from big to small - if same grade, sort by stateId - low before high (!!)
 
-        //update the audience_points array by the ten most voted
+                //update the audience_points array by the ten most voted
+                //enum {FIRST_PLACE, SECOND_PLACE....
+
+    //outside function - judges_points = countTableCreate(states map) - initialize to zero & add stateId
+
+    //iterate on Judges map and for each judge:
+        //update the judges_grades array by the judge's results
         //enum {FIRST_PLACE, SECOND_PLACE....
 
-    //create int array judges_grades[2][num_of_states], initialize to zero
-    //iterate with MAP_FOREACH in the States map:
-    // add stateId in int array
-    //iterate on Judges map and for each judge
-    //update the judges_grades array by the judge's results
-    //enum {FIRST_PLACE, SECOND_PLACE....
-    //special struct array final_grades[num_of_states], intialize to 0
-    //run on the audience_grades and judges grades and add the :
-    //stateId, and the calculated grade by the precentage
-    //sort the array if same grade, sort by stateId
+    //outside function - final_points = countTableCreate(states map) - initialize to zero & add stateId
+
+        //run on the audience_points and judges_points and add the :
+            //the calculated grade by the precentage
+            // outside function - sort the array - from big to small - if same grade, sort by stateId - low before high (!!)
 
     //ListCreate with copyString and freeString functions
-    //insert the top ten of final_grade array names to the list (with mapGet)
+    //insert all final_grade array names to the list (with mapGet)
 
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     return NULL;
-    //create based on the above function (runConstest)
+    // get audiencePoints(eurovision)
+
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
