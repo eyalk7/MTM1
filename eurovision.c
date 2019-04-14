@@ -10,6 +10,18 @@
 #include "judge.h"
 #include "state.h"
 
+enum {
+    TENTH_PLACE = 1,
+    NINTH_PLACE,
+    EIGHT_PLACE,
+    SEVENTH_PLACE,
+    SIXTH_PLACE,
+    FIFTH_PLACE,
+    FOURTH_PLACE,
+    THIRD_PLACE,
+    SECOND_PLACE = 10,
+    FIRST_PLACE = 12
+};
 
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
