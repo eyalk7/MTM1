@@ -385,9 +385,10 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
 
     //iterate on the array, in each row:
         // iterate on the entire array and check if "it's a match", skip on "-1"
-        // if it is a match save the states pair names on the list - after lex' sorting
+        // if it is a match save the states pair names on the list - after lexicorgraphic sort
         // change to "-1" the both rows
-    //print it how they wanted
+
+   // sort the strings array lexicorgraphic
 }
 
 //Functions for List
