@@ -142,13 +142,15 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
 
     //iterate on "States" map & remove from each state's "Votes" map the given stateId
     MAP_FOREACH(int *, iterator, eurovision->States) {
-        assert(iterator->votes != NULL);
-        mapRemove(iterator->votes, &stateId);
+        StateData state_data = mapGet(eurovision->States, iterator);
+
+        assert(state_data->votes != NULL);
+        mapRemove(state_data->votes, &stateId);
     }
 
     //iterate on "Judges" map & remove judges that voted for the given stateId
     MAP_FOREACH(int *, iterator, eurovision->Judges) {
-        if (resultsContain(eurovision, *iterator, stateId)) {
+        if (resultsContain(eurovision->States, eurovision->Judges, *iterator, stateId)) {
             eurovisionRemoveJudge(eurovision, *iterator);
         }
     }
@@ -175,7 +177,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
         return EUROVISION_INVALID_NAME;
     }
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
+        id_validation = isIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
         assert(id_validation == EUROVISION_STATE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_STATE_NOT_EXIST);
         if (id_validation != EUROVISION_STATE_ALREADY_EXIST) {
             return id_validation;
@@ -238,12 +240,14 @@ EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
         return EUROVISION_NULL_ARGUMENT;
     }
     EurovisionResult id_validation1 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
-    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
+    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID ||
+           id_validation1 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) {
         return id_validation1;
     }
     EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
-    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
+    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID ||
+           id_validation2 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) {
         return id_validation2;
     }
@@ -258,19 +262,19 @@ EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
     assert(giver_data != NULL);
     int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
 
-    // if no votes - give 1 vote, else add 1 vote. update the votes map
-    if (cur_votes_num == NULL) {
-        int new_votes_num = 1;
-    } else {
-        int new_votes_num = (*cur_votes_num) + 1;
+    // if no votes - give 1 vote, else add 1 vote
+    int new_votes_num = 1;
+    if (cur_votes_num != NULL) {
+        new_votes_num = (*cur_votes_num) + 1;
     }
-
+    // update the votes map
     if (mapPut(giver_data->votes, &stateTaker, &new_votes_num) == MAP_OUT_OF_MEMORY) {
         return EUROVISION_OUT_OF_MEMORY;
     }
 
     return EUROVISION_SUCCESS;
 }
+
 
 EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
                                       int stateTaker) {
@@ -300,11 +304,9 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
     int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
 
     // if no votes - return SUCCESS, else subtract 1 vote. update the votes map
-    if (cur_votes_num == NULL) {
-        return EUROVISION_SUCCESS;
-    } else {
-        int new_votes_num = (*cur_votes_num) - 1;
-    }
+    if (cur_votes_num == NULL) return EUROVISION_SUCCESS;
+
+    int new_votes_num = (*cur_votes_num) - 1;
 
     if (mapPut(giver_data->votes, &stateTaker, &new_votes_num) == MAP_OUT_OF_MEMORY) {
         return EUROVISION_OUT_OF_MEMORY;
@@ -322,24 +324,24 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 
     //create int array audience_grades[2][num_of_states], initialize to zero
     //iterate with MAP_FOREACH in the States map:
-        // add stateId in int array
+    // add stateId in int array
     //iterate with MAP_FOREACH in the States map:
-        //iterate in the votes map of that State
-            //create array of struct for id+votes state_votes[num_of_states] array initialize to 0
-            //iterate on the vote map, save the id and the vote_count on the array
-                //sort the array if same grade, sort by stateId
-            //update the audience_grades array by the ten most voted
-            //enum {FIRST_PLACE, SECOND_PLACE....
+    //iterate in the votes map of that State
+    //create array of struct for id+votes state_votes[num_of_states] array initialize to 0
+    //iterate on the vote map, save the id and the vote_count on the array
+    //sort the array if same grade, sort by stateId
+    //update the audience_grades array by the ten most voted
+    //enum {FIRST_PLACE, SECOND_PLACE....
     //create int array judges_grades[2][num_of_states], initialize to zero
-        //iterate with MAP_FOREACH in the States map:
-        // add stateId in int array
+    //iterate with MAP_FOREACH in the States map:
+    // add stateId in int array
     //iterate on Judges map and for each judge
-        //update the judges_grades array by the judge's results
-        //enum {FIRST_PLACE, SECOND_PLACE....
+    //update the judges_grades array by the judge's results
+    //enum {FIRST_PLACE, SECOND_PLACE....
     //special struct array final_grades[num_of_states], intialize to 0
-        //run on the audience_grades and judges grades and add the :
-            //stateId, and the calculated grade by the precentage
-        //sort the array if same grade, sort by stateId
+    //run on the audience_grades and judges grades and add the :
+    //stateId, and the calculated grade by the precentage
+    //sort the array if same grade, sort by stateId
 
     //ListCreate with copyString and freeString functions
     //insert the top ten of final_grade array names to the list (with mapGet)
