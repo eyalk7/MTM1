@@ -64,7 +64,7 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
     return resultsContainState(tmp_judge, state_id);
 }
 
-/********************************************* COUNT TABLE STRUCT FUNCTIONS **********************************************************/
+/********************************************* COUNT TABLE FUNCTIONS **********************************************************/
 
 CountData* countTableCreate(Map map) {
 
