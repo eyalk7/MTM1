@@ -4,10 +4,10 @@
 #include "map.h"
 
 enum {
-    EQUAL, 
-    EQUAL_TO_FIRST, 
-    START_OF_MAP, 
-    END_OF_MAP, 
+    EQUAL,
+    EQUAL_TO_FIRST,
+    START_OF_MAP,
+    END_OF_MAP,
     MIDDLE_OF_MAP
 };
 
@@ -28,8 +28,8 @@ struct Map_t {
 };
 
 //assistance functions
-static MapNode nodeCreate ();
-static void nodeDestroy (MapNode node);
+MapNode nodeCreate ();
+void nodeDestroy (MapNode node);
 
 int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator);
 
@@ -88,8 +88,10 @@ Map mapCopy(Map map) {
 
         /* assert(result != MAP_NULL_ARGUMENT) */
 
-        if (result == MAP_OUT_OF_MEMORY)
+        if (result == MAP_OUT_OF_MEMORY) {
+            mapDestroy(copy); // free all nodes created until now
             return NULL;    // if allocate failed return NULL
+        }
     }
 
     //in the last node put NULL in "next"
@@ -135,6 +137,7 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     }
     // copy data
     MapDataElement new_data = map->copyDataElement(dataElement);
+    if (!new_data) return MAP_OUT_OF_MEMORY;
 
     // iterate on the map and compare
     MapNode tmp_iterator = map->head;
@@ -153,10 +156,11 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
 
     // if key dosn't exist, create new node
     MapNode new_node = nodeCreate();
-    if (new_node == NULL) {
-        return MAP_OUT_OF_MEMORY;
-    }
+    if (new_node == NULL) return MAP_OUT_OF_MEMORY;
+
     MapKeyElement new_key = map->copyKeyElement(keyElement);
+    if (!new_key) return MAP_OUT_OF_MEMORY;
+
     new_node->data = new_data;
     new_node->key = new_key;
     new_node->next = NULL;
@@ -177,9 +181,9 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     }
 
     // else insert the new node to its place
-        new_node->next = tmp_iterator->next;
-        tmp_iterator->next = new_node;
-        return MAP_SUCCESS;
+    new_node->next = tmp_iterator->next;
+    tmp_iterator->next = new_node;
+    return MAP_SUCCESS;
 }
 
 MapDataElement mapGet(Map map, MapKeyElement keyElement){
@@ -279,7 +283,7 @@ MapResult mapClear(Map map) {
     return MAP_SUCCESS;
 }
 
-static MapNode nodeCreate () {
+MapNode nodeCreate () {
     MapNode new_node = malloc(sizeof(*new_node));
     if (new_node == NULL) {
         return NULL;
@@ -287,11 +291,11 @@ static MapNode nodeCreate () {
     return new_node;
 }
 
-static void nodeDestroy (MapNode node) {
+void nodeDestroy (MapNode node) {
     free(node);
 }
 
-static int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator) {
+int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator) {
     // if smallest key return START_OF_MAP
     if ((*tmp_iterator) == NULL || map->compareKeyElements(keyElement, (*tmp_iterator)->key) < 0) {
         return START_OF_MAP;
