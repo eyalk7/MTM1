@@ -6,17 +6,20 @@
 
 // copyJudgeDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
+    // casting
+    JudgeData judge_data = (JudgeData)data;
+    
     //memory allocation for the JudgeData and check
     JudgeData copy = malloc(sizeof(*copy));
     if (!copy) return NULL;
     //memory allocation for name string and check
-    copy->name = malloc(strlen(copy->name) + 1);
+    copy->name = malloc(strlen(judge_data->name) + 1);
     if (!copy->name) {
         free(copy);
         return NULL;
     }
     //copy name and results
-    strcpy(copy->name, ((JudgeData)data)->name);
+    strcpy(copy->name, (judge_data->name);
 
     for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
         copy->states[i] = ((JudgeData)data)->states[i];
@@ -25,6 +28,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     //return address
     return copy;
 }
+
 // copyJudgeKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
 JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
     return copyInteger(*((int*)key));
