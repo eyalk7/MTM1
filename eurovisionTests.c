@@ -105,11 +105,13 @@ static void giveVotes(Eurovision eurovision, int giver, int taker, int votes) {
   }
 }
 
-static void setupEurovisionVotes(Eurovision eurovision) {
+/*
+static void setupEurovisionVotes2(Eurovision eurovision) {
   giveVotes(eurovision, 1, 12, 4);
   giveVotes(eurovision, 2, 8, 2);
   giveVotes(eurovision, 3, 4, 1);
 }
+*/
 
 /** total voters result:
  * 1:  12 + 0  + 0       = 12
@@ -126,7 +128,7 @@ static void setupEurovisionVotes(Eurovision eurovision) {
  * 13: 0  + 0  + 1       = 1
  * 14: 0  + 0  + 2       = 2
  */
-static void setupEurovisionVotes2(Eurovision eurovision) {
+static void setupEurovisionVotes(Eurovision eurovision) {
   giveVotes(eurovision, 1, 2, 20);
   giveVotes(eurovision, 1, 3, 18);
   giveVotes(eurovision, 1, 5, 16);
