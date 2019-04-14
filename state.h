@@ -10,7 +10,7 @@ typedef struct StateData_t {
 typedef struct countData_t {
     unsigned int id;
     int count;
-}* CountData;
+} *CountData;
 
 typedef void* StateDataElement;
 typedef void* StateKeyElement;
