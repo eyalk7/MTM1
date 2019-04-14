@@ -72,7 +72,14 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareIntegers(*((int*)key1), *((int*)key2));
 }
 
+/********************************************* COUNT TABLE STRUCT FUNCTIONS **********************************************************/
 
+CountTable* countTableCreate(Map map) {
+
+}
+CountTable* votesMapToArrayConvert(Map votes) {
+
+}
 /***************************************************** VOTE MAP FUNCTIONS ************************************************************/
 
 // copyVotesDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
