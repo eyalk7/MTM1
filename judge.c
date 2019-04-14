@@ -4,12 +4,6 @@
 #include "functions.h"
 #include "judge.h"
 
-struct JudgeData_t {
-    char *name;
-    unsigned int states[NUMBER_OF_STATES_TO_RANK];   // list of stateIds in order of points to give
-};
-
-
 // copyJudgeDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     //memory allocation for the JudgeData and check
@@ -61,15 +55,4 @@ bool resultsContainState(JudgeDataElement judge, int state_id) {
         }
     }
     return false;
-}
-
-JudgeData createJudgeData(char* name, int results[]) {
-    JudgeData tmp_judge_data = malloc(sizeof(*tmp_judge_data));
-    tmp_judge_data->name = name;
-
-    for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        tmp_judge_data->states[i] = results[i];
-    }
-
-    return tmp_judge_data;
 }
