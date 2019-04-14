@@ -20,10 +20,6 @@ struct eurovision_t {
     Map Judges; // keys = JudgeId, data = JudgeData
 };
 
-int main () {
-
-}
-
 Eurovision eurovisionCreate() {
     // memory allocation for the struct and check
     Eurovision eurovision = malloc(sizeof(*eurovision));
