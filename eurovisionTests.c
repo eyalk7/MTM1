@@ -226,9 +226,7 @@ bool testAddVote() {
   Eurovision eurovision = setupEurovision();
   setupEurovisionStates(eurovision);
   CHECK(eurovisionAddVote(eurovision, -1, 12), EUROVISION_INVALID_ID);
-  //CHECK(
-          printf("\nreturn value: %d\n", eurovisionAddVote(eurovision, 12, -1));
-          //, EUROVISION_INVALID_ID);
+  CHECK(eurovisionAddVote(eurovision, 12, -1), EUROVISION_INVALID_ID);
   CHECK(eurovisionAddVote(eurovision, 100, 12), EUROVISION_STATE_NOT_EXIST);
   CHECK(eurovisionAddVote(eurovision, 12, 100), EUROVISION_STATE_NOT_EXIST);
   CHECK(eurovisionAddVote(eurovision, 12, 1), EUROVISION_SUCCESS);
