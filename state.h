@@ -7,17 +7,32 @@ typedef struct StateData_t {
     Map votes; // key = stateId, data = no. of votes this state gives
 } *StateData;
 
+typedef struct countData_t {
+    unsigned int id;
+    int count;
+} *CountData;
+
 typedef void* StateDataElement;
 typedef void* StateKeyElement;
 
 typedef void* VoteDataElement;
 typedef void* VoteKeyElement;
 
+/********************** STATE MAP FUNCTIONS ***********************/
+
 StateDataElement copyStateDataElement(StateDataElement data);
 StateKeyElement copyStateKeyElement(StateKeyElement key);
 void freeStateDataElement(StateDataElement data);
 void freeStateKeyElement(StateKeyElement key);
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
+
+/********************** COUNT TABLE STRUCT FUNCTIONS ***********************/
+
+CountData* countTableCreate(Map map);
+CountData* convertVotesToCountTable(Map votes);
+
+
+/********************** VOTE MAP FUNCTIONS ***********************/
 
 VoteDataElement copyVoteDataElement(VoteDataElement data);
 VoteKeyElement copyVoteKeyElement(VoteKeyElement key);
