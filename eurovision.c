@@ -219,7 +219,7 @@ EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
     }
     EurovisionResult id_validation = isIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
     assert(id_validation == EUROVISION_JUDGE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_JUDGE_NOT_EXIST);
-    if (id_validation != EUROVISION_STATE_ALREADY_EXIST) {
+    if (id_validation != EUROVISION_JUDGE_ALREADY_EXIST) {
         return id_validation;
     }
 
@@ -241,7 +241,7 @@ EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
     if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) {
         return id_validation1;
     }
-    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
+    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateTaker);
     assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID ||
            id_validation2 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) {
