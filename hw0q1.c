@@ -14,7 +14,7 @@ int main() {
     return 0;
 }
 
-char *stringDuplicator(char *str, int times) {
+char *stringDuplicate(char *str, int times) {
     assert(str);
     assert(times > 0);
     int len = strlen(str);
