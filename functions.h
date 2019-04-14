@@ -15,7 +15,7 @@ typedef enum mapType_t {
 
 EurovisionResult isIDValid(Map map, MapType type, int id);
 bool isLowerCase(char c);
-bool checkValidName(char* name);
+bool checkValidName(const char* name);
 bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
 int* copyInteger(int num);

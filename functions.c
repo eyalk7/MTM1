@@ -33,7 +33,7 @@ bool isLowerCase(char c) {
     return ('a' <= c && c <= 'z');
 }
 
-bool checkValidName(char* name) {
+bool checkValidName(const char* name) {
     //check the given string only contains small letters and spaces
     for (int i = 0; i < strlen(name); i++) {
         if (!isLowerCase(name[i]) && name[i] != SPACE) return false;
