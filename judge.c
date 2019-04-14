@@ -10,7 +10,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     JudgeData copy = malloc(sizeof(*copy));
     if (!copy) return NULL;
     //memory allocation for name string and check
-    copy->name = malloc(sizeof(*(copy->name)));
+    copy->name = malloc(strlen(copy->name) + 1);
     if (!copy->name) {
         free(copy);
         return NULL;
