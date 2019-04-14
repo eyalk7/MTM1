@@ -319,16 +319,17 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     //getSize of States map - num_of_states
     // if state map is empty return empty List
 
-    //create int array audience_grades[2][num_of_states], initialize to zero
+    //outside function - audience_points = countTableCreate(states map) - initialize to zero & add stateId
+
     //iterate with MAP_FOREACH in the States map:
-    // add stateId in int array
-    //iterate with MAP_FOREACH in the States map:
-    //iterate in the votes map of that State
-    //create array of struct for id+votes state_votes[num_of_states] array initialize to 0
-    //iterate on the vote map, save the id and the vote_count on the array
-    //sort the array if same grade, sort by stateId
-    //update the audience_grades array by the ten most voted
-    //enum {FIRST_PLACE, SECOND_PLACE....
+        //outside function - convertVotesToCountTable(votes map):
+        //use countTableCreate
+        //fill votes numbers for each id
+        //sort the array - from big to small - if same grade, sort by stateId - low before high (!!)
+
+        //update the audience_points array by the ten most voted
+        //enum {FIRST_PLACE, SECOND_PLACE....
+
     //create int array judges_grades[2][num_of_states], initialize to zero
     //iterate with MAP_FOREACH in the States map:
     // add stateId in int array
