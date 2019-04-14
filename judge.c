@@ -19,7 +19,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
         return NULL;
     }
     //copy name and results
-    strcpy(copy->name, (judge_data->name);
+    strcpy(copy->name, judge_data->name);
 
     for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
         copy->states[i] = ((JudgeData)data)->states[i];
