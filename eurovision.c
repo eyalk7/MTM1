@@ -327,6 +327,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     return NULL;
     // eurovision NULL check
     //check precent (1-100) else return NULL
+    // if state map is empty return empty List
 
         //outsize function - audiencePoints(eurovision) - returns CountData* array with all of the below:
             //getSize of States map - num_of_states
@@ -353,26 +354,39 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 
         //run on the audience_points and judges_points and add the :
             //the calculated grade by the precentage
-            // outside function - sort the array - from big to small - if same grade, sort by stateId - low before high (!!)
 
-    //ListCreate with copyString and freeString functions
-    //insert all final_grade array names to the list (with mapGet)
+    //outside function - sort the array - from big to small - if same grade, sort by stateId - low before high (!!)
+
+    //outside function - countTableToList(final_grades) - in "functions"
+        //ListCreate with copyString and freeString functions
+        //insert all final_grade array names to the list by the new order (with mapGet)
+
+    // free all countTables
 
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     return NULL;
+    //eurovision check
     // get audiencePoints(eurovision)
+    //outside function - countTableToList(final_grades) - in "functions"
 
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
     return NULL;
-    //create based on the above function
-    //in each state after finished the "state_vote" array (sorted)
-    //two dimensinal array left cullumn stateId, right column the no. 1 of that state
-    //iterate on the array and check for each row if "it's a match"
-    //if it is a match save the states pair on another array (check for duplications)
+    //getSize of States map - num_of_states
+    // if state map is empty return empty List
+
+    //create two dimnesinal int array - state_favorites[2][num_of_states]
+    //iterate on the states map and fill on each state:
+        //insert stateId first column
+        //outside function - getFavoriteState(votes map) - second column
+
+    //iterate on the array, in each row:
+        // iterate on the entire array and check if "it's a match", skip on "-1"
+        // if it is a match save the states pair names on the list - after lex' sorting
+        // change to "-1" the both rows
     //print it how they wanted
 }
 
