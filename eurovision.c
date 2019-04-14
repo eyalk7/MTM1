@@ -359,9 +359,14 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
 
 //Functions for List
 ListElement copyString(ListElement str) {
+    char* copy = malloc(strlen(str) + 1);
+    if (!copy) return NULL;
 
+    strcpy(copy, str);
+
+    return copy;
 }
 
 void freeString(ListElement str) {
-
+    free(str);
 }
