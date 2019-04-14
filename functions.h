@@ -7,12 +7,13 @@
 #include "judge.h"
 
 #define SPACE ' '
+
 typedef enum mapType_t {
     STATES_MAP,
     JUDGES_MAP
 } MapType;
 
-bool isIDValid(Map map, MapType type, int id);
+EurovisionResult isIDValid(Map map, MapType type, int id);
 bool isLowerCase(char c);
 bool checkValidName(char* name);
 bool resultsContain (Map states, Map judges, int judge_id, int state_id);
