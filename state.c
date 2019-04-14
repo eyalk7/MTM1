@@ -74,10 +74,10 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
 
 /********************************************* COUNT TABLE STRUCT FUNCTIONS **********************************************************/
 
-CountTable* countTableCreate(Map map) {
+CountData* countTableCreate(Map map) {
 
 }
-CountTable* votesMapToArrayConvert(Map votes) {
+CountData* convertVotesToCountTable(Map votes) {
 
 }
 /***************************************************** VOTE MAP FUNCTIONS ************************************************************/
