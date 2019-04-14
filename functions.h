@@ -28,7 +28,7 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
 
-/********************** COUNT TABLE STRUCT FUNCTIONS ***********************/
+/********************** COUNT TABLE FUNCTIONS ***********************/
 
 CountData* countTableCreate(Map map);
 CountData* convertVotesToCountTable(Map votes);
