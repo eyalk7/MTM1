@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "functions.h"
 
+
 EurovisionResult isIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
     assert(map != NULL);
