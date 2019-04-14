@@ -22,7 +22,7 @@ void freeStateDataElement(StateDataElement data);
 void freeStateKeyElement(StateKeyElement key);
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
 
-
+int getFavoriteState(Map votes);
 
 /********************** VOTE MAP FUNCTIONS ***********************/
 
