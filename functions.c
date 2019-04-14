@@ -14,26 +14,20 @@ EurovisionResult isIDValid(Map map, MapType type, int id) {
     }
 
     if (mapContains(map, &id)) {
-        if (type == STATES_MAP) {
-            return EUROVISION_STATE_ALREADY_EXIST;
-        }
-        // else type == JUDGES_MAP
-        return EUROVISION_JUDGE_ALREADY_EXIST;
+        if (type == STATES_MAP) return EUROVISION_STATE_ALREADY_EXIST;
+        return EUROVISION_JUDGE_ALREADY_EXIST;  // else type == JUDGES_MAP
     }
 
     // else state not exist
-    if (type == STATES_MAP) {
-        return EUROVISION_STATE_NOT_EXIST;
-    }
-    // else type == JUDGES_MAP
-    return EUROVISION_JUDGE_NOT_EXIST;
+    if (type == STATES_MAP) return EUROVISION_STATE_NOT_EXIST;
+    return EUROVISION_JUDGE_NOT_EXIST;  // else type == JUDGES_MAP
 }
 
 bool isLowerCase(char c) {
     return ('a' <= c && c <= 'z');
 }
 
-bool checkValidName(const char* name) {
+bool checkValidName(const  char* name) {
     //check the given string only contains small letters and spaces
     for (int i = 0; i < strlen(name); i++) {
         if (!isLowerCase(name[i]) && name[i] != SPACE) return false;
@@ -68,4 +62,25 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
 
     // iterate on the judge's results and check if state_id is there
     return resultsContainState(tmp_judge, state_id);
+}
+
+/********************************************* COUNT TABLE STRUCT FUNCTIONS **********************************************************/
+
+CountData* countTableCreate(Map map) {
+
+}
+CountData* convertVotesToCountTable(Map votes) {
+
+}
+
+void sortCountTable(CountData* table) {
+
+}
+
+void freeCountTable(CountData* countTable) {
+
+}
+
+List convertCountTableToList(CountData* countTable) {
+
 }
