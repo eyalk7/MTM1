@@ -6,12 +6,6 @@
 #include "state.h"
 #include "functions.h"
 
-struct StateData_t {
-    char *name;
-    char *song_name;
-    Map votes; // key = stateId, data = no. of votes this state gives
-};
-
 /***************************************************** STATE MAP FUNCTIONS ************************************************************/
 
 // copyStateDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
@@ -78,17 +72,6 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareIntegers(*((int*)key1), *((int*)key2));
 }
 
-StateData createStateData(char* name, char* song_name, Map votes) {
-    StateData tmp_state_data = malloc(sizeof(*tmp_state_data));
-    tmp_state_data->name = name;
-    tmp_state_data->song_name = song_name;
-    tmp_state_data->votes = votes;
-    return tmp_state_data;
-}
-
-Map getStateVotes(StateData data) {
-    return data->votes;
-}
 
 /***************************************************** VOTE MAP FUNCTIONS ************************************************************/
 
