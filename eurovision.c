@@ -312,6 +312,7 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
 }
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
+    return NULL;
     // eurovision NULL check
     //check precent (1-100) else return NULL
 
@@ -345,10 +346,12 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
+    return NULL;
     //create based on the above function (runConstest)
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
+    return NULL;
     //create based on the above function
     //in each state after finished the "state_vote" array (sorted)
     //two dimensinal array left cullumn stateId, right column the no. 1 of that state
@@ -359,9 +362,9 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
 
 //Functions for List
 ListElement copyString(ListElement str) {
-
+    return NULL;
 }
 
 void freeString(ListElement str) {
-
+return NULL;
 }

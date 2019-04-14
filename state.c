@@ -18,12 +18,12 @@ StateDataElement copyStateDataElement(StateDataElement data) {
     if (!copy) return NULL;
 
     //memory allocation for strings and check
-    copy->name = malloc(strlen(copy->name) + 1);
+    copy->name = malloc(strlen(state_data->name) + 1);
     if (!copy->name) {
         free(copy);
         return NULL;
     }
-    copy->song_name = malloc(strlen(copy->song_name) + 1);
+    copy->song_name = malloc(strlen(state_data->song_name) + 1);
     if (!copy->song_name) {
         free(copy->name);
         free(copy);
