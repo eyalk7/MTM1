@@ -56,6 +56,7 @@ List audiencePoints(Map states, int audiencePrecent);
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
+EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int diff);
 /********************** COUNT LIST FUNCTIONS ***********************/
 
 ListElement copyIntPair(ListElement elem);

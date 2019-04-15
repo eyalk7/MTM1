@@ -10,10 +10,6 @@
 #include "judge.h"
 #include "state.h"
 
-ListElement copyString(ListElement str);
-FreeListElement freeString(ListElement str);
-EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int diff);
-
 struct eurovision_t {
     Map States; // keys = StateId, data = StateData
     Map Judges; // keys = JudgeId, data = JudgeData
