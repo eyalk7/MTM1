@@ -22,7 +22,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     strcpy(copy->name, judge_data->name);
 
     for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        copy->states[i] = ((JudgeData)data)->states[i];
+        copy->results[i] = ((JudgeData)data)->results[i];
     }
 
     //return address
@@ -54,7 +54,7 @@ int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
 bool resultsContainState(JudgeDataElement judge, int state_id) {
     JudgeData tmp_judge = (JudgeData)judge;
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        if (tmp_judge->states[i] == state_id) {
+        if (tmp_judge->results[i] == state_id) {
             return true;
         }
     }

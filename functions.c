@@ -189,10 +189,10 @@ void freeString(ListElement str) {
 ListElement copyIntPair(ListElement elem) {
     if (elem == NULL) return NULL;
 
-    CountData new_elem = malloc(sizeof(*elem));
+    CountData elem_p = elem;
+    CountData new_elem = malloc(sizeof(*elem_p));
     if (new_elem == NULL) return NULL;
 
-    CountData elem_p = elem;
     new_elem->count = elem_p->count;
     new_elem->id = elem_p->id;
 
