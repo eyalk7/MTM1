@@ -1,6 +1,8 @@
 #ifndef STATES_H
 #define STATES_H
 
+#define NO_FAVORITE_STATE -1
+
 typedef struct StateData_t {
     char *name;
     char *song_name;
