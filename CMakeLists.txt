@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(ex1_mtm C)
+project(hw1_mtm C)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -pedantic-errors -Werror")
 

@@ -72,7 +72,20 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareIntegers(*((int*)key1), *((int*)key2));
 }
 
-int getFavoriteState(Map votes);
+int getFavoriteState(Map votes) {
+    // return most voted state's id
+    if(mapGetSize(votes) <= 0) return NO_FAVORITE_STATE;
+
+    StateKeyElement mostVoted = mapGetFirst(votes);
+    MAP_FOREACH(StateKeyElement, state, votes) {
+        int compare_result = compareStateKeyElements(mostVoted, state);
+        if (compare_result < 0) {
+            mostVoted = state;
+        }
+    }
+
+    return *(int*)mostVoted; // id of most voted state
+}
 
 
 /***************************************************** VOTE MAP FUNCTIONS ************************************************************/

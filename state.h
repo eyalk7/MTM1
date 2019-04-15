@@ -1,6 +1,8 @@
 #ifndef STATES_H
 #define STATES_H
 
+#define NO_FAVORITE_STATE -1
+
 typedef struct StateData_t {
     char *name;
     char *song_name;
@@ -22,7 +24,7 @@ void freeStateDataElement(StateDataElement data);
 void freeStateKeyElement(StateKeyElement key);
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
 
-
+int getFavoriteState(Map votes);
 
 /********************** VOTE MAP FUNCTIONS ***********************/
 
