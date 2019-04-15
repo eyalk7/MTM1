@@ -43,6 +43,6 @@ List convertVotesToList(Map votes);
 // Converts final results to list of state names
 List convertToStringlist(List finalResults, Map states);
 ListElement copyString(ListElement str);
-FreeListElement freeString(ListElement str);
+void  freeString(ListElement str);
 
 #endif //FUNCTIONS_H
