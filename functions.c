@@ -29,7 +29,7 @@ bool isLowerCase(char c) {
 bool checkValidName(const  char* name) {
     //check the given string only contains small letters and spaces
     for (int i = 0; i < strlen(name); i++) {
-        if (!isLowerCase(name[i]) && name[i] != SPACE) return false;
+        if (!isLowerCase(name[i]) && name[i] != SPACECHAR) return false;
     }
     return true;
 }
@@ -112,19 +112,28 @@ int compareCountData(ListElement data1, ListElement data2) {
 }
 
 List countListCreate(Map map) {
+    // check parameter?
+
     List list = listCreate(copyCountData, freeCountData);
     if (!list) return NULL;
 
-    MAP_FOREACH(MapKeyElement, key, map) {
-        int id = *(int*)key;
+    MAP_FOREACH(int*, key, map) {
         CountData data = malloc(sizeof(*data));
         if (!data) {
             listDestroy(list);
             return NULL;
         }
 
-        data->id = id;
-        
+        data->id = *key;
+        data->count = 0; // intialize to 0
+
+        ListResult result = listInsertFirst(list, data);
+        freeCountData(data);
+
+        if (result != LIST_SUCCESS) {
+            listDestroy(list);
+            return NULL;
+        }
     }
 
     return list;
@@ -132,13 +141,60 @@ List countListCreate(Map map) {
 
 
 List convertVotesToList(Map votes) {
+    // check parameter?
 
+    List list = countListCreate(votes);
+
+    LIST_FOREACH(CountData, elem, list) {
+        int* data = mapGet(votes, &(elem->id));
+        if (!data) {
+            listDestroy(list);
+            return NULL;
+        }
+        elem->count = *data;
+    }
+
+    ListResult result = listSort(list, compareCountData);
+    if (result != LIST_SUCCESS) {
+        listDestroy(list);
+        return NULL;
+    }
+
+    return list;
 }
 
-void freeCountList(CountData* countTable) {
+List convertToStringlist(List finalResults, Map states) {
+    // check parameters?
+    List state_names = listCreate(copyString, freeString);
 
+    LIST_FOREACH(CountData, elem, finalResults) {
+        int stateId = elem->id;
+        StateData data = mapGet(states, &stateId);
+        if (!data) {
+            listDestroy(state_names);
+            return NULL;
+        }
+
+        ListResult result = listInsertLast(state_names, data->name);
+        if (result != LIST_SUCCESS) {
+            listDestroy(state_names);
+            return NULL;
+        }
+    }
+
+    return state_names;
 }
 
-List convertToStringlist(List countList) {
+ListElement copyString(ListElement str) {
+    char* copy = malloc(strlen(str) + 1);
+    if (!copy) return NULL;
 
+    strcpy(copy, str);
+
+    return copy;
 }
+
+void freeString(ListElement str) {
+    free(str);
+}
+

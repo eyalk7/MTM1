@@ -8,7 +8,11 @@
 #include "judge.h"
 #include "list.h"
 
-#define SPACE ' '
+#define SPACECHAR ' '
+#define SPACE " "
+#define COMMA ","
+#define DASH "-"
+#define EXTRA_CHARACTERS_IN_STATE_PAIR 4
 
 typedef enum mapType_t {
     STATES_MAP,
@@ -56,7 +60,9 @@ List countListCreate(Map map);
 // Assumption: Given map has keys of type int*
 List countListCreate(Map map);
 List convertVotesToList(Map votes);
-void freeCountList(CountData* countTable);
+// Converts final results to list of state names
 List convertToStringlist(List finalResults, Map states);
+ListElement copyString(ListElement str);
+void  freeString(ListElement str);
 
 #endif //FUNCTIONS_H
