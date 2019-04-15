@@ -8,7 +8,11 @@
 #include "list.h"
 #include "state.h"
 
-#define SPACE ' '
+#define SPACECHAR ' '
+#define SPACE " "
+#define COMMA ","
+#define DASH "-"
+#define EXTRA_CHARACTERS_IN_STATE_PAIR 4
 
 typedef enum mapType_t {
     STATES_MAP,
