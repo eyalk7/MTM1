@@ -57,6 +57,6 @@ List countListCreate(Map map);
 List countListCreate(Map map);
 List convertVotesToList(Map votes);
 void freeCountList(CountData* countTable);
-List convertToStringlist(List countList);
+List convertToStringlist(List finalResults, Map states);
 
 #endif //FUNCTIONS_H

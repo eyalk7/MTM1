@@ -243,9 +243,11 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // check valid arguments
     if (eurovision == NULL || audiencePercent > 100 || audiencePercent < 0) return NULL;
 
-    List winners_list = listCreate(copyString, freeString);
     // if state map is empty return empty List
-    if (mapGetFirst(eurovision->States) == NULL) return winners_list;
+    if (mapGetFirst(eurovision->States) == NULL) {
+        List winners_list = listCreate(copyString, freeString);
+        return winners_list;
+    }
 
     // get the audience points
     List audience_points = audiencePoints(eurovision->States);
@@ -277,24 +279,50 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     //run on the audience_points and judges_points and add the calculated grade by the precentage
     CountData audience_points_iterator = listGetFirst(audience_points);
     CountData judges_points_iterator = listGetFirst(judges_points);
+    CountData final_points_iterator = listGetFirst(final_points);
+    while (final_points_iterator != NULL) {
+        assert(audience_points_iterator->id == judges_points_iterator->id);
+        assert(audience_points_iterator->id == final_points_iterator->id);
+        final_points_iterator->count = audiencePercent*(audience_points_iterator->count) + (100-audiencePercent)*(judges_points_iterator->count);
+        audience_points_iterator = listGetNext(audience_points);
+        judges_points_iterator = listGetNext(judges_points);
+        final_points_iterator = listGetNext(final_points);
+    }
 
+    // sort the final list
+    if (listSort(final_points, compareCountData) != LIST_SUCCESS) return NULL;
 
-    //outside function - compare - from big to small - if same grade, sort by stateId - low before high (!!)
+    // convert to names list
+    List winners_list = convertToStringlist(final_points, eurovision->States);
+    if (winners_list == NULL) return NULL;
 
-    //outside function - countListToWinnersList(final_grades) - in "functions"
-        //ListCreate with copyString and freeString functions
-        //insert all final_grade array names to the list by the new order (with mapGet)
+    // destroy all Lists
+    listDestroy(audience_points);
+    listDestroy(judges_points);
+    listDestroy(final_points);
 
-    // free all Lists
-
+    return winners_list;
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
-    return NULL;
-    //eurovision check
-    // get audiencePoints(eurovision)
-    //outside function - countListToWinnersList(final_grades) - in "functions"
+    // check valid arguments
+    if (eurovision == NULL) return NULL;
 
+    // get audience Points
+    List audience_points = audiencePoints(eurovision->States);
+    if (audience_points == NULL) return NULL;
+
+    // sort the final list
+    if (listSort(audience_points, compareCountData) != LIST_SUCCESS) return NULL;
+
+    // convert to names list
+    List winners_list = convertToStringlist(audience_points, eurovision->States);
+    if (winners_list == NULL) return NULL;
+
+    // destroy all lists
+    listDestroy(audience_points);
+
+    return winners_list;
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
