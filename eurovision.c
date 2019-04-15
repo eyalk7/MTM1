@@ -348,11 +348,11 @@ EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int
         return EUROVISION_SUCCESS;
     }
 
-    // sum up the current num of votes and wanted difference
-    diff += (*cur_votes_num);
+    // if there are votes sum up the current num of votes and wanted difference
+    if (cur_votes_num != NULL) diff += (*cur_votes_num);
 
-    // if the sum <= 0 delete the state from the votes map
-    if (diff <= 0) {
+    // if the sum <= 0 and there are votes - delete the state from the votes map
+    if (cur_votes_num != NULL && diff <= 0) {
         mapRemove(giver_data->votes, &stateTaker);
         return EUROVISION_SUCCESS;
     }
