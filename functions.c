@@ -64,41 +64,48 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
     return resultsContainState(tmp_judge, state_id);
 }
 
+/********************************************* COUNT LIST FUNCTIONS **********************************************************/
 
-List audiencePoints(Eurovision eurovision) {
-//outsize function - audiencePoints(eurovision) - returns List with all of the below:
-//getSize of States map - num_of_states
-// if state map is empty return empty List
-
-//outside function - audience_points = countListCreate(states map) - initialize to zero & add stateId
-
-//iterate with MAP_FOREACH in the States map:
-//outside function - convertVotesToCountList(votes map):
-//use countListCreate
-//fill votes numbers for each id
-//outside function - compare - from big to small - if same grade, sort by stateId - low before high (!!)
-
-//update the audience_points List by the ten most voted
-//enum {FIRST_PLACE, SECOND_PLACE....
-}
-
-/********************************************* COUNT TABLE STRUCT FUNCTIONS **********************************************************/
-
-CountData* countTableCreate(Map map) {
-
-}
-CountData* convertVotesToCountTable(Map votes) {
+ListElement copyCountData(ListElement elem) {
 
 }
 
-void sortCountTable(CountData* table) {
+void freeCountData(ListElement elem) {
 
 }
 
-void freeCountTable(CountData* countTable) {
+int compareCountData(ListElement data1, ListElement data2) {
 
 }
 
-List convertCountTableToList(CountData* countTable) {
+List countListCreate(Map map) {
+    List list = listCreate(copyCountData, freeCountData);
+    if (!list) return NULL;
+
+    MAP_FOREACH(MapKeyElement, key, map) {
+        int id = *(int*)key;
+        CountData data = malloc(sizeof(*data));
+        if (!data) {
+            listDestroy(list);
+            return NULL;
+        }
+
+        data->id = id;
+        
+    }
+
+    return list;
+}
+
+
+List convertVotesToList(Map votes) {
+
+}
+
+void freeCountList(CountData* countTable) {
+
+}
+
+List convertToStringlist(List countList) {
 
 }
