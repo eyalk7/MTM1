@@ -63,7 +63,7 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
     return resultsContainState(tmp_judge, state_id);
 }
 
-List audiencePoints(Map states) {
+List audiencePoints(Map states, int audiencePrecent) {
     // create an audience points list with all states & Ranking table
     List audience_points = countListCreate(states);
     Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
@@ -85,7 +85,7 @@ List audiencePoints(Map states) {
             // iterate on audience points list & find the state & add the points
             LIST_FOREACH(CountData, audience_points_iterator, audience_points){
                 if (audience_points_iterator->id == state_vote_iterator->id){
-                    audience_points_iterator->count += ranking[i];
+                    audience_points_iterator->count += audiencePrecent*ranking[i];
                 }
             }
             state_vote_iterator = listGetNext(state_vote);

@@ -250,7 +250,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     }
 
     // get the audience points
-    List points_list = audiencePoints(eurovision->States);
+    List points_list = audiencePoints(eurovision->States, audiencePercent);
     if (points_list == NULL) return NULL;
 
     // get the judges's points:
