@@ -64,7 +64,7 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
 }
 
 List audiencePoints(Map states, int audiencePrecent) {
-    // create an audience points list with all states & Ranking table
+    // create an audience points list with all states
     List audience_points = countListCreate(states);
     Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 

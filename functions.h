@@ -35,8 +35,6 @@ typedef enum {
     FIRST_PLACE = 12
 } Ranking;
 
-const Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
-
 typedef struct countData_t {
     int id;
     unsigned int count;

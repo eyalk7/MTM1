@@ -105,13 +105,13 @@ static void giveVotes(Eurovision eurovision, int giver, int taker, int votes) {
   }
 }
 
-/*
-static void setupEurovisionVotes2(Eurovision eurovision) {
+
+static void setupEurovisionVotes(Eurovision eurovision) {
   giveVotes(eurovision, 1, 12, 4);
   giveVotes(eurovision, 2, 8, 2);
   giveVotes(eurovision, 3, 4, 1);
 }
-*/
+
 
 /** total voters result:
  * 1:  12 + 0  + 0       = 12
@@ -128,7 +128,7 @@ static void setupEurovisionVotes2(Eurovision eurovision) {
  * 13: 0  + 0  + 1       = 1
  * 14: 0  + 0  + 2       = 2
  */
-static void setupEurovisionVotes(Eurovision eurovision) {
+static void setupEurovisionVotes2(Eurovision eurovision) {
   giveVotes(eurovision, 1, 2, 20);
   giveVotes(eurovision, 1, 3, 18);
   giveVotes(eurovision, 1, 5, 16);
@@ -271,7 +271,7 @@ bool testRemoveVote() {
  * 9:   2 * 0.6 +  6 * 0.4 = 3.6 (germany)
  * 15:  3 * 0.6 +  0 * 0.4 = 1.8 (sweden)
  */
-/*
+
 
 bool testRunContest() {
   Eurovision eurovision = setupEurovision();
@@ -317,14 +317,14 @@ bool testRunAudienceFavorite() {
   return true;
 }
 
-*/
-/* friendlies: malta-croatia, russia-moldova *//*
+
+ /* friendlies: malta-croatia, russia-moldova */
 
 bool testRunGetFriendlyStates() {
   Eurovision eurovision = setupEurovision();
   setupEurovisionStates(eurovision);
-  */
-/* setupEurovisionJudges(eurovision); *//*
+
+ setupEurovisionJudges(eurovision);
 
   setupEurovisionVotes2(eurovision);
 
@@ -340,4 +340,4 @@ bool testRunGetFriendlyStates() {
   eurovisionDestroy(eurovision);
   return true;
 }
-*/
+

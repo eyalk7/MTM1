@@ -18,8 +18,8 @@ int main(int argc, char *argv[]) {
     TEST(testRemoveJudge)
     TEST(testAddVote)
     TEST(testRemoveVote)
-    //TEST(testRunContest)
-    //TEST(testRunAudienceFavorite)
+    TEST(testRunContest)
+    TEST(testRunAudienceFavorite)
     //TEST(testRunGetFriendlyStates)
     return 0;
 }

@@ -238,6 +238,7 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // check valid arguments
     if (eurovision == NULL || audiencePercent > 100 || audiencePercent < 0) return NULL;
+    Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 
     // if state map is empty return empty List
     if (mapGetFirst(eurovision->States) == NULL) {
