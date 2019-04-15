@@ -91,7 +91,15 @@ List countListCreate(Map map) {
         }
 
         data->id = id;
-        
+        data->count = 0; // intialize to 0
+
+        ListResult result = listInsertFirst(list, data);
+        freeCountData(data);
+
+        if (result != LIST_SUCCESS) {
+            listDestroy(list);
+            return NULL;
+        }
     }
 
     return list;
@@ -99,11 +107,26 @@ List countListCreate(Map map) {
 
 
 List convertVotesToList(Map votes) {
+    List list = countListCreate(votes);
 
-}
+    LIST_FOREACH(ListElement, elem, list) {
+        CountData data = (CountData)elem;
+        VoteKeyElement id = &(data->id);
+        VoteDataElement voteData = mapGet(votes, id);
+        if (!voteData) {
+            listDestroy(list);
+            return NULL;
+        }
+        data->count = *(int*)voteData;
+    }
 
-void freeCountList(List countList) {
+    ListResult result = listSort(list, compareCountData);
+    if (result != LIST_SUCCESS) {
+        listDestroy(list);
+        return NULL;
+    }
 
+    return list;
 }
 
 List convertToStringlist(List countList) {
