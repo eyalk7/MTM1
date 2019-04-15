@@ -221,3 +221,24 @@ int compareIntPairs(ListElement data1, ListElement data2) {
     //else
     return SECOND_BEFORE_FIRST;
 }
+/********************** FRIENDLY STATE FUNCTIONS ***********************/
+
+int stringCompare(void* str1, void* str2) {
+    return strcmp(str1, str2);
+}
+void* copyInt(void* integer) {
+    return copyInteger(*(int*)integer);
+}
+void freeInt(void* integer) {
+    free(integer);
+}
+int compareInts(void* integer1, void* integer2) {
+    return compareIntegers(*(int*)integer1, *(int*)integer2);
+}
+
+bool statesAreFriendly(int* stateId1, int* favState1, int* stateId2, int* favState2) {
+    if (!stateId1 || !favState1 || !stateId2 || !favState2) return false;
+
+    return (*stateId1 == *favState2 && *stateId2 == *favState1);
+}
+
