@@ -64,23 +64,38 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
     return resultsContainState(tmp_judge, state_id);
 }
 
-/********************************************* COUNT TABLE FUNCTIONS **********************************************************/
+/********************************************* COUNT LIST FUNCTIONS **********************************************************/
 
-CountData* countTableCreate(Map map) {
-
-}
-CountData* convertVotesToCountTable(Map votes) {
+ListElement copyCountData(ListElement elem) {
 
 }
 
-void sortCountTable(CountData* table) {
+void freeCountData(ListElement elem) {
 
 }
 
-void freeCountTable(CountData* countTable) {
+int compareCountData(ListElement data1, ListElement data2) {
 
 }
 
-List convertCountTableToList(CountData* countTable) {
+List countListCreate(Map map) {
+    List list = listCreate(copyCountData, freeCountData);
+    if (!list) return NULL;
+
+    LIST_FOREACH(ListElement, elem, list) {
+
+    }
+}
+
+
+List convertVotesToList(Map votes) {
+
+}
+
+void freeCountList(CountData* countTable) {
+
+}
+
+List convertToStringlist(List countList) {
 
 }
