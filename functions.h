@@ -6,6 +6,7 @@
 #include "eurovision.h"
 #include "judge.h"
 #include "list.h"
+#include "state.h"
 
 #define SPACE ' '
 
@@ -15,7 +16,7 @@ typedef enum mapType_t {
 } MapType;
 
 typedef struct countData_t {
-    unsigned int id;
+    int id;
     int count;
 } *CountData;
 
@@ -39,7 +40,6 @@ List countListCreate(Map map);
 // Assumption: Given map has keys of type int*
 List countListCreate(Map map);
 List convertVotesToList(Map votes);
-void freeCountList(List countList);
 List convertToStringlist(List countList);
 
 #endif //FUNCTIONS_H
