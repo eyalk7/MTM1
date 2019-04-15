@@ -151,7 +151,7 @@ ListElement copyString(ListElement str) {
     return copy;
 }
 
-FreeListElement freeString(ListElement str) {
+void freeString(ListElement str) {
     free(str);
 }
 
