@@ -266,47 +266,24 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
             int *judge_results = iterator->results;
             for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
                 // iterate on judges points list & find the state & add the points
-                LIST_FOREACH(CountData, judges_points_iterator, judges_points) {
+                LIST_FOREACH(CountData, judges_points_iterator, points_list) {
                     if (judge_results[i] == judges_points_iterator->id) {
-                        judges_points_iterator->count += ranking[i];
+                        judges_points_iterator->count += (100-audiencePercent)*ranking[i];
                     }
                 }
             }
         }
     }
 
-    // create final_points list and calculate the points according to the audiencePrecent
-    List final_points = countListCreate(eurovision->States);
-    if (final_points == NULL){
-        listDestroy(audience_points);
-        listDestroy(judges_points);
-        return NULL;
-    }
-
-    //run on the audience_points and judges_points and add the calculated grade by the precentage
-    CountData audience_points_iterator = listGetFirst(audience_points);
-    CountData judges_points_iterator = listGetFirst(judges_points);
-    CountData final_points_iterator = listGetFirst(final_points);
-    while (final_points_iterator != NULL) {
-        assert(audience_points_iterator->id == judges_points_iterator->id);
-        assert(audience_points_iterator->id == final_points_iterator->id);
-        final_points_iterator->count = audiencePercent*(audience_points_iterator->count) + (100-audiencePercent)*(judges_points_iterator->count);
-        audience_points_iterator = listGetNext(audience_points);
-        judges_points_iterator = listGetNext(judges_points);
-        final_points_iterator = listGetNext(final_points);
-    }
-
     // sort the final list
-    if (listSort(final_points, compareCountData) != LIST_SUCCESS) return NULL;
+    if (listSort(points_list, compareCountData) != LIST_SUCCESS) return NULL;
 
     // convert to names list
-    List winners_list = convertToStringlist(final_points, eurovision->States);
+    List winners_list = convertToStringlist(points_list, eurovision->States);
     if (winners_list == NULL) return NULL;
 
     // destroy all Lists
-    listDestroy(audience_points);
-    listDestroy(judges_points);
-    listDestroy(final_points);
+    listDestroy(points_list);
 
     return winners_list;
 }
