@@ -64,22 +64,25 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
 }
 
 List audiencePoints(Map states) {
-    // create a points list with all states & Ranking table
+    // create an audience points list with all states & Ranking table
     List audience_points = countListCreate(states);
-    Ranking ranking[10] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
+    Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 
-    // iterate on the States map:
+    // iterate on the States map, check each state's top 10 & update the points list
     MAP_FOREACH(int*, iterator, states) {
         // get the state's data
         StateData state_data = mapGet(states, iterator);
         assert(state_data != NULL);
 
-        // create the state's vote list:
+        // create the state's sorted vote list:
         List state_vote = convertVotesToList(state_data->votes);
 
-        //update the audience_points array by the ten most voted
+        // update the audience_points list according to the top 10
         CountData state_vote_iterator = listGetFirst(state_vote);
         for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+            // if end of state's votes list, break
+            if (state_vote_iterator == NULL) break;
+            // iterate on audience points list & find the state & add the points
             LIST_FOREACH(CountData, audience_points_iterator, audience_points){
                 if (audience_points_iterator->id == state_vote_iterator->id){
                     audience_points_iterator->count += ranking[i];
@@ -87,8 +90,13 @@ List audiencePoints(Map states) {
             }
             state_vote_iterator = listGetNext(state_vote);
         }
+        // destroy the state_vote list
+        listDestroy(state_vote);
     }
+
+    return audience_points;
 }
+
 /********************************************* COUNT LIST FUNCTIONS **********************************************************/
 
 ListElement copyCountData(ListElement elem) {
