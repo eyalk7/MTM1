@@ -99,11 +99,11 @@ List audiencePoints(Map states, int audiencePrecent) {
 
 /********************************************* COUNT LIST FUNCTIONS **********************************************************/
 
-ListElement copyCountData(ListElement elem) {
+ListElement copyIntPair(ListElement elem) {
 
 }
 
-void freeCountData(ListElement elem) {
+void freeIntPair(ListElement elem) {
 
 }
 
