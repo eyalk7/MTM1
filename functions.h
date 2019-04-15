@@ -28,15 +28,18 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
 
-CountData* audiencePoints(Eurovision eurovision);
+/********************** COUNT LIST FUNCTIONS ***********************/
 
-/********************** COUNT TABLE STRUCT FUNCTIONS ***********************/
+ListElement copyCountData(ListElement elem);
+void freeCountData(ListElement elem);
+int compareCountData(ListElement data1, ListElement data2);
 
-CountData* countTableCreate(Map map);
-CountData* convertVotesToCountTable(Map votes);
-void sortCountTable(CountData* table);
-void freeCountTable(CountData* countTable);
-List convertCountTableToList(CountData* countTable);
+List countListCreate(Map map);
 
+// Assumption: Given map has keys of type int*
+List countListCreate(Map map);
+List convertVotesToList(Map votes);
+void freeCountList(CountData* countTable);
+List convertToStringlist(List countList);
 
 #endif //FUNCTIONS_H
