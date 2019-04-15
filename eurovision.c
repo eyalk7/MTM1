@@ -24,7 +24,7 @@ enum {
 };
 
 ListElement copyString(ListElement str);
-void freeString(ListElement str);
+FreeListElement freeString(ListElement str);
 EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int diff);
 
 struct eurovision_t {
@@ -253,9 +253,11 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
 }
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
-    return NULL;
-    // eurovision NULL check
-    //check precent (1-100) else return NULL
+    // check valid arguments
+    if (eurovision == NULL || audiencePercent > 100 || audiencePercent < 0) {
+        return NULL;
+    }
+    List winners_list = listCreate(copyString, freeString);
     // if state map is empty return empty List
 
         //outsize function - audiencePoints(eurovision) - returns CountData* array with all of the below:
@@ -330,7 +332,7 @@ ListElement copyString(ListElement str) {
     return copy;
 }
 
-void freeString(ListElement str) {
+FreeListElement freeString(ListElement str) {
     free(str);
 }
 
