@@ -79,18 +79,19 @@ int compareCountData(ListElement data1, ListElement data2) {
 }
 
 List countListCreate(Map map) {
+    // check parameter?
+
     List list = listCreate(copyCountData, freeCountData);
     if (!list) return NULL;
 
-    MAP_FOREACH(MapKeyElement, key, map) {
-        int id = *(int*)key;
+    MAP_FOREACH(int*, key, map) {
         CountData data = malloc(sizeof(*data));
         if (!data) {
             listDestroy(list);
             return NULL;
         }
 
-        data->id = id;
+        data->id = *key;
         data->count = 0; // intialize to 0
 
         ListResult result = listInsertFirst(list, data);
@@ -107,17 +108,17 @@ List countListCreate(Map map) {
 
 
 List convertVotesToList(Map votes) {
+    // check parameter?
+
     List list = countListCreate(votes);
 
-    LIST_FOREACH(ListElement, elem, list) {
-        CountData data = (CountData)elem;
-        VoteKeyElement id = &(data->id);
-        VoteDataElement voteData = mapGet(votes, id);
-        if (!voteData) {
+    LIST_FOREACH(CountData, elem, list) {
+        int* data = mapGet(votes, &(elem->id));
+        if (!data) {
             listDestroy(list);
             return NULL;
         }
-        data->count = *(int*)voteData;
+        elem->count = *data;
     }
 
     ListResult result = listSort(list, compareCountData);
@@ -129,6 +130,28 @@ List convertVotesToList(Map votes) {
     return list;
 }
 
-List convertToStringlist(List countList) {
+List convertToStringlist(List finalResults, Map states) {
+    // check parameters?
+    List states = listCreate(copyString, freeString);
+
+    LIST_FOREACH(CountData, elem, finalResults) {
+        int stateId = elem->id;
+        StateData data = mapGet(states, &stateId);
+        data->name
+    }
 
 }
+
+ListElement copyString(ListElement str) {
+    char* copy = malloc(strlen(str) + 1);
+    if (!copy) return NULL;
+
+    strcpy(copy, str);
+
+    return copy;
+}
+
+FreeListElement freeString(ListElement str) {
+    free(str);
+}
+
