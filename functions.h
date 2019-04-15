@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "map.h"
 #include "eurovision.h"
+#include "state.h"
 #include "judge.h"
 #include "list.h"
 
@@ -14,8 +15,21 @@ typedef enum mapType_t {
     JUDGES_MAP
 } MapType;
 
+typedef enum {
+    TENTH_PLACE = 1,
+    NINTH_PLACE,
+    EIGHT_PLACE,
+    SEVENTH_PLACE,
+    SIXTH_PLACE,
+    FIFTH_PLACE,
+    FOURTH_PLACE,
+    THIRD_PLACE,
+    SECOND_PLACE = 10,
+    FIRST_PLACE = 12
+} Ranking;
+
 typedef struct countData_t {
-    unsigned int id;
+    int id;
     int count;
 } *CountData;
 
@@ -27,6 +41,7 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
+List audiencePoints(Map states);
 
 /********************** COUNT LIST FUNCTIONS ***********************/
 

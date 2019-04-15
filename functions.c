@@ -3,7 +3,6 @@
 #include <assert.h>
 #include "functions.h"
 
-
 EurovisionResult isIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
     assert(map != NULL);
@@ -64,6 +63,32 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
     return resultsContainState(tmp_judge, state_id);
 }
 
+List audiencePoints(Map states) {
+    // create a points list with all states & Ranking table
+    List audience_points = countListCreate(states);
+    Ranking ranking[10] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
+
+    // iterate on the States map:
+    MAP_FOREACH(int*, iterator, states) {
+        // get the state's data
+        StateData state_data = mapGet(states, iterator);
+        assert(state_data != NULL);
+
+        // create the state's vote list:
+        List state_vote = convertVotesToList(state_data->votes);
+
+        //update the audience_points array by the ten most voted
+        CountData state_vote_iterator = listGetFirst(state_vote);
+        for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+            LIST_FOREACH(CountData, audience_points_iterator, audience_points){
+                if (audience_points_iterator->id == state_vote_iterator->id){
+                    audience_points_iterator->count += ranking[i];
+                }
+            }
+            state_vote_iterator = listGetNext(state_vote);
+        }
+    }
+}
 /********************************************* COUNT LIST FUNCTIONS **********************************************************/
 
 ListElement copyCountData(ListElement elem) {
