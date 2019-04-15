@@ -107,7 +107,7 @@ void freeIntPair(ListElement elem) {
 
 }
 
-int compareCountData(ListElement data1, ListElement data2) {
+int compareIntPairs(ListElement data1, ListElement data2) {
 
 }
 
