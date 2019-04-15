@@ -40,6 +40,9 @@ List countListCreate(Map map);
 // Assumption: Given map has keys of type int*
 List countListCreate(Map map);
 List convertVotesToList(Map votes);
-List convertToStringlist(List countList);
+// Converts final results to list of state names
+List convertToStringlist(List finalResults, Map states);
+ListElement copyString(ListElement str);
+FreeListElement freeString(ListElement str);
 
 #endif //FUNCTIONS_H
