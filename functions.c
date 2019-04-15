@@ -114,7 +114,7 @@ int compareIntPairs(ListElement data1, ListElement data2) {
 List countListCreate(Map map) {
     // check parameter?
 
-    List list = listCreate(copyCountData, freeCountData);
+    List list = listCreate(copyIntPair, freeIntPair);
     if (!list) return NULL;
 
     MAP_FOREACH(int*, key, map) {
@@ -128,7 +128,7 @@ List countListCreate(Map map) {
         data->count = 0; // intialize to 0
 
         ListResult result = listInsertFirst(list, data);
-        freeCountData(data);
+        freeIntPair(data);
 
         if (result != LIST_SUCCESS) {
             listDestroy(list);
@@ -154,7 +154,7 @@ List convertVotesToList(Map votes) {
         elem->count = *data;
     }
 
-    ListResult result = listSort(list, compareCountData);
+    ListResult result = listSort(list, compareIntPairs);
     if (result != LIST_SUCCESS) {
         listDestroy(list);
         return NULL;
@@ -198,3 +198,38 @@ void freeString(ListElement str) {
     free(str);
 }
 
+ListElement copyIntPair(ListElement elem) {
+    if (elem == NULL) return NULL;
+
+    CountData new_elem = malloc(sizeof(*elem));
+    if (new_elem == NULL) return NULL;
+
+    CountData elem_p = elem;
+    new_elem->count = elem_p->count;
+    new_elem->id = elem_p->id;
+
+    return new_elem;
+}
+
+void freeIntPair(ListElement elem) {
+    free(elem);
+}
+
+int compareIntPairs(ListElement data1, ListElement data2) {
+    if (data1 == NULL || data2 == NULL) return NULL;
+
+    CountData data1_p = data1;
+    CountData data2_p = data2;
+
+    // if data1 need to come before data2 return POSITIVE_NUM, else return NEGATIVE_NUM
+
+    if (data1_p->count == data2_p->count) {
+        if (data1_p->id < data2_p->id) return POSITIVE_NUM;
+        //else
+        return NEGATIVE_NUM;
+    }
+
+    if (data1_p->count > data2_p->count) return POSITIVE_NUM;
+    //else
+    return NEGATIVE_NUM;
+}

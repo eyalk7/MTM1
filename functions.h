@@ -14,6 +14,8 @@
 #define DASH "-"
 #define NUM_OF_EXTRA_CHARS 4
 #define ONE_HUNDREND_PRECENT 1
+#define POSITIVE_NUM 1
+#define NEGATIVE_NUM -1
 
 typedef enum mapType_t {
     STATES_MAP,
@@ -59,7 +61,6 @@ void freeString(ListElement str);
 ListElement copyIntPair(ListElement elem);
 void freeIntPair(ListElement elem);
 int compareIntPairs(ListElement data1, ListElement data2);
-
 
 List countListCreate(Map map);
 
