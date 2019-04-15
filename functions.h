@@ -39,7 +39,7 @@ List countListCreate(Map map);
 // Assumption: Given map has keys of type int*
 List countListCreate(Map map);
 List convertVotesToList(Map votes);
-void freeCountList(CountData* countTable);
+void freeCountList(List countList);
 List convertToStringlist(List countList);
 
 #endif //FUNCTIONS_H
