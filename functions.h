@@ -57,7 +57,7 @@ void freeString(ListElement str);
 
 ListElement copyIntPair(ListElement elem);
 void freeIntPair(ListElement elem);
-int compareCountData(ListElement data1, ListElement data2);
+int compareIntPairs(ListElement data1, ListElement data2);
 
 
 List countListCreate(Map map);
