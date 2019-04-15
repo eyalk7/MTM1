@@ -132,14 +132,24 @@ List convertVotesToList(Map votes) {
 
 List convertToStringlist(List finalResults, Map states) {
     // check parameters?
-    List states = listCreate(copyString, freeString);
+    List state_names = listCreate(copyString, freeString);
 
     LIST_FOREACH(CountData, elem, finalResults) {
         int stateId = elem->id;
         StateData data = mapGet(states, &stateId);
-        data->name
+        if (!data) {
+            listDestroy(state_names);
+            return NULL;
+        }
+
+        ListResult result = listInsertLast(state_names, data->name);
+        if (result != LIST_SUCCESS) {
+            listDestroy(state_names);
+            return NULL;
+        }
     }
 
+    return state_names;
 }
 
 ListElement copyString(ListElement str) {
