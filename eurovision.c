@@ -250,14 +250,17 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     }
 
     // get the audience points
-    List audience_points = audiencePoints(eurovision->States);
-    if (audience_points == NULL) return NULL;
+    List points_list = audiencePoints(eurovision->States);
+    if (points_list == NULL) return NULL;
 
     // get the judges's points:
-    List judges_points = countListCreate(eurovision->States);
-    if (judges_points == NULL) return NULL;
+    /*List judges_points = countListCreate(eurovision->States);
+    if (judges_points == NULL) {
+        listDestroy(audience_points);
+        return NULL;
+    }*/
 
-    // if there are judges, update the judges_points list according to the judges's results
+    // if there are judges, update the points list according to the judges's results
     if (mapGetFirst(eurovision->Judges) != NULL) {
         MAP_FOREACH(JudgeData, iterator, eurovision->Judges) {
             int *judge_results = iterator->results;
@@ -274,7 +277,11 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 
     // create final_points list and calculate the points according to the audiencePrecent
     List final_points = countListCreate(eurovision->States);
-    if (final_points == NULL) return NULL;
+    if (final_points == NULL){
+        listDestroy(audience_points);
+        listDestroy(judges_points);
+        return NULL;
+    }
 
     //run on the audience_points and judges_points and add the calculated grade by the precentage
     CountData audience_points_iterator = listGetFirst(audience_points);

@@ -36,7 +36,7 @@ const Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, TH
 
 typedef struct countData_t {
     int id;
-    int count;
+    unsigned int count;
 } *CountData;
 
 
