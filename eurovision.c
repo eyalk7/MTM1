@@ -298,69 +298,95 @@ List eurovisionRunAudienceFavorite(Eurovision eurovision) {
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
-    return NULL;
     //getSize of States map - num_of_states
+    int num_of_states = mapGetSize(eurovision->States);
+
     // if state map is empty return empty List
+    if (num_of_states == 0) return listCreate(copyString, freeString);
 
     //create two dimnesinal int array - state_favorites[2][num_of_states]
+    Map state_favorites = mapCreate(copyInt, copyInt, freeInt, freeInt, compareInts);
+
+////////////////////////////INIIIALIZE STATE FAVORITES -> outside function////////////////////////////////////////
     //iterate on the states map and fill on each state:
+    MAP_FOREACH(int*, stateId, eurovision->States) {
+        StateData state = mapGet(eurovision->States, stateId);
+        if (!state) {
+            mapDestroy(state_favorites);
+            return NULL;
+        }
         //insert stateId first column
-        //outside function - getFavoriteState(votes map) - second column
+        //outside function - getFavoriteStates(votes map) - second column
+        int favState = getFavoriteState(state->votes);
+        MapResult result = mapPut(state_favorites, stateId, &favState);
+
+        if (result != MAP_SUCCESS) {
+            mapDestroy(state_favorites);
+            return NULL;
+        }
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+    List friendly_states = listCreate(copyString, freeString);
+    if (!friendly_states) {
+        mapDestroy(state_favorites);
+        return NULL;
+    }
 
     //iterate on the array, in each row:
+    MAP_FOREACH(int*, stateId, state_favorites) {
         // iterate on the entire array and check if "it's a match", skip on "-1"
-        // if it is a match save the states pair names on the list - after lexicorgraphic sort
-        // change to "-1" the both rows
+        int *favState1 = mapGet(state_favorites, stateId);
+        int *stateId2 = favState1;
+        int *favState2 = mapGet(state_favorites, stateId2);
 
-   // sort the strings array lexicorgraphic
-}
+        // areFriendly checks if the pointers are NULL ! :)
+        if (statesAreFriendly(stateId, favState1, stateId2, favState2)) {
+            // if it is a match save the states pair names on the list - after lexicographical sort
+            StateData state1 = mapGet(eurovision->States, stateId);
+            StateData state2 = mapGet(eurovision->States, stateId2);
 
-EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int diff) {
-    // check valid arguments
-    if (eurovision == NULL) {
-        return EUROVISION_NULL_ARGUMENT;
-    }
-    EurovisionResult id_validation1 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
-    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID ||
-           id_validation1 == EUROVISION_STATE_NOT_EXIST);
-    if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) {
-        return id_validation1;
-    }
-    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateTaker);
-    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID ||
-           id_validation2 == EUROVISION_STATE_NOT_EXIST);
-    if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) {
-        return id_validation2;
-    }
+            // change both rows to "-1"
+            *favState1 = NO_FAVORITE_STATE;
+            *favState2 = NO_FAVORITE_STATE;
+            ////////////////////////////// CREATE STATE PAIR STRING - OUTSIDE FUNCTION //////////////////////////////
 
-    // check that stategiver != stateTaker
-    if (stateGiver == stateTaker) {
-        return EUROVISION_SAME_STATE;
-    }
+            char *name1 = state1->name;
+            char *name2 = state2->name;
 
-    // check current num of votes for stateTaker in stateGiver's votes map
-    StateData giver_data = mapGet(eurovision->States, &stateGiver);
-    assert(giver_data != NULL);
-    int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
+            char *statePair = malloc(strlen(name1) + strlen(name2) + NUM_OF_EXTRA_CHARS + 1);
+            char *min = name2, *max = name1;
+            if (strcmp(name1, name2) < 0) {
+                min = name1;
+                max = name2;
+            }
+            strcat(statePair, min);
+            strcat(statePair, SPACE);
+            strcat(statePair, DASH);
+            strcat(statePair, SPACE);
+            strcat(statePair, max);
+            strcat(statePair, COMMA);
 
-    // if no votes & diff <= 0 just return
-    if (cur_votes_num == NULL && diff <= 0) {
-        return EUROVISION_SUCCESS;
-    }
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // if there are votes sum up the current num of votes and wanted difference
-    if (cur_votes_num != NULL) diff += (*cur_votes_num);
-
-    // if the sum <= 0 and there are votes - delete the state from the votes map
-    if (cur_votes_num != NULL && diff <= 0) {
-        mapRemove(giver_data->votes, &stateTaker);
-        return EUROVISION_SUCCESS;
+            ListResult result = listInsertLast(friendly_states, statePair);
+            free(statePair);
+            if (result != LIST_SUCCESS) {
+                mapDestroy(state_favorites);
+                listDestroy(friendly_states);
+                return NULL;
+            }
+        }
     }
 
-    // else update the votes map
-    if (mapPut(giver_data->votes, &stateTaker, &diff) == MAP_OUT_OF_MEMORY) {
-        return EUROVISION_OUT_OF_MEMORY;
+
+    mapDestroy(state_favorites);
+
+    // sort the strings array lexicorgraphically
+    if (listSort(friendly_states, stringCompare) != LIST_SUCCESS) {
+        listDestroy(friendly_states);
+        return NULL;
     }
 
-    return EUROVISION_SUCCESS;
+    return friendly_states;
 }
