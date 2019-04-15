@@ -28,6 +28,8 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
 
+CountData* audiencePoints(Eurovision eurovision);
+
 /********************** COUNT TABLE STRUCT FUNCTIONS ***********************/
 
 CountData* countTableCreate(Map map);
@@ -35,5 +37,6 @@ CountData* convertVotesToCountTable(Map votes);
 void sortCountTable(CountData* table);
 void freeCountTable(CountData* countTable);
 List convertCountTableToList(CountData* countTable);
+
 
 #endif //FUNCTIONS_H

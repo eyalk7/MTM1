@@ -64,6 +64,24 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
     return resultsContainState(tmp_judge, state_id);
 }
 
+
+List audiencePoints(Eurovision eurovision) {
+//outsize function - audiencePoints(eurovision) - returns List with all of the below:
+//getSize of States map - num_of_states
+// if state map is empty return empty List
+
+//outside function - audience_points = countListCreate(states map) - initialize to zero & add stateId
+
+//iterate with MAP_FOREACH in the States map:
+//outside function - convertVotesToCountList(votes map):
+//use countListCreate
+//fill votes numbers for each id
+//outside function - compare - from big to small - if same grade, sort by stateId - low before high (!!)
+
+//update the audience_points List by the ten most voted
+//enum {FIRST_PLACE, SECOND_PLACE....
+}
+
 /********************************************* COUNT TABLE STRUCT FUNCTIONS **********************************************************/
 
 CountData* countTableCreate(Map map) {
