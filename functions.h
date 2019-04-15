@@ -47,15 +47,18 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
+
 List audiencePoints(Map states, int audiencePrecent);
+
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
 /********************** COUNT LIST FUNCTIONS ***********************/
 
-ListElement copyCountData(ListElement elem);
-void freeCountData(ListElement elem);
+ListElement copyIntPair(ListElement elem);
+void freeIntPair(ListElement elem);
 int compareCountData(ListElement data1, ListElement data2);
+
 
 List countListCreate(Map map);
 
