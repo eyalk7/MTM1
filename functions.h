@@ -69,4 +69,12 @@ List convertVotesToList(Map votes);
 // Converts final results to list of state names
 List convertToStringlist(List finalResults, Map states);
 
+/********************** FRIENDLY STATE FUNCTIONS ***********************/
+int stringCompare(void* str1, void* str2);
+void* copyInt(void* integer);
+void freeInt(void* integer);
+int compareInts(void* integer1, void* integer2);
+
+bool statesAreFriendly(int *stateId1, int *favState1, int *stateId2, int *favState2);
+
 #endif //FUNCTIONS_H
