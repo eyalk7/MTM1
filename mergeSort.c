@@ -30,8 +30,8 @@ char* errorCodeToString(ErrorCode error);
 *   EMPTY_LIST error if an empty list was sent
 *   UNSORTED_LIST if one of the given lists is not sorted
 * 	NULL_ARGUMENT error if NULL pointer was sent for mergedOut
-*   SUCCESS if there was no memory error and the merged list was created successfully
-*
+*   SUCCESS if there was no memory error
+*           and the merged list was created successfully
 */
 ErrorCode mergeSortedLists(Node list1, Node list2, Node *mergedOut);
 
@@ -41,6 +41,19 @@ ErrorCode mergeSortedLists(Node list1, Node list2, Node *mergedOut);
 * @param lst - pointer to first node in list
 */
 void freeList(Node list);
+
+/**
+ * Copies one list into the end of another.
+ * The destination list is altered but not the source list.
+ * All the pointers given are altered.
+ * @param dest - Pointer to last node in the list we copy into.
+ * @param source - Pointer to a node in the list to copy from (until the end).
+ * @param prevNode - Pointer to the node before the given pointer (dest) in order to link previous nodes
+ * @return
+ *  SUCCESS if copied successfully
+ *  MEMORY_ERROR if a memory allocation failed
+ */
+ErrorCode listCopy(Node *dest, Node *source, Node *prevNode);
 
 void printList(Node lst);
 
@@ -138,18 +151,12 @@ ErrorCode mergeSortedLists(Node list1, Node list2, Node *mergedOut) {
     if (ptr2) {
         ptr = ptr2;
     }
-    while (ptr) {
-        node = malloc(sizeof(*node));
-        if (!node) {
-            // allocation failed
-            freeList(*mergedOut);       // free all nodes created so far
-            return MEMORY_ERROR;
-        }
 
-        node->x = ptr->x;          // set node data
-        prevNode->next = node;     // set previous node's next
-        prevNode = node;           // save current node for next iteration
-        ptr = ptr->next;           // increment pointer
+    // copy the leftover to the end of the merged list
+    ErrorCode code = listCopy(&node, &ptr, &prevNode);
+    if (code == MEMORY_ERROR) {
+        freeList(*mergedOut);       // free all nodes created so far
+        return MEMORY_ERROR;        // allocation failed
     }
 
     node->next = NULL;             // set last node to point to null
@@ -163,6 +170,19 @@ void freeList(Node list) {
         free(temp);
     }
     // if NULL pointer is received nothing is done
+}
+
+ErrorCode listCopy(Node *dest, Node *source, Node *prevNode) {
+    while (*source) {
+        *dest = malloc(sizeof(**dest));
+        if (!*dest) return MEMORY_ERROR;    // allocation failed
+        (*dest)->x = (*source)->x;          // set node data
+        (*prevNode)->next = *dest;          // set previous node's next
+        *prevNode = *dest;                  // save current node for next iteration
+        *source = (*source)->next;          // increment pointer
+    }
+
+    return SUCCESS;
 }
 
 void printList(Node lst) {
