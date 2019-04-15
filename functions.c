@@ -209,15 +209,15 @@ int compareIntPairs(ListElement data1, ListElement data2) {
     CountData data1_p = data1;
     CountData data2_p = data2;
 
-    // if data1 need to come before data2 return POSITIVE_NUM, else return NEGATIVE_NUM
+    // if data1 need to come before data2 return FIRST_BEFORE_SECOND, else return SECOND_BEFORE_FIRST
 
     if (data1_p->count == data2_p->count) {
-        if (data1_p->id < data2_p->id) return POSITIVE_NUM;
+        if (data1_p->id < data2_p->id) return FIRST_BEFORE_SECOND;
         //else
-        return NEGATIVE_NUM;
+        return SECOND_BEFORE_FIRST;
     }
 
-    if (data1_p->count > data2_p->count) return POSITIVE_NUM;
+    if (data1_p->count > data2_p->count) return FIRST_BEFORE_SECOND;
     //else
-    return NEGATIVE_NUM;
+    return SECOND_BEFORE_FIRST;
 }
