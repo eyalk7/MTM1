@@ -99,18 +99,6 @@ List audiencePoints(Map states, int audiencePrecent) {
 
 /********************************************* COUNT LIST FUNCTIONS **********************************************************/
 
-ListElement copyIntPair(ListElement elem) {
-
-}
-
-void freeIntPair(ListElement elem) {
-
-}
-
-int compareIntPairs(ListElement data1, ListElement data2) {
-
-}
-
 List countListCreate(Map map) {
     // check parameter?
 
