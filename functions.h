@@ -12,7 +12,7 @@
 #define SPACE " "
 #define COMMA ","
 #define DASH "-"
-#define EXTRA_CHARACTERS_IN_STATE_PAIR 4
+#define NUM_OF_EXTRA_CHARS 4
 #define ONE_HUNDREND_PRECENT 1
 
 typedef enum mapType_t {
@@ -48,13 +48,18 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
+
 List audiencePoints(Map states, int audiencePrecent);
+
+ListElement copyString(ListElement str);
+void freeString(ListElement str);
 
 /********************** COUNT LIST FUNCTIONS ***********************/
 
-ListElement copyCountData(ListElement elem);
-void freeCountData(ListElement elem);
-int compareCountData(ListElement data1, ListElement data2);
+ListElement copyIntPair(ListElement elem);
+void freeIntPair(ListElement elem);
+int compareIntPairs(ListElement data1, ListElement data2);
+
 
 List countListCreate(Map map);
 
@@ -63,7 +68,5 @@ List countListCreate(Map map);
 List convertVotesToList(Map votes);
 // Converts final results to list of state names
 List convertToStringlist(List finalResults, Map states);
-ListElement copyString(ListElement str);
-void  freeString(ListElement str);
 
 #endif //FUNCTIONS_H
