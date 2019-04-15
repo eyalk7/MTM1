@@ -14,8 +14,8 @@
 #define DASH "-"
 #define NUM_OF_EXTRA_CHARS 4
 #define ONE_HUNDREND_PRECENT 1
-#define FIRST_BEFORE_SECOND -1
-#define SECOND_BEFORE_FIRST 1
+#define FIRST_BEFORE_SECOND 1
+#define SECOND_BEFORE_FIRST -1
 
 typedef enum mapType_t {
     STATES_MAP,
