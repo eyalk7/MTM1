@@ -102,7 +102,7 @@ List convertVotesToList(Map votes) {
 
 }
 
-void freeCountList(CountData* countTable) {
+void freeCountList(List countList) {
 
 }
 
