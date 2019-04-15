@@ -7,7 +7,7 @@
 
 typedef struct JudgeData_t {
     char *name;
-    unsigned int states[NUMBER_OF_STATES_TO_RANK];   // list of stateIds in order of points to give
+    unsigned int results[NUMBER_OF_STATES_TO_RANK];   // list of stateIds in order of points to give
 } *JudgeData;
 
 typedef void* JudgeDataElement;

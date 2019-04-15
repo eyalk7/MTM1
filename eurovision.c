@@ -194,7 +194,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
     strcpy(tmp_judgeName, judgeName);
     tmp_judge_data->name = tmp_judgeName;
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        tmp_judge_data->states[i] = judgeResults[i];
+        tmp_judge_data->results[i] = judgeResults[i];
     }
 
     // add the judge to the "Judges" map in "eurovision"
@@ -247,18 +247,37 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // if state map is empty return empty List
     if (mapGetFirst(eurovision->States) == NULL) return winners_list;
 
-        //outsize function - audiencePoints(eurovision) - returns List with all of the below:
+    // get the audience points
+    List audience_points = audiencePoints(eurovision->States);
+    if (audience_points == NULL) return NULL;
 
-    //outside function - judges_points = countListCreate(states map) - initialize to zero & add stateId
+    // get the judges's points:
+    List judges_points = countListCreate(eurovision->States);
+    if (judges_points == NULL) return NULL;
 
-    //iterate on Judges map and for each judge:
-        //update the judges_grades List by the judge's results
-        //enum {FIRST_PLACE, SECOND_PLACE....
+    // if there are judges, update the judges_points list according to the judges's results
+    if (mapGetFirst(eurovision->Judges) != NULL) {
+        MAP_FOREACH(JudgeData, iterator, eurovision->Judges) {
+            int *judge_results = iterator->results;
+            for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+                // iterate on judges points list & find the state & add the points
+                LIST_FOREACH(CountData, judges_points_iterator, judges_points) {
+                    if (judge_results[i] == judges_points_iterator->id) {
+                        judges_points_iterator->count += ranking[i];
+                    }
+                }
+            }
+        }
+    }
 
-    //outside function - final_points = countListCreate(states map) - initialize to zero & add stateId
+    // create final_points list and calculate the points according to the audiencePrecent
+    List final_points = countListCreate(eurovision->States);
+    if (final_points == NULL) return NULL;
 
-        //run on the audience_points and judges_points and add the :
-            //the calculated grade by the precentage
+    //run on the audience_points and judges_points and add the calculated grade by the precentage
+    CountData audience_points_iterator = listGetFirst(audience_points);
+    CountData judges_points_iterator = listGetFirst(judges_points);
+
 
     //outside function - compare - from big to small - if same grade, sort by stateId - low before high (!!)
 
