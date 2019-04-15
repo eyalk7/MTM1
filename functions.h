@@ -13,6 +13,7 @@
 #define COMMA ","
 #define DASH "-"
 #define EXTRA_CHARACTERS_IN_STATE_PAIR 4
+#define ONE_HUNDREND_PRECENT 1
 
 typedef enum mapType_t {
     STATES_MAP,

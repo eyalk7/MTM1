@@ -253,13 +253,6 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     List points_list = audiencePoints(eurovision->States, audiencePercent);
     if (points_list == NULL) return NULL;
 
-    // get the judges's points:
-    /*List judges_points = countListCreate(eurovision->States);
-    if (judges_points == NULL) {
-        listDestroy(audience_points);
-        return NULL;
-    }*/
-
     // if there are judges, update the points list according to the judges's results
     if (mapGetFirst(eurovision->Judges) != NULL) {
         MAP_FOREACH(JudgeData, iterator, eurovision->Judges) {
@@ -276,15 +269,14 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     }
 
     // sort the final list
-    if (listSort(points_list, compareCountData) != LIST_SUCCESS) return NULL;
+    if (listSort(points_list, compareCountData) != LIST_SUCCESS){
+        listDestroy(points_list);
+        return NULL;
+    }
 
-    // convert to names list
+    // convert to names list & destroy & return
     List winners_list = convertToStringlist(points_list, eurovision->States);
-    if (winners_list == NULL) return NULL;
-
-    // destroy all Lists
     listDestroy(points_list);
-
     return winners_list;
 }
 
@@ -293,19 +285,18 @@ List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     if (eurovision == NULL) return NULL;
 
     // get audience Points
-    List audience_points = audiencePoints(eurovision->States);
+    List audience_points = audiencePoints(eurovision->States, ONE_HUNDREND_PRECENT);
     if (audience_points == NULL) return NULL;
 
     // sort the final list
-    if (listSort(audience_points, compareCountData) != LIST_SUCCESS) return NULL;
+    if (listSort(audience_points, compareCountData) != LIST_SUCCESS) {
+        listDestroy(audience_points);
+        return NULL;
+    }
 
-    // convert to names list
+    // convert to names list & destroy list & return
     List winners_list = convertToStringlist(audience_points, eurovision->States);
-    if (winners_list == NULL) return NULL;
-
-    // destroy all lists
     listDestroy(audience_points);
-
     return winners_list;
 }
 
