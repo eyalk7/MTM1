@@ -271,6 +271,10 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
         return NULL;
     }
 
+    LIST_FOREACH(CountData, itr, points_list) {
+        printf("id=%d, count: %d\n", itr->id, itr->count);
+    }
+
     // convert to names list & destroy & return
     List winners_list = convertToStringlist(points_list, eurovision->States);
     listDestroy(points_list);
