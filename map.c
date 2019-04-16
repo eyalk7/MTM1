@@ -205,9 +205,7 @@ MapDataElement mapGet(Map map, MapKeyElement keyElement){
 
 MapResult mapRemove(Map map, MapKeyElement keyElement){
     // NULL check for parameters
-    if (map == NULL || keyElement == NULL) {
-        return MAP_NULL_ARGUMENT;
-    }
+    if (map == NULL || keyElement == NULL) return MAP_NULL_ARGUMENT;
 
     // iterate on the map and compare
     MapNode tmp_iterator = map->head;
