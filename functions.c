@@ -34,20 +34,26 @@ bool checkValidName(const  char* name) {
     return true;
 }
 
-int* copyInteger(int num) {
+void* copyInt(void* integer) {
     //allocation for int
     int* copy = malloc(sizeof(*copy));
     //initialize the int
-    *copy = num;
+    *copy = *(int*)integer;
     //return address
     return copy;
 }
 
-int compareIntegers(int a, int b) {
+void freeInt(void* integer) {
+    free(integer);
+}
+
+int compareInts(void* integer1, void* integer2) {
     //compare the ints
     //return 0 if equal
     //return bigger than 0 if first is bigger
     //else the small than 0
+    int a = *(int*)integer1;
+    int b = *(int*)integer2;
     return a - b;
 }
 
@@ -226,16 +232,6 @@ int compareCountData(ListElement data1, ListElement data2) {
 int stringCompare(void* str1, void* str2) {
     return strcmp(str1, str2);
 }
-void* copyInt(void* integer) {
-    return copyInteger(*(int*)integer);
-}
-void freeInt(void* integer) {
-    free(integer);
-}
-int compareInts(void* integer1, void* integer2) {
-    return compareIntegers(*(int*)integer1, *(int*)integer2);
-}
-
 bool statesAreFriendly(int* stateId1, int* favState1, int* stateId2, int* favState2) {
     if (!stateId1 || !favState1 || !stateId2 || !favState2) return false;
 
