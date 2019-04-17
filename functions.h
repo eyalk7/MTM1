@@ -12,9 +12,8 @@
 /** macros for strings states list */
 #define SPACECHAR ' '
 #define SPACE " "
-#define COMMA ","
 #define DASH "-"
-#define NUM_OF_EXTRA_CHARS 4
+#define NUM_OF_EXTRA_CHARS 3
 
 /** macro for audience precent */
 #define ONE_HUNDREND_PRECENT 1
