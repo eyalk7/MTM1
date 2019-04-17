@@ -253,9 +253,9 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // if there are judges, update the points list according to the judges's results
     if (mapGetFirst(eurovision->Judges) != NULL) {
         MAP_FOREACH(JudgeData, iterator, eurovision->Judges) {
-            //printf("iterator->results[%d]: %d\n", 0, iterator->results[0]);
-            //printf("%s\n", iterator->name);
-            int *judge_results = iterator->results;
+            JudgeData judge_data = mapGet(eurovision->Judges, iterator);
+            assert(judge_data != NULL);
+            int *judge_results = judge_data->results;
             for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
                 // iterate on judges points list & find the state & add the points
                 LIST_FOREACH(CountData, judges_points_iterator, points_list) {
@@ -265,10 +265,6 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
                 }
             }
         }
-    }
-
-    LIST_FOREACH(CountData, itr, points_list) {
-        printf("id=%d, count: %d\n", itr->id, itr->count);
     }
 
     // sort the final list
