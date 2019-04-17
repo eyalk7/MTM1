@@ -3,7 +3,8 @@
 #include <assert.h>
 #include "map.h"
 
-
+/********************** ENUMS & STRUCTS ***********************/
+/** enums for mapIterateAndCompare */
 enum {
     EQUAL,
     EQUAL_TO_FIRST,
@@ -28,9 +29,12 @@ struct Map_t {
     compareMapKeyElements compareKeyElements;
 };
 
-/** help functions */
+/********************** HELP FUNCTIONS ***********************/
+/** create & destroy node functions */
 static MapNode nodeCreate ();
 static void nodeDestroy (MapNode node);
+
+/** iterate on the map & compare each keyElement to given keyElement */
 static int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator);
 
 Map mapCreate(copyMapDataElements copyDataElement,

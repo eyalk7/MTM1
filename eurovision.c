@@ -58,7 +58,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
                                     const char *stateName,
                                     const char *songName) {
     // check valid arguments
-    if (eurovision == NULL || stateName == NULL || songName == NULL) return EUROVISION_NULL_ARGUMENT;
+    if (!eurovision || !stateName || !songName) return EUROVISION_NULL_ARGUMENT;
     EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, stateId);
     assert(id_validation == EUROVISION_STATE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_STATE_NOT_EXIST);
     if (id_validation != EUROVISION_STATE_NOT_EXIST) return id_validation;
@@ -66,14 +66,14 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 
     // memory alloctation for the tmp_state_data & for names and check
     StateData tmp_state_data = malloc(sizeof(*tmp_state_data));
-    if (tmp_state_data == NULL) return EUROVISION_OUT_OF_MEMORY;
+    if (!tmp_state_data) return EUROVISION_OUT_OF_MEMORY;
     char *tmp_stateName = malloc(strlen(stateName) + 1);
-    if (tmp_stateName == NULL) {
+    if (!tmp_stateName) {
         free (tmp_state_data);
         return EUROVISION_OUT_OF_MEMORY;
     }
     char *tmp_songName = malloc(strlen(songName) + 1);
-    if (tmp_songName == NULL) {
+    if (!tmp_songName) {
         free (tmp_state_data);
         free(tmp_stateName);
         return EUROVISION_OUT_OF_MEMORY;
@@ -81,7 +81,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 
     // Create tmp_votes and add votes functions,
     Map tmp_votes = mapCreate(copyVoteDataElement, copyVoteKeyElement, freeVoteDataElement, freeVoteKeyElement, compareVoteKeyElements);
-    if (tmp_votes == NULL) {
+    if (!tmp_votes) {
         free (tmp_state_data);
         free(tmp_stateName);
         free(tmp_songName);
@@ -111,7 +111,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     // check valid arguments
-    if (eurovision == NULL) return EUROVISION_NULL_ARGUMENT;
+    if (!eurovision) return EUROVISION_NULL_ARGUMENT;
     EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, stateId);
     if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
 
@@ -139,7 +139,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
                                     const char *judgeName,
                                     int *judgeResults) {
     // check valid arguments
-    if (eurovision == NULL || judgeName == NULL || judgeResults == NULL) return EUROVISION_NULL_ARGUMENT;
+    if (!eurovision || !judgeName || !judgeResults) return EUROVISION_NULL_ARGUMENT;
     EurovisionResult id_validation = isIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
     assert(id_validation == EUROVISION_JUDGE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_JUDGE_NOT_EXIST);
     if (id_validation != EUROVISION_JUDGE_NOT_EXIST) return id_validation;
@@ -152,9 +152,9 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
 
     // memory alloctation for the tmp_judge_data & for name and check
     JudgeData tmp_judge_data = malloc(sizeof(*tmp_judge_data));
-    if (tmp_judge_data == NULL) return EUROVISION_OUT_OF_MEMORY;
+    if (!tmp_judge_data) return EUROVISION_OUT_OF_MEMORY;
     char *tmp_judgeName = malloc(strlen(judgeName) + 1);
-    if (tmp_judgeName == NULL) {
+    if (!tmp_judgeName) {
         free(tmp_judge_data);
         return EUROVISION_OUT_OF_MEMORY;
     }
@@ -180,7 +180,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
 
 EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
     // check valid arguments
-    if (eurovision == NULL) return EUROVISION_NULL_ARGUMENT;
+    if (!eurovision) return EUROVISION_NULL_ARGUMENT;
     EurovisionResult id_validation = isIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
     assert(id_validation == EUROVISION_JUDGE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_JUDGE_NOT_EXIST);
     if (id_validation != EUROVISION_JUDGE_ALREADY_EXIST) return id_validation;
@@ -204,7 +204,7 @@ EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // check valid arguments
-    if (eurovision == NULL || audiencePercent > 100 || audiencePercent < 0) return NULL;
+    if (!eurovision || audiencePercent > 100 || audiencePercent < 0) return NULL;
     Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 
     // if state map is empty return empty List
@@ -215,7 +215,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 
     // get the audience points
     List points_list = audiencePoints(eurovision->States, audiencePercent);
-    if (points_list == NULL) return NULL;
+    if (!points_list) return NULL;
 
     // if there are judges, update the points list according to the judges's results
     if (mapGetFirst(eurovision->Judges) != NULL) {
@@ -250,11 +250,11 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     // check valid arguments
-    if (eurovision == NULL) return NULL;
+    if (!eurovision) return NULL;
 
     // get audience Points
     List audience_points = audiencePoints(eurovision->States, ONE_HUNDREND_PRECENT);
-    if (audience_points == NULL) return NULL;
+    if (!audience_points) return NULL;
 
     // sort the final list
     if (listSort(audience_points, compareCountData) != LIST_SUCCESS) {
