@@ -210,7 +210,7 @@ void freeCountData(ListElement elem) {
 }
 
 int compareCountData(ListElement data1, ListElement data2) {
-    if (data1 == NULL || data2 == NULL) return NULL;
+    assert(data1 != NULL && data2 != NULL);
 
     CountData data1_p = data1;
     CountData data2_p = data2;

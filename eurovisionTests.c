@@ -328,6 +328,7 @@ bool testRunGetFriendlyStates() {
     CHECK((friendlies == NULL), false);
     CHECK(listGetSize(friendlies), 2);
     char *current = (char *)listGetFirst(friendlies);
+    printf("croatia - malta: %s\n", current);
     CHECK(strcmp(current, "croatia - malta"), 0);
     current  = (char*)listGetNext(friendlies);
     CHECK(strcmp(current, "moldova - russia"), 0);
