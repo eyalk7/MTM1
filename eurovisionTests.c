@@ -278,7 +278,6 @@ bool testRunContest() {
     List ranking = eurovisionRunContest(eurovision, 40);
     CHECK(listGetSize(ranking), 16);
     char *current = (char*)listGetFirst(ranking);
-    printf("moldova: %s\n", current);
     CHECK(strcmp(current, "moldova"), 0);
     current = (char*)listGetNext(ranking);
     CHECK(strcmp(current, "russia"), 0);

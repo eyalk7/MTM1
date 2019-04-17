@@ -253,26 +253,28 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // if there are judges, update the points list according to the judges's results
     if (mapGetFirst(eurovision->Judges) != NULL) {
         MAP_FOREACH(JudgeData, iterator, eurovision->Judges) {
+            //printf("iterator->results[%d]: %d\n", 0, iterator->results[0]);
+            //printf("%s\n", iterator->name);
             int *judge_results = iterator->results;
             for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
                 // iterate on judges points list & find the state & add the points
                 LIST_FOREACH(CountData, judges_points_iterator, points_list) {
                     if (judge_results[i] == judges_points_iterator->id) {
-                        judges_points_iterator->count += (100-audiencePercent)*ranking[i];
+                        judges_points_iterator->count += (60)*ranking[i];
                     }
                 }
             }
         }
     }
 
+    LIST_FOREACH(CountData, itr, points_list) {
+        printf("id=%d, count: %d\n", itr->id, itr->count);
+    }
+
     // sort the final list
     if (listSort(points_list, compareIntPairs) != LIST_SUCCESS){
         listDestroy(points_list);
         return NULL;
-    }
-
-    LIST_FOREACH(CountData, itr, points_list) {
-        printf("id=%d, count: %d\n", itr->id, itr->count);
     }
 
     // convert to names list & destroy & return

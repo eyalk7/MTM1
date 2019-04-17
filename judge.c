@@ -22,7 +22,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     strcpy(copy->name, judge_data->name);
 
     for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        copy->results[i] = ((JudgeData)data)->results[i];
+        copy->results[i] = judge_data->results[i];
     }
 
     //return address

@@ -156,10 +156,17 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
 
     // if key dosn't exist, create new node
     MapNode new_node = nodeCreate();
-    if (new_node == NULL) return MAP_OUT_OF_MEMORY;
+    if (new_node == NULL) {
+        map->freeDataElement(new_data);
+        return MAP_OUT_OF_MEMORY;
+    }
 
     MapKeyElement new_key = map->copyKeyElement(keyElement);
-    if (!new_key) return MAP_OUT_OF_MEMORY;
+    if (new_key == NULL) {
+        map->freeDataElement(new_data);
+        nodeDestroy(new_node);
+        return MAP_OUT_OF_MEMORY;
+    }
 
     new_node->data = new_data;
     new_node->key = new_key;
