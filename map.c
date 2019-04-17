@@ -120,20 +120,18 @@ int mapGetSize(Map map) {
 }
 
 bool mapContains(Map map, MapKeyElement element) {
-    if (!map || !element)
-        return false;   // NULL pointer was sent
+    // check if NULL pointer was sent
+    if (!map || !element) return false;
 
     //iterate on the map and compare each key with the element using the user's function
-    MapNode ptr;
-    for (ptr = map->head; ptr && map->compareKeyElements(element, ptr->key) > 0; ptr = ptr->next) {
-    }
-    if (!ptr)
-        return false;   // end of map, element not found
+    MapNode tmp_iterator = map->head;
+    int compare_result = mapIterateAndCompare(map, element, &tmp_iterator);
 
-    if (map->compareKeyElements(element, ptr->key) == 0)
-        return true;    // element found
+    // if found return true
+    if (compare_result == EQUAL || compare_result == EQUAL_TO_FIRST) return true;
 
-    return false;   // element not found
+    // else, element not found
+    return false;
 }
 
 MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) {
