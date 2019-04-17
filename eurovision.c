@@ -272,10 +272,13 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
     //getSize of States map - num_of_states
     int num_of_states = mapGetSize(eurovision->States);
 
-    // if state map is empty return empty List
-    if (num_of_states == 0) return listCreate(copyString, freeString);
+    List friendly_states = listCreate(copyString, freeString);
+    if (!friendly_states) return NULL;  // allocation failed
 
-    //create two dimnesinal int array - state_favorites[2][num_of_states]
+    // if state map is empty return empty List
+    if (num_of_states == 0) return friendly_states;
+
+    //create map state_favorites - key = stateId, value = favStateId
     Map state_favorites = mapCreate(copyInt, copyInt, freeInt, freeInt, compareInts);
 
 ////////////////////////////INIIIALIZE STATE FAVORITES -> outside function////////////////////////////////////////
@@ -283,6 +286,7 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
     MAP_FOREACH(int*, stateId, eurovision->States) {
         StateData state = mapGet(eurovision->States, stateId);
         if (!state) {
+            listDestroy(friendly_states);
             mapDestroy(state_favorites);
             return NULL;
         }
@@ -292,17 +296,12 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
         MapResult result = mapPut(state_favorites, stateId, &favState);
 
         if (result != MAP_SUCCESS) {
+            listDestroy(friendly_states);
             mapDestroy(state_favorites);
             return NULL;
         }
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    List friendly_states = listCreate(copyString, freeString);
-    if (!friendly_states) {
-        mapDestroy(state_favorites);
-        return NULL;
-    }
 
     //iterate on the array, in each row:
     MAP_FOREACH(int*, stateId, state_favorites) {
@@ -311,7 +310,7 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
         int *stateId2 = favState1;
         int *favState2 = mapGet(state_favorites, stateId2);
 
-        // areFriendly checks if the pointers are NULL ! :)
+        // areFriendly also checks if the pointers are NULL ! :)
         if (statesAreFriendly(stateId, favState1, stateId2, favState2)) {
             // if it is a match save the states pair names on the list - after lexicographical sort
             StateData state1 = mapGet(eurovision->States, stateId);
@@ -320,6 +319,7 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
             // change both rows to "-1"
             *favState1 = NO_FAVORITE_STATE;
             *favState2 = NO_FAVORITE_STATE;
+
             ////////////////////////////// CREATE STATE PAIR STRING - OUTSIDE FUNCTION //////////////////////////////
 
             char *name1 = state1->name;
@@ -332,11 +332,10 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
                 max = name2;
             }
             strcat(statePair, min);
-            strcat(statePair, SPACE);
-            strcat(statePair, DASH);
-            strcat(statePair, SPACE);
+            strcat(statePair, (char*)SPACE);
+            strcat(statePair, (char*)DASH);
+            strcat(statePair, (char*)SPACE);
             strcat(statePair, max);
-            strcat(statePair, COMMA);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -361,3 +360,4 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
 
     return friendly_states;
 }
+
