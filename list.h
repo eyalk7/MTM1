@@ -283,15 +283,14 @@ ListResult listRemoveCurrent(List list);
 * For example, the following code will sort a list of integers according to
 * their distance from 0.
 * @code
-* int closerTo(ListElement num1, ListElement num2, ListSortKey value) {
-*   int distance1 = abs(*(int*)num1 - *(int*)value);
-*   int distance2 = abs(*(int*)num2 - *(int*)value);
+* int closerToZero(ListElement num1, ListElement num2) {
+*   int distance1 = abs(*(int*)num1);
+*   int distance2 = abs(*(int*)num2);
 *   return distance1 - distance2;
 * }
 *
 * void sortInts(List listOfInts) {
-*   int key = 0;
-*   listSort(listOfInts, closerTo, &key);
+*   listSort(listOfInts, closerToZero);
 * }
 * @endcode
 *
