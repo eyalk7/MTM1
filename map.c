@@ -27,11 +27,10 @@ struct Map_t {
     compareMapKeyElements compareKeyElements;
 };
 
-//assistance functions
-MapNode nodeCreate ();
-void nodeDestroy (MapNode node);
-
-int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator);
+/** help functions */
+static MapNode nodeCreate ();
+static void nodeDestroy (MapNode node);
+static int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator);
 
 Map mapCreate(copyMapDataElements copyDataElement,
               copyMapKeyElements copyKeyElement,
@@ -288,7 +287,7 @@ MapResult mapClear(Map map) {
     return MAP_SUCCESS;
 }
 
-MapNode nodeCreate () {
+static MapNode nodeCreate () {
     MapNode new_node = malloc(sizeof(*new_node));
     if (new_node == NULL) {
         return NULL;
@@ -296,11 +295,11 @@ MapNode nodeCreate () {
     return new_node;
 }
 
-void nodeDestroy (MapNode node) {
+static void nodeDestroy (MapNode node) {
     free(node);
 }
 
-int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator) {
+static int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator) {
     // if smallest key return START_OF_MAP
     if ((*tmp_iterator) == NULL || map->compareKeyElements(keyElement, (*tmp_iterator)->key) < 0) {
         return START_OF_MAP;
