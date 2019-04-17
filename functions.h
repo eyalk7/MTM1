@@ -58,10 +58,11 @@ bool checkValidName(const char* name);
 /** check if the given judge's results contain the given state */
 bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
-/** Map ADT functions for Judge/State keysElements
- * and for votes dataElements */
-int* copyInteger(int num);
-int compareIntegers(int a, int b);
+/** Map ADT functions for Judge/State/state_favorites keysElements
+ * and for votes/state_favorites dataElements */
+void* copyInt(void* integer);
+void freeInt(void* integer);
+int compareInts(void* integer1, void* integer2);
 
 /** List ADT functions for strings states list */
 ListElement copyString(ListElement str);
@@ -98,14 +99,7 @@ List convertToStringlist(List finalResults, Map states);
 List audiencePoints(Map states, int audiencePrecent);
 
 /********************** FRIENDLY STATE FUNCTIONS ***********************/
-/** string compare for states name */
 int stringCompare(void* str1, void* str2);
-
-/** copy, free & compare functions for  */
-void* copyInt(void* integer);
-void freeInt(void* integer);
-int compareInts(void* integer1, void* integer2);
-
 bool statesAreFriendly(int *stateId1, int *favState1, int *stateId2, int *favState2);
 
 #endif //FUNCTIONS_H
