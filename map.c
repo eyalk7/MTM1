@@ -13,12 +13,14 @@ enum {
     MIDDLE_OF_MAP
 };
 
+/** node struct for the map */
 typedef struct MapNode_t {
     MapKeyElement key;
     MapDataElement data;
     struct MapNode_t *next;
 } *MapNode;
 
+/** map strcuct */
 struct Map_t {
     MapNode head;
     MapNode iterator;
@@ -37,6 +39,45 @@ static void nodeDestroy (MapNode node);
 /** iterate on the map & compare each keyElement to given keyElement */
 static int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator);
 
+
+/****************** HELP FUNCTIONS *******************/
+
+static MapNode nodeCreate () {
+    MapNode new_node = malloc(sizeof(*new_node));
+    if (!new_node) return NULL;
+
+    return new_node;
+}
+
+static void nodeDestroy (MapNode node) {
+    free(node);
+}
+
+static int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator) {
+    // if smallest key return START_OF_MAP
+    if ((*tmp_iterator) == NULL || map->compareKeyElements(keyElement, (*tmp_iterator)->key) < 0) {
+        return START_OF_MAP;
+    }
+
+    // if equal to the first
+    if (map->compareKeyElements(keyElement, (*tmp_iterator)->key) == EQUAL) {
+        return EQUAL_TO_FIRST;
+    }
+
+    // iterate and compare
+    while ((*tmp_iterator)->next != NULL && map->compareKeyElements(keyElement, (*tmp_iterator)->next->key) > 0) {
+        (*tmp_iterator) = (*tmp_iterator)->next;
+    }
+
+    // reached end of map
+    if ((*tmp_iterator)->next == NULL) return END_OF_MAP;
+
+    // equality
+    if (map->compareKeyElements(keyElement, (*tmp_iterator)->next->key) == EQUAL) return EQUAL;
+
+    return MIDDLE_OF_MAP;
+}
+
 /********************** MAP FUNCTIONS ***********************/
 
 Map mapCreate(copyMapDataElements copyDataElement,
@@ -49,8 +90,7 @@ Map mapCreate(copyMapDataElements copyDataElement,
         return NULL;
 
     Map map = malloc(sizeof(*map));    // allocate memory for new map
-    if (!map)
-        return NULL;    // if allocate failed, return NULL
+    if (!map) return NULL;    // if allocate failed, return NULL
 
     // initialize empty map
     map->head = NULL;
@@ -77,38 +117,29 @@ void mapDestroy(Map map) {
 }
 
 Map mapCopy(Map map) {
-    if (!map)
-        return NULL;    // return NULL if null pointer was sent
+    // return NULL if null pointer was sent
+    if (!map) return NULL;
 
-    // create map copy
+    // create map copy, return null if memory allocation failed
     Map copy = mapCreate(map->copyDataElement, map->copyKeyElement, map->freeDataElement, map->freeKeyElement, map->compareKeyElements);
-    if (!copy)
-        return NULL;    // return null if memory allocation failed
+    if (!copy) return NULL;
 
     //iterate on the map and copy all pairs
     for (MapNode ptr = map->head; ptr ; ptr = ptr->next) {
 
         // add a copy of each node to the map copy
-        // (uses the user's function to copy the key and data)
         MapResult result = mapPut(copy, ptr->key, ptr->data);
-
-        /* assert(result != MAP_NULL_ARGUMENT) */
-
         if (result == MAP_OUT_OF_MEMORY) {
             mapDestroy(copy); // free all nodes created until now
             return NULL;    // if allocate failed return NULL
         }
     }
 
-    //in the last node put NULL in "next"
-    // mapPut sets the "next"s correctly so the last node gets NULL
-
     return copy;    // return the copy pointer
 }
 
 int mapGetSize(Map map) {
-    if (!map)
-        return -1;  // return -1 if NULL
+    if (!map) return -1;  // return -1 if NULL
 
     //iterate on the map and count until NULL
     int count = 0;
@@ -116,7 +147,8 @@ int mapGetSize(Map map) {
         count++;
     }
 
-    return count;    // return count
+    // return count
+    return count;
 }
 
 bool mapContains(Map map, MapKeyElement element) {
@@ -292,42 +324,4 @@ MapResult mapClear(Map map) {
 
     // return MAP_SUCCESS
     return MAP_SUCCESS;
-}
-
-/****************** HELP FUNCTIONS *******************/
-
-static MapNode nodeCreate () {
-    MapNode new_node = malloc(sizeof(*new_node));
-    if (!new_node) return NULL;
-
-    return new_node;
-}
-
-static void nodeDestroy (MapNode node) {
-    free(node);
-}
-
-static int mapIterateAndCompare (Map map, MapKeyElement keyElement, MapNode *tmp_iterator) {
-    // if smallest key return START_OF_MAP
-    if ((*tmp_iterator) == NULL || map->compareKeyElements(keyElement, (*tmp_iterator)->key) < 0) {
-        return START_OF_MAP;
-    }
-
-    // if equal to the first
-    if (map->compareKeyElements(keyElement, (*tmp_iterator)->key) == EQUAL) {
-        return EQUAL_TO_FIRST;
-    }
-
-    // iterate and compare
-    while ((*tmp_iterator)->next != NULL && map->compareKeyElements(keyElement, (*tmp_iterator)->next->key) > 0) {
-        (*tmp_iterator) = (*tmp_iterator)->next;
-    }
-
-    // reached end of map
-    if ((*tmp_iterator)->next == NULL) return END_OF_MAP;
-
-    // equality
-    if (map->compareKeyElements(keyElement, (*tmp_iterator)->next->key) == EQUAL) return EQUAL;
-
-    return MIDDLE_OF_MAP;
 }
