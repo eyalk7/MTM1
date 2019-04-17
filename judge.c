@@ -31,7 +31,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
 
 // copyJudgeKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
 JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
-    return copyInteger(*((int*)key));
+    return copyInt(key);
 }
 // freeJudgeDataElement - Function pointer to be used for removing data elements from the map
 void freeJudgeDataElement(JudgeDataElement data) {
@@ -44,11 +44,11 @@ void freeJudgeDataElement(JudgeDataElement data) {
 // freeJudgeKeyElement - Function pointer to be used for removing key elements from the map
 void freeJudgeKeyElement(JudgeKeyElement key) {
     //free allocation
-    free(key);
+    freeInt(key);
 }
 // compareJudgeKeyElements - Function pointer to be used for comparing key elements inside the map. Used to check if new elements already exist in the map.
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
-    return compareIntegers(*((int*)key1), *((int*)key2));
+    return compareInts(key1, key2);
 }
 
 bool resultsContainState(JudgeDataElement judge, int state_id) {
