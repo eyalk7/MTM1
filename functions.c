@@ -103,6 +103,44 @@ List audiencePoints(Map states, int audiencePrecent) {
     return audience_points;
 }
 
+EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference) {
+    // check valid arguments
+    if (states == NULL) return EUROVISION_NULL_ARGUMENT;
+    EurovisionResult id_validation1 = isIDValid(states, STATES_MAP, stateGiver);
+    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
+    if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) return id_validation1;
+    EurovisionResult id_validation2 = isIDValid(states, STATES_MAP, stateTaker);
+    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
+    if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) return id_validation2;
+
+    // check that stategiver != stateTaker
+    if (stateGiver == stateTaker) return EUROVISION_SAME_STATE;
+
+    // check current num of votes for stateTaker in stateGiver's votes map
+    StateData giver_data = mapGet(states, &stateGiver);
+    assert(giver_data != NULL);
+    int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
+
+    // if no votes & difference <= 0 just return
+    if (cur_votes_num == NULL && difference <= 0) return EUROVISION_SUCCESS;
+
+    // if there are votes sum up the current num of votes and wanted difference
+    if (cur_votes_num != NULL) {
+        difference += (*cur_votes_num);
+
+        // if the sum <= 0 and there are votes - delete the state from the votes map
+        if (difference <= 0) {
+            mapRemove(giver_data->votes, &stateTaker);
+            return EUROVISION_SUCCESS;
+        }
+    }
+
+    // else update the votes map
+    if (mapPut(giver_data->votes, &stateTaker, &difference) == MAP_OUT_OF_MEMORY) return EUROVISION_OUT_OF_MEMORY;
+
+    return EUROVISION_SUCCESS;
+}
+
 /********************************************* COUNT LIST FUNCTIONS **********************************************************/
 
 List countListCreate(Map map) {
@@ -237,41 +275,49 @@ bool statesAreFriendly(int* stateId1, int* favState1, int* stateId2, int* favSta
 
     return (*stateId1 == *favState2 && *stateId2 == *favState1);
 }
+Map getStateFavorites(Map states) {
+    //create map state_favorites - key = stateId, value = favStateId
+    Map state_favorites = mapCreate(copyInt, copyInt, freeInt, freeInt, compareInts);
+    if (!state_favorites) return NULL;
 
-EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference) {
-    // check valid arguments
-    if (states == NULL) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation1 = isIDValid(states, STATES_MAP, stateGiver);
-    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
-    if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) return id_validation1;
-    EurovisionResult id_validation2 = isIDValid(states, STATES_MAP, stateTaker);
-    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
-    if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) return id_validation2;
+    //iterate on the states map and fill on each state:
+    MAP_FOREACH(int*, stateId, states) {
+        StateData state = mapGet(states, stateId);
+        if (!state) {
+            mapDestroy(state_favorites);
+            return NULL;
+        }
+        //outside function - getFavoriteStates(votes map) - second column
+        int favState = getFavoriteState(state->votes);
+        //insert stateId first column
+        MapResult result = mapPut(state_favorites, stateId, &favState);
 
-    // check that stategiver != stateTaker
-    if (stateGiver == stateTaker) return EUROVISION_SAME_STATE;
-
-    // check current num of votes for stateTaker in stateGiver's votes map
-    StateData giver_data = mapGet(states, &stateGiver);
-    assert(giver_data != NULL);
-    int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
-
-    // if no votes & difference <= 0 just return
-    if (cur_votes_num == NULL && difference <= 0) return EUROVISION_SUCCESS;
-
-    // if there are votes sum up the current num of votes and wanted difference
-    if (cur_votes_num != NULL) {
-        difference += (*cur_votes_num);
-
-        // if the sum <= 0 and there are votes - delete the state from the votes map
-        if (difference <= 0) {
-            mapRemove(giver_data->votes, &stateTaker);
-            return EUROVISION_SUCCESS;
+        if (result != MAP_SUCCESS) {
+            mapDestroy(state_favorites);
+            return NULL;
         }
     }
 
-    // else update the votes map
-    if (mapPut(giver_data->votes, &stateTaker, &difference) == MAP_OUT_OF_MEMORY) return EUROVISION_OUT_OF_MEMORY;
+    return state_favorites;
+}
 
-    return EUROVISION_SUCCESS;
+char *getStatePair(StateData state1, StateData state2) {
+    char *name1 = state1->name;
+    char *name2 = state2->name;
+
+    char *statePair = malloc(strlen(name1) + strlen(name2) + NUM_OF_EXTRA_CHARS + 1);
+    if (!statePair) return NULL;
+
+    char *min = name2, *max = name1;
+    if (strcmp(name1, name2) < 0) {
+        min = name1;
+        max = name2;
+    }
+    strcat(statePair, min);
+    strcat(statePair, (char*)SPACE);
+    strcat(statePair, (char*)DASH);
+    strcat(statePair, (char*)SPACE);
+    strcat(statePair, max);
+
+    return statePair;
 }
