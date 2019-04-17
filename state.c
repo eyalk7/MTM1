@@ -6,7 +6,7 @@
 #include "state.h"
 #include "functions.h"
 
-/***************************************************** STATE MAP FUNCTIONS ************************************************************/
+/************************* STATE MAP FUNCTIONS *******************************/
 
 // copyStateDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 StateDataElement copyStateDataElement(StateDataElement data) {

@@ -7,10 +7,9 @@ EurovisionResult isIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
     assert(map != NULL);
     assert(type == STATES_MAP || type == JUDGES_MAP);
+
     //check ID >= 0 & check if Id already exist in the given map
-    if (id < 0) {
-        return EUROVISION_INVALID_ID;
-    }
+    if (id < 0) return EUROVISION_INVALID_ID;
 
     if (mapContains(map, &id)) {
         if (type == STATES_MAP) return EUROVISION_STATE_ALREADY_EXIST;
@@ -72,6 +71,7 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
 List audiencePoints(Map states, int audiencePrecent) {
     // create an audience points list with all states
     List audience_points = countListCreate(states);
+    if (!audience_points) return NULL;
     Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 
     // iterate on the States map, check each state's top 10 & update the points list
@@ -82,6 +82,10 @@ List audiencePoints(Map states, int audiencePrecent) {
 
         // create the state's sorted vote list:
         List state_vote = convertVotesToList(state_data->votes);
+        if (!state_vote) {
+            listDestroy(audience_points);
+            return NULL;
+        }
 
         // update the audience_points list according to the top 10
         CountData state_vote_iterator = listGetFirst(state_vote);
