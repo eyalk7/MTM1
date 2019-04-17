@@ -103,5 +103,7 @@ int stringCompare(void* str1, void* str2);
 
 /** check if states are friendly by the assigment definition */
 bool statesAreFriendly(int *stateId1, int *favState1, int *stateId2, int *favState2);
+Map getStateFavorites(Map states);
+char *getStatePair(StateData state1, StateData state2);
 
 #endif //FUNCTIONS_H

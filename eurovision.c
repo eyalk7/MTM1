@@ -279,29 +279,14 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
     if (num_of_states == 0) return friendly_states;
 
     //create map state_favorites - key = stateId, value = favStateId
-    Map state_favorites = mapCreate(copyInt, copyInt, freeInt, freeInt, compareInts);
+    /// OUTSIDE FUNCTION ///
+    Map state_favorites = getStateFavorites(eurovision->States);
+    /// OUTSIDE FUNCTION ///
 
-////////////////////////////INIIIALIZE STATE FAVORITES -> outside function////////////////////////////////////////
-    //iterate on the states map and fill on each state:
-    MAP_FOREACH(int*, stateId, eurovision->States) {
-        StateData state = mapGet(eurovision->States, stateId);
-        if (!state) {
-            listDestroy(friendly_states);
-            mapDestroy(state_favorites);
-            return NULL;
-        }
-        //insert stateId first column
-        //outside function - getFavoriteStates(votes map) - second column
-        int favState = getFavoriteState(state->votes);
-        MapResult result = mapPut(state_favorites, stateId, &favState);
-
-        if (result != MAP_SUCCESS) {
-            listDestroy(friendly_states);
-            mapDestroy(state_favorites);
-            return NULL;
-        }
+    if (!state_favorites) {
+        listDestroy(friendly_states);
+        return NULL;
     }
-////////////////////////////////////////////////////////////////////////////////////////////////
 
     //iterate on the array, in each row:
     MAP_FOREACH(int*, stateId, state_favorites) {
@@ -316,28 +301,19 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
             StateData state1 = mapGet(eurovision->States, stateId);
             StateData state2 = mapGet(eurovision->States, stateId2);
 
-            // change both rows to "-1"
+            // change both rows to "-1" => prevent the same pair from being chosen
             *favState1 = NO_FAVORITE_STATE;
             *favState2 = NO_FAVORITE_STATE;
 
-            ////////////////////////////// CREATE STATE PAIR STRING - OUTSIDE FUNCTION //////////////////////////////
+            /// OUTSIDE FUNCTION ///
+            char *statePair = getStatePair(state1, state2);
+            /// OUTSIDE FUNCTION ///
 
-            char *name1 = state1->name;
-            char *name2 = state2->name;
-
-            char *statePair = malloc(strlen(name1) + strlen(name2) + NUM_OF_EXTRA_CHARS + 1);
-            char *min = name2, *max = name1;
-            if (strcmp(name1, name2) < 0) {
-                min = name1;
-                max = name2;
+            if (!statePair) {
+                mapDestroy(state_favorites);
+                listDestroy(friendly_states);
+                return NULL;
             }
-            strcat(statePair, min);
-            strcat(statePair, (char*)SPACE);
-            strcat(statePair, (char*)DASH);
-            strcat(statePair, (char*)SPACE);
-            strcat(statePair, max);
-
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             ListResult result = listInsertLast(friendly_states, statePair);
             free(statePair);
@@ -346,9 +322,9 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
                 listDestroy(friendly_states);
                 return NULL;
             }
+
         }
     }
-
 
     mapDestroy(state_favorites);
 
