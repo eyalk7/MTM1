@@ -76,15 +76,17 @@ int getFavoriteState(Map votes) {
     // return most voted state's id
     if(mapGetSize(votes) <= 0) return NO_FAVORITE_STATE;
 
-    StateKeyElement mostVoted = mapGetFirst(votes);
-    MAP_FOREACH(StateKeyElement, state, votes) {
-        int compare_result = compareStateKeyElements(mostVoted, state);
-        if (compare_result < 0) {
-            mostVoted = state;
+    VoteKeyElement favState = mapGetFirst(votes);
+    int max = *(int*)mapGet(votes, favState);
+    MAP_FOREACH(VoteKeyElement, state, votes) {
+        int num_of_votes = *(int*)mapGet(votes, state);
+        if (num_of_votes > max) {
+            favState = state;
+            max = num_of_votes;
         }
     }
 
-    return *(int*)mostVoted; // id of most voted state
+    return *(int*)favState; // id of most voted state
 }
 
 
