@@ -8,7 +8,7 @@
 #include "judge.h"
 #include "list.h"
 
-/********************** MACROS, ENUMS & STRUCTS ***********************/
+/********************** MACROS & ENUMS ***********************/
 /** macros for strings states list */
 #define SPACECHAR ' '
 #define SPACE " "
@@ -22,6 +22,7 @@
 /** macros for points compare and enums for points distribution */
 #define FIRST_BEFORE_SECOND (-1)
 #define SECOND_BEFORE_FIRST 1
+
 typedef enum {
     TENTH_PLACE = 1,
     NINTH_PLACE,
@@ -41,12 +42,6 @@ typedef enum mapType_t {
     JUDGES_MAP
 } MapType;
 
-/** struct for votes/points count lists */
-typedef struct countData_t {
-    int id;
-    unsigned int count;
-} *CountData;
-
 /********************** EUROVISION HELP FUNCTIONS ***********************/
 /** check if state/judge ID is valid */
 EurovisionResult isIDValid(Map map, MapType type, int id);
@@ -63,18 +58,26 @@ bool checkValidName(const char* name);
 /** check if the given judge's results contain the given state */
 bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
+/** Map ADT functions for Judge/State/state_favorites keysElements & votes/state_favorites dataElements */
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
 
-
+/** List ADT functions for strings states list */
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
-/********************** COUNT LIST FUNCTIONS ***********************/
+/********************** COUNT LIST FUNCTIONS & STRUCTS ***********************
+* Count List is a List of CountData for saving stateID & points/votes pairs */
 
-ListElement copyIntPair(ListElement elem);
-void freeIntPair(ListElement elem);
-int compareIntPairs(ListElement data1, ListElement data2);
+/** struct for votes/points Count Lists */
+typedef struct countData_t {
+    int id;
+    unsigned int count;
+} *CountData;
+
+ListElement copyCountData(ListElement elem);
+void freeCountData(ListElement elem);
+int compareCountData(ListElement data1, ListElement data2);
 
 // Assumption: Given map has keys of type int*
 List countListCreate(Map map);

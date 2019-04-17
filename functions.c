@@ -103,7 +103,7 @@ List audiencePoints(Map states, int audiencePrecent) {
 List countListCreate(Map map) {
     // check parameter?
 
-    List list = listCreate(copyIntPair, freeIntPair);
+    List list = listCreate(copyCountData, freeCountData);
     if (!list) return NULL;
 
     MAP_FOREACH(int*, key, map) {
@@ -117,7 +117,7 @@ List countListCreate(Map map) {
         data->count = 0; // intialize to 0
 
         ListResult result = listInsertFirst(list, data);
-        freeIntPair(data);
+        freeCountData(data);
 
         if (result != LIST_SUCCESS) {
             listDestroy(list);
@@ -143,7 +143,7 @@ List convertVotesToList(Map votes) {
         elem->count = *data;
     }
 
-    ListResult result = listSort(list, compareIntPairs);
+    ListResult result = listSort(list, compareCountData);
     if (result != LIST_SUCCESS) {
         listDestroy(list);
         return NULL;
@@ -187,7 +187,7 @@ void freeString(ListElement str) {
     free(str);
 }
 
-ListElement copyIntPair(ListElement elem) {
+ListElement copyCountData(ListElement elem) {
     if (elem == NULL) return NULL;
 
     CountData elem_p = elem;
@@ -200,11 +200,11 @@ ListElement copyIntPair(ListElement elem) {
     return new_elem;
 }
 
-void freeIntPair(ListElement elem) {
+void freeCountData(ListElement elem) {
     free(elem);
 }
 
-int compareIntPairs(ListElement data1, ListElement data2) {
+int compareCountData(ListElement data1, ListElement data2) {
     if (data1 == NULL || data2 == NULL) return NULL;
 
     CountData data1_p = data1;
