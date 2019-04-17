@@ -8,20 +8,20 @@
 #include "judge.h"
 #include "list.h"
 
+/********************** MACROS, ENUMS & STRUCTS ***********************/
+// macros for strings states list
 #define SPACECHAR ' '
 #define SPACE " "
 #define COMMA ","
 #define DASH "-"
 #define NUM_OF_EXTRA_CHARS 4
+
+// macro for audience precent
 #define ONE_HUNDREND_PRECENT 1
+
+// macros for points compare and enums for points distribution
 #define FIRST_BEFORE_SECOND -1
 #define SECOND_BEFORE_FIRST 1
-
-typedef enum mapType_t {
-    STATES_MAP,
-    JUDGES_MAP
-} MapType;
-
 typedef enum {
     TENTH_PLACE = 1,
     NINTH_PLACE,
@@ -35,13 +35,23 @@ typedef enum {
     FIRST_PLACE = 12
 } Ranking;
 
+//  enums for isIDValid function
+typedef enum mapType_t {
+    STATES_MAP,
+    JUDGES_MAP
+} MapType;
+
+// struct for votes/points count lists
 typedef struct countData_t {
     int id;
     unsigned int count;
 } *CountData;
 
-
+/********************** EUROVISION HELP FUNCTIONS ***********************/
+// check if state/judge ID is valid
 EurovisionResult isIDValid(Map map, MapType type, int id);
+// change the vote count from state to state by
+EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int difference);
 bool isLowerCase(char c);
 bool checkValidName(const char* name);
 bool resultsContain (Map states, Map judges, int judge_id, int state_id);
@@ -49,12 +59,10 @@ bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
 
-List audiencePoints(Map states, int audiencePrecent);
 
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
-EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int diff);
 /********************** COUNT LIST FUNCTIONS ***********************/
 
 ListElement copyIntPair(ListElement elem);
@@ -68,6 +76,9 @@ List countListCreate(Map map);
 List convertVotesToList(Map votes);
 // Converts final results to list of state names
 List convertToStringlist(List finalResults, Map states);
+
+/********************** CONTEST FUNCTIONS ***********************/
+List audiencePoints(Map states, int audiencePrecent);
 
 /********************** FRIENDLY STATE FUNCTIONS ***********************/
 int stringCompare(void* str1, void* str2);
