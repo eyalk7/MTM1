@@ -58,7 +58,8 @@ bool checkValidName(const char* name);
 /** check if the given judge's results contain the given state */
 bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
-/** Map ADT functions for Judge/State/state_favorites keysElements & votes/state_favorites dataElements */
+/** Map ADT functions for Judge/State/state_favorites keysElements
+ * and for votes/state_favorites dataElements */
 int* copyInteger(int num);
 int compareIntegers(int a, int b);
 
@@ -75,17 +76,25 @@ typedef struct countData_t {
     unsigned int count;
 } *CountData;
 
+/** copy, free & compare functions for CountData element */
 ListElement copyCountData(ListElement elem);
 void freeCountData(ListElement elem);
 int compareCountData(ListElement data1, ListElement data2);
 
-// Assumption: Given map has keys of type int*
+/** create CountData List
+ * Assumption: Given map has keys of type int* */
 List countListCreate(Map map);
+
+/** converts given votes map to CountData List */
 List convertVotesToList(Map votes);
-// Converts final results to list of state names
+
+/** Converts final ranking of states (in CountData List)
+ * to list of state names (strings List) */
 List convertToStringlist(List finalResults, Map states);
 
 /********************** CONTEST FUNCTIONS ***********************/
+/** calculate the audience point (multiplied by audience precent)
+ * of all states in given States map and returns CountData List */
 List audiencePoints(Map states, int audiencePrecent);
 
 /********************** FRIENDLY STATE FUNCTIONS ***********************/
