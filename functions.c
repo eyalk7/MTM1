@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <stdio.h>
 #include "functions.h"
 
 EurovisionResult isIDValid(Map map, MapType type, int id) {
