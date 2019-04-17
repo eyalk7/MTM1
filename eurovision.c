@@ -237,7 +237,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     }
 
     // sort the final list
-    if (listSort(points_list, compareIntPairs) != LIST_SUCCESS){
+    if (listSort(points_list, compareCountData) != LIST_SUCCESS){
         listDestroy(points_list);
         return NULL;
     }
@@ -257,7 +257,7 @@ List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     if (audience_points == NULL) return NULL;
 
     // sort the final list
-    if (listSort(audience_points, compareIntPairs) != LIST_SUCCESS) {
+    if (listSort(audience_points, compareCountData) != LIST_SUCCESS) {
         listDestroy(audience_points);
         return NULL;
     }
