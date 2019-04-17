@@ -9,18 +9,18 @@
 #include "list.h"
 
 /********************** MACROS, ENUMS & STRUCTS ***********************/
-// macros for strings states list
+/** macros for strings states list */
 #define SPACECHAR ' '
 #define SPACE " "
 #define COMMA ","
 #define DASH "-"
 #define NUM_OF_EXTRA_CHARS 4
 
-// macro for audience precent
+/** macro for audience precent */
 #define ONE_HUNDREND_PRECENT 1
 
-// macros for points compare and enums for points distribution
-#define FIRST_BEFORE_SECOND -1
+/** macros for points compare and enums for points distribution */
+#define FIRST_BEFORE_SECOND (-1)
 #define SECOND_BEFORE_FIRST 1
 typedef enum {
     TENTH_PLACE = 1,
@@ -35,25 +35,32 @@ typedef enum {
     FIRST_PLACE = 12
 } Ranking;
 
-//  enums for isIDValid function
+/**  enums for isIDValid function */
 typedef enum mapType_t {
     STATES_MAP,
     JUDGES_MAP
 } MapType;
 
-// struct for votes/points count lists
+/** struct for votes/points count lists */
 typedef struct countData_t {
     int id;
     unsigned int count;
 } *CountData;
 
 /********************** EUROVISION HELP FUNCTIONS ***********************/
-// check if state/judge ID is valid
+/** check if state/judge ID is valid */
 EurovisionResult isIDValid(Map map, MapType type, int id);
-// change the vote count from state to state by
+
+/** change the vote count from state to state by */
 EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int difference);
+
+/** check if all letters lower case */
 bool isLowerCase(char c);
+
+/** check valid judge/song/state name */
 bool checkValidName(const char* name);
+
+/** check if the given judge's results contain the given state */
 bool resultsContain (Map states, Map judges, int judge_id, int state_id);
 
 int* copyInteger(int num);
@@ -68,8 +75,6 @@ void freeString(ListElement str);
 ListElement copyIntPair(ListElement elem);
 void freeIntPair(ListElement elem);
 int compareIntPairs(ListElement data1, ListElement data2);
-
-List countListCreate(Map map);
 
 // Assumption: Given map has keys of type int*
 List countListCreate(Map map);
