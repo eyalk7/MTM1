@@ -46,7 +46,7 @@ typedef enum mapType_t {
 EurovisionResult isIDValid(Map map, MapType type, int id);
 
 /** change the vote count from state to state by */
-EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int difference);
+EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference);
 
 /** check if all letters lower case */
 bool isLowerCase(char c);
