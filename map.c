@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "map.h"
 
+
 enum {
     EQUAL,
     EQUAL_TO_FIRST,
