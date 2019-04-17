@@ -193,13 +193,13 @@ EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
 
 EurovisionResult eurovisionAddVote(Eurovision eurovision, int stateGiver,
                                    int stateTaker) {
-    return eurovisionChangeVote(eurovision, stateGiver, stateTaker, 1);
+    return eurovisionChangeVote(eurovision->States, stateGiver, stateTaker, 1);
 }
 
 
 EurovisionResult eurovisionRemoveVote(Eurovision eurovision, int stateGiver,
                                       int stateTaker) {
-    return eurovisionChangeVote(eurovision, stateGiver, stateTaker, -1);
+    return eurovisionChangeVote(eurovision->States, stateGiver, stateTaker, -1);
 }
 
 List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {

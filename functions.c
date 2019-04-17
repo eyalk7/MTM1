@@ -242,13 +242,13 @@ bool statesAreFriendly(int* stateId1, int* favState1, int* stateId2, int* favSta
     return (*stateId1 == *favState2 && *stateId2 == *favState1);
 }
 
-EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int stateTaker, int difference) {
+EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference) {
     // check valid arguments
-    if (eurovision == NULL) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation1 = isIDValid(eurovision->States, STATES_MAP, stateGiver);
+    if (states == NULL) return EUROVISION_NULL_ARGUMENT;
+    EurovisionResult id_validation1 = isIDValid(states, STATES_MAP, stateGiver);
     assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) return id_validation1;
-    EurovisionResult id_validation2 = isIDValid(eurovision->States, STATES_MAP, stateTaker);
+    EurovisionResult id_validation2 = isIDValid(states, STATES_MAP, stateTaker);
     assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) return id_validation2;
 
@@ -256,7 +256,7 @@ EurovisionResult eurovisionChangeVote(Eurovision eurovision, int stateGiver, int
     if (stateGiver == stateTaker) return EUROVISION_SAME_STATE;
 
     // check current num of votes for stateTaker in stateGiver's votes map
-    StateData giver_data = mapGet(eurovision->States, &stateGiver);
+    StateData giver_data = mapGet(states, &stateGiver);
     assert(giver_data != NULL);
     int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
 
