@@ -335,5 +335,6 @@ bool testRunGetFriendlyStates() {
 
     listDestroy(friendlies);
     eurovisionDestroy(eurovision);
+
     return true;
 }

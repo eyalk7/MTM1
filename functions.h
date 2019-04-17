@@ -98,7 +98,10 @@ List convertToStringlist(List finalResults, Map states);
 List audiencePoints(Map states, int audiencePrecent);
 
 /********************** FRIENDLY STATE FUNCTIONS ***********************/
+/** string compare function for the strings states List sort */
 int stringCompare(void* str1, void* str2);
+
+/** check if states are friendly by the assigment definition */
 bool statesAreFriendly(int *stateId1, int *favState1, int *stateId2, int *favState2);
 
 #endif //FUNCTIONS_H
