@@ -274,7 +274,7 @@ int compareCountData(ListElement data1, ListElement data2) {
 int stringCompare(void* str1, void* str2) {
     return strcmp(str1, str2);
 }
-bool statesAreFriendly(int* stateId1, int* favState1, int* stateId2, int* favState2) {
+bool statesAreFriendly(const int* stateId1,const int* favState1,const int* stateId2,const int* favState2) {
     if (!stateId1 || !favState1 || !stateId2 || !favState2) return false;
 
     return (*stateId1 == *favState2 && *stateId2 == *favState1);
