@@ -320,9 +320,9 @@ char *getStatePair(StateData state1, StateData state2) {
         max = name2;
     }
     strcat(statePair, min);
-    strcat(statePair, (char*)SPACE);
-    strcat(statePair, (char*)DASH);
-    strcat(statePair, (char*)SPACE);
+    strcat(statePair, SPACE);
+    strcat(statePair, DASH);
+    strcat(statePair, SPACE);
     strcat(statePair, max);
 
     return statePair;
