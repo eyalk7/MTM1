@@ -293,6 +293,7 @@ Map getStateFavorites(Map states) {
         }
         //outside function - getFavoriteStates(votes map) - second column
         int favState = getFavoriteState(state->votes);
+
         //insert stateId first column
         MapResult result = mapPut(state_favorites, stateId, &favState);
 
@@ -311,6 +312,7 @@ char *getStatePair(StateData state1, StateData state2) {
 
     char *statePair = malloc(strlen(name1) + strlen(name2) + NUM_OF_EXTRA_CHARS + 1);
     if (!statePair) return NULL;
+    statePair[0] = '\0';
 
     char *min = name2, *max = name1;
     if (strcmp(name1, name2) < 0) {
