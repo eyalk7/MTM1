@@ -59,7 +59,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
                                     const char *songName) {
     // check valid arguments
     if (!eurovision || !stateName || !songName) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, stateId);
+    EurovisionResult id_validation = checkIDValid(eurovision->States, STATES_MAP, stateId);
     assert(id_validation == EUROVISION_STATE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_STATE_NOT_EXIST);
     if (id_validation != EUROVISION_STATE_NOT_EXIST) return id_validation;
     if (!checkValidName(stateName) || !checkValidName(songName)) return EUROVISION_INVALID_NAME;
@@ -112,7 +112,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     // check valid arguments
     if (!eurovision) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = isIDValid(eurovision->States, STATES_MAP, stateId);
+    EurovisionResult id_validation = checkIDValid(eurovision->States, STATES_MAP, stateId);
     if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
 
     //iterate on "States" map & remove from each state's "Votes" map the given stateId
@@ -141,12 +141,12 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
                                     int *judgeResults) {
     // check valid arguments
     if (!eurovision || !judgeName || !judgeResults) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = isIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
+    EurovisionResult id_validation = checkIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
     assert(id_validation == EUROVISION_JUDGE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_JUDGE_NOT_EXIST);
     if (id_validation != EUROVISION_JUDGE_NOT_EXIST) return id_validation;
     if (!checkValidName(judgeName)) return EUROVISION_INVALID_NAME;
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        id_validation = isIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
+        id_validation = checkIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
         assert(id_validation == EUROVISION_STATE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_STATE_NOT_EXIST);
         if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
     }
@@ -182,7 +182,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
 EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
     // check valid arguments
     if (!eurovision) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = isIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
+    EurovisionResult id_validation = checkIDValid(eurovision->Judges, JUDGES_MAP, judgeId);
     assert(id_validation == EUROVISION_JUDGE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_JUDGE_NOT_EXIST);
     if (id_validation != EUROVISION_JUDGE_ALREADY_EXIST) return id_validation;
 
@@ -212,7 +212,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     if (mapGetFirst(eurovision->States) == NULL) return listCreate(copyString, freeString);
 
     // get the audience points
-    List points_list = audiencePoints(eurovision->States, audiencePercent);
+    List points_list = getAudiencePoints(eurovision->States, audiencePercent);
     if (!points_list) return NULL;
 
     // update the points list according to the judges's results
@@ -239,7 +239,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     }
 
     // convert to names list & destroy & return
-    List winners_list = convertToStringlist(points_list, eurovision->States);
+    List winners_list = convertToStringList(points_list, eurovision->States);
     listDestroy(points_list);
     return winners_list;
 }
@@ -249,7 +249,7 @@ List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     if (!eurovision) return NULL;
 
     // get audience Points
-    List audience_points = audiencePoints(eurovision->States, ONE_HUNDREND_PRECENT);
+    List audience_points = getAudiencePoints(eurovision->States, ONE_HUNDREND_PRECENT);
     if (!audience_points) return NULL;
 
     // sort the final list
@@ -259,7 +259,7 @@ List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     }
 
     // convert to names list & destroy list & return
-    List winners_list = convertToStringlist(audience_points, eurovision->States);
+    List winners_list = convertToStringList(audience_points, eurovision->States);
     listDestroy(audience_points);
     return winners_list;
 }
@@ -292,7 +292,7 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
         int *favState2 = mapGet(state_favorites, stateId2);
 
         // areFriendly also checks if the pointers are NULL ! :)
-        if (statesAreFriendly(stateId, favState1, stateId2, favState2)) {
+        if (checkFriendlyStates(stateId, favState1, stateId2, favState2)) {
             // if it is a match save the states pair names on the list - after lexicographical sort
             StateData state1 = mapGet(eurovision->States, stateId);
             StateData state2 = mapGet(eurovision->States, stateId2);

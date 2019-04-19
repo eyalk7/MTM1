@@ -3,32 +3,33 @@
 #include <assert.h>
 #include "functions.h"
 
-EurovisionResult isIDValid(Map map, MapType type, int id) {
+EurovisionResult checkIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
     assert(map != NULL);
     assert(type == STATES_MAP || type == JUDGES_MAP);
 
-    //check ID >= 0 & check if Id already exist in the given map
+    //check ID >= 0
     if (id < 0) return EUROVISION_INVALID_ID;
 
+    // check if Id already exist in the given map
     if (mapContains(map, &id)) {
         if (type == STATES_MAP) return EUROVISION_STATE_ALREADY_EXIST;
         return EUROVISION_JUDGE_ALREADY_EXIST;  // else type == JUDGES_MAP
     }
 
-    // else state not exist
+
     if (type == STATES_MAP) return EUROVISION_STATE_NOT_EXIST;
     return EUROVISION_JUDGE_NOT_EXIST;  // else type == JUDGES_MAP
 }
 
-bool isLowerCase(char c) {
+bool checkLowerCase(char c) {
     return ('a' <= c && c <= 'z');
 }
 
 bool checkValidName(const  char* name) {
     //check the given string only contains small letters and spaces
     for (int i = 0; i < strlen(name); i++) {
-        if (!isLowerCase(name[i]) && name[i] != ' ') return false;
+        if (!checkLowerCase(name[i]) && name[i] != ' ') return false;
     }
     return true;
 }
@@ -56,10 +57,11 @@ int compareInts(MapKeyElement integer1, MapKeyElement integer2) {
     return a - b;
 }
 
-List audiencePoints(Map states, int audiencePercent) {
+List getAudiencePoints(Map states, int audiencePercent) {
     // create an audience points list with all states
     List audience_points = countListCreate(states);
     if (!audience_points) return NULL;
+
     Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 
     // iterate on the States map, check each state's top 10 & update the points list
@@ -98,10 +100,10 @@ List audiencePoints(Map states, int audiencePercent) {
 EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference) {
     // check valid arguments
     if (states == NULL) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation1 = isIDValid(states, STATES_MAP, stateGiver);
+    EurovisionResult id_validation1 = checkIDValid(states, STATES_MAP, stateGiver);
     assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) return id_validation1;
-    EurovisionResult id_validation2 = isIDValid(states, STATES_MAP, stateTaker);
+    EurovisionResult id_validation2 = checkIDValid(states, STATES_MAP, stateTaker);
     assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
     if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) return id_validation2;
 
@@ -186,7 +188,7 @@ List convertVotesToList(Map votes) {
     return list;
 }
 
-List convertToStringlist(List finalResults, Map states) {
+List convertToStringList(List finalResults, Map states) {
     // check parameters?
     List state_names = listCreate(copyString, freeString);
 
@@ -262,7 +264,7 @@ int stringCompare(void* str1, void* str2) {
     return strcmp(str1, str2);
 }
 
-bool statesAreFriendly(const int* stateId1,const int* favState1,const int* stateId2,const int* favState2) {
+bool checkFriendlyStates(const int* stateId1,const int* favState1,const int* stateId2,const int* favState2) {
     if (!stateId1 || !favState1 || !stateId2 || !favState2) return false;
 
     return (*stateId1 == *favState2 && *stateId2 == *favState1);

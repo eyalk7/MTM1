@@ -42,13 +42,13 @@ typedef enum mapType_t {
 
 /********************** EUROVISION HELP FUNCTIONS ***********************/
 /** Check if given state/judge ID is valid */
-EurovisionResult isIDValid(Map map, MapType type, int id);
+EurovisionResult checkIDValid(Map map, MapType type, int id);
 
 /** change the vote count from state to state by a given amount */
 EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference);
 
 /** check if a given character is a lower case alphabet letter */
-bool isLowerCase(char c);
+bool checkLowerCase(char c);
 
 /** check valid judge/song/state name */
 bool checkValidName(const char* name);
@@ -86,19 +86,19 @@ List convertVotesToList(Map votes);
 
 /** Converts final ranking of states (in CountData List)
  * to list of state names (strings List) */
-List convertToStringlist(List finalResults, Map states);
+List convertToStringList(List finalResults, Map states);
 
 /********************** CONTEST FUNCTIONS ***********************/
 /** calculate the audience point (multiplied by audience percent)
  * of all states in given States map and returns CountData List */
-List audiencePoints(Map states, int audiencePercent);
+List getAudiencePoints(Map states, int audiencePercent);
 
 /********************** FRIENDLY STATE FUNCTIONS ***********************/
 /** string compare function for the state names List sort */
 int stringCompare(void* str1, void* str2);
 
 /** Check if states are friendly by the assigment definition */
-bool statesAreFriendly(const int *stateId1,const int *favState1,const int *stateId2,const int *favState2);
+bool checkFriendlyStates(const int *stateId1,const int *favState1,const int *stateId2,const int *favState2);
 
 /** returns a map that shows each state's "favorite state"
  * (key = state's id, value = favorite state's id) */
