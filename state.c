@@ -7,8 +7,10 @@
 #include "functions.h"
 
 /************************* STATE MAP FUNCTIONS *******************************/
+StateKeyElement copyStateKeyElement(StateKeyElement key) {
+    return copyInt(key);
+}
 
-// copyStateDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
 StateDataElement copyStateDataElement(StateDataElement data) {
     // casting
     StateData state_data = (StateData)data;
@@ -46,11 +48,12 @@ StateDataElement copyStateDataElement(StateDataElement data) {
     //return address
     return copy;
 }
-// copyStateKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
-StateKeyElement copyStateKeyElement(StateKeyElement key) {
-    return copyInt(key);
+
+void freeStateKeyElement(StateKeyElement key) {
+    //free allocation
+    freeInt(key);
 }
-// freeStateDataElement - Function pointer to be used for removing data elements from the map
+
 void freeStateDataElement(StateDataElement data) {
     StateData state_data = (StateData)data;
     //mapDestroy the Votes map
@@ -61,15 +64,38 @@ void freeStateDataElement(StateDataElement data) {
     //free stateData allocation
     free(state_data);
 }
-// freeStateKeyElement - Function pointer to be used for removing key elements from the map
-void freeStateKeyElement(StateKeyElement key) {
-    //free allocation
-    freeInt(key);
-}
-// compareStateKeyElements - Function pointer to be used for comparing key elements inside the map. Used to check if new elements already exist in the map.
+
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     //outside function
     return compareInts(key1, key2);
+}
+
+/************************* VOTE MAP FUNCTIONS *******************************/
+VoteKeyElement copyVoteKeyElement(VoteKeyElement key) {
+    return copyInt(key);
+}
+
+VoteDataElement copyVoteDataElement(VoteDataElement data) {
+    return copyInt(data);
+}
+
+void freeVoteKeyElement(VoteKeyElement key) {
+    //free
+    freeInt(key);
+}
+
+void freeVoteDataElement(VoteDataElement data) {
+    //free
+    freeInt(data);
+}
+
+int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2) {
+    return compareInts(key1, key2);
+}
+
+/********************** FRIENDLY STATE FUNCTIONS ***********************/
+int stringCompare(void* str1, void* str2) {
+    return strcmp(str1, str2);
 }
 
 int getFavoriteState(Map votes) {
@@ -87,40 +113,6 @@ int getFavoriteState(Map votes) {
     }
 
     return *(int*)favState; // id of most voted state
-}
-
-
-/***************************************************** VOTE MAP FUNCTIONS ************************************************************/
-
-// copyVotesDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
-VoteDataElement copyVoteDataElement(VoteDataElement data) {
-    //outside function
-    return copyInt(data);
-}
-// copyVotesKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
-VoteKeyElement copyVoteKeyElement(VoteKeyElement key) {
-    //outside function
-    return copyInt(key);
-}
-// freeVotesDataElement - Function pointer to be used for removing data elements from the map
-void freeVoteDataElement(VoteDataElement data) {
-    //free
-    freeInt(data);
-}
-// freeVotesKeyElement - Function pointer to be used for removing key elements from the map
-void freeVoteKeyElement(VoteKeyElement key) {
-    //free
-    freeInt(key);
-}
-// compareVotesKeyElements - Function pointer to be used for comparing key elements inside the map. Used to check if new elements already exist in the map.
-int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2) {
-    return compareInts(key1, key2);
-}
-
-/********************** FRIENDLY STATE FUNCTIONS ***********************/
-
-int stringCompare(void* str1, void* str2) {
-    return strcmp(str1, str2);
 }
 
 bool checkFriendlyStates(const int* stateId1,const int* favState1,const int* stateId2,const int* favState2) {

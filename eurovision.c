@@ -11,8 +11,8 @@
 #include "state.h"
 
 struct eurovision_t {
-    Map States; // keys = StateId, data = StateData
-    Map Judges; // keys = JudgeId, data = JudgeData
+    Map States; // keys = State ID, data = StateData
+    Map Judges; // keys = Judge ID, data = JudgeData
 };
 
 Eurovision eurovisionCreate() {
@@ -125,7 +125,7 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     //iterate on "Judges" map & remove judges that voted for the given stateId
     MAP_FOREACH(int *, iterator, eurovision->Judges) {
         JudgeData judgeData = mapGet(eurovision->Judges, iterator);
-        if (resultsContainState(judgeData, stateId)) {
+        if (judgeResultsContain(judgeData, stateId)) {
             eurovisionRemoveJudge(eurovision, *iterator);
         }
     }

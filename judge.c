@@ -4,11 +4,15 @@
 #include "functions.h"
 #include "judge.h"
 
-// copyJudgeDataElement - Function pointer to be used for copying data elements into	the map or when copying the map.
+/********************** JUDGE MAP FUNCTIONS ***********************/
+JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
+    return copyInt(key);
+}
+
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     // casting
     JudgeData judge_data = (JudgeData)data;
-    
+
     //memory allocation for the JudgeData and check
     JudgeData copy = malloc(sizeof(*copy));
     if (!copy) return NULL;
@@ -29,11 +33,11 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     return copy;
 }
 
-// copyJudgeKeyElement - Function pointer to be used for copying key elements into	the map or when copying the map.
-JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
-    return copyInt(key);
+void freeJudgeKeyElement(JudgeKeyElement key) {
+    //free allocation
+    freeInt(key);
 }
-// freeJudgeDataElement - Function pointer to be used for removing data elements from the map
+
 void freeJudgeDataElement(JudgeDataElement data) {
     JudgeData tmp = (JudgeData)data;
     //free strings allocation
@@ -41,21 +45,7 @@ void freeJudgeDataElement(JudgeDataElement data) {
     //free judgeData allocation
     free(tmp);
 }
-// freeJudgeKeyElement - Function pointer to be used for removing key elements from the map
-void freeJudgeKeyElement(JudgeKeyElement key) {
-    //free allocation
-    freeInt(key);
-}
-// compareJudgeKeyElements - Function pointer to be used for comparing key elements inside the map. Used to check if new elements already exist in the map.
+
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
     return compareInts(key1, key2);
-}
-
-bool resultsContainState(JudgeData judge, int state_id) {
-    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        if (judge->results[i] == state_id) {
-            return true;
-        }
-    }
-    return false;
 }

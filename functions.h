@@ -39,9 +39,6 @@ typedef enum mapType_t {
 /** Check if given state/judge ID is valid */
 EurovisionResult checkIDValid(Map map, MapType type, int id);
 
-/** change the vote count from state to state by a given amount */
-EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference);
-
 /** check if a given character is a lower case alphabet letter */
 bool checkLowerCase(char c);
 
@@ -57,6 +54,12 @@ int compareInts(MapKeyElement integer1, MapKeyElement integer2);
 /** List ADT functions for using a string list of state names */
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
+
+/** change the vote count from state to state by a given amount */
+EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference);
+
+/** checks if a judge gave points to the given state */
+bool judgeResultsContain(JudgeData judge, int stateId);
 
 /********************** COUNT LIST FUNCTIONS & STRUCTS ***********************
 * Count List is a List of CountData for saving the points/votes of each state/judge */

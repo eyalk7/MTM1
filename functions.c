@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "functions.h"
 
+/***************************************** EUROVISION HELP FUNCTIONS **********************************************************/
 EurovisionResult checkIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
     assert(map != NULL);
@@ -42,11 +43,9 @@ void* copyInt(void* integer) {
     //return address
     return copy;
 }
-
 void freeInt(void* integer) {
     free(integer);
 }
-
 int compareInts(MapKeyElement integer1, MapKeyElement integer2) {
     //compare the ints
     //return 0 if equal
@@ -57,44 +56,16 @@ int compareInts(MapKeyElement integer1, MapKeyElement integer2) {
     return a - b;
 }
 
-List getAudiencePoints(Map states, int audiencePercent) {
-    // create an audience points list with all states
-    List audience_points = countListCreate(states);
-    if (!audience_points) return NULL;
+ListElement copyString(ListElement str) {
+    char* copy = malloc(strlen(str) + 1);
+    if (!copy) return NULL;
 
-    Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
+    strcpy(copy, str);
 
-    // iterate on the States map, check each state's top 10 & update the points list
-    MAP_FOREACH(int*, iterator, states) {
-        // get the state's data
-        StateData state_data = mapGet(states, iterator);
-        assert(state_data != NULL);
-
-        // create the state's sorted vote list:
-        List state_vote = convertVotesToList(state_data->votes);
-        if (!state_vote) {
-            listDestroy(audience_points);
-            return NULL;
-        }
-
-        // update the audience_points list according to the top 10
-        CountData state_vote_iterator = listGetFirst(state_vote);
-        for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-            // if end of state's votes list, break
-            if (state_vote_iterator == NULL) break;
-            // iterate on audience points list & find the state & add the points
-            LIST_FOREACH(CountData, audience_points_iterator, audience_points){
-                if (audience_points_iterator->id == state_vote_iterator->id){
-                    audience_points_iterator->voteCount += audiencePercent*ranking[i];
-                }
-            }
-            state_vote_iterator = listGetNext(state_vote);
-        }
-        // destroy the state_vote list
-        listDestroy(state_vote);
-    }
-
-    return audience_points;
+    return copy;
+}
+void freeString(ListElement str) {
+    free(str);
 }
 
 EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference) {
@@ -135,7 +106,47 @@ EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker
     return EUROVISION_SUCCESS;
 }
 
+bool judgeResultsContain(JudgeData judge, int state_id) {
+    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        if (judge->results[i] == state_id) return true;
+    }
+    return false;
+}
+
 /********************************************* COUNT LIST FUNCTIONS **********************************************************/
+ListElement copyCountData(ListElement elem) {
+    if (elem == NULL) return NULL;
+
+    CountData elem_p = elem;
+    CountData new_elem = malloc(sizeof(*elem_p));
+    if (new_elem == NULL) return NULL;
+
+    new_elem->voteCount = elem_p->voteCount;
+    new_elem->id = elem_p->id;
+
+    return new_elem;
+}
+void freeCountData(ListElement elem) {
+    free(elem);
+}
+int compareCountData(ListElement data1, ListElement data2) {
+    assert(data1 != NULL && data2 != NULL);
+
+    CountData data1_p = data1;
+    CountData data2_p = data2;
+
+    // if data1 need to come before data2 return FIRST_BEFORE_SECOND, else return SECOND_BEFORE_FIRST
+
+    if (data1_p->voteCount == data2_p->voteCount) {
+        if (data1_p->id < data2_p->id) return FIRST_BEFORE_SECOND;
+        //else
+        return SECOND_BEFORE_FIRST;
+    }
+
+    if (data1_p->voteCount > data2_p->voteCount) return FIRST_BEFORE_SECOND;
+    //else
+    return SECOND_BEFORE_FIRST;
+}
 
 List countListCreate(Map map) {
     // check parameter?
@@ -210,51 +221,43 @@ List convertToStringList(List finalResults, Map states) {
     return state_names;
 }
 
-ListElement copyString(ListElement str) {
-    char* copy = malloc(strlen(str) + 1);
-    if (!copy) return NULL;
+/********************************************* CONTEST FUNCTIONS **********************************************************/
+List getAudiencePoints(Map states, int audiencePercent) {
+    // create an audience points list with all states
+    List audience_points = countListCreate(states);
+    if (!audience_points) return NULL;
 
-    strcpy(copy, str);
+    Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 
-    return copy;
-}
+    // iterate on the States map, check each state's top 10 & update the points list
+    MAP_FOREACH(int*, iterator, states) {
+        // get the state's data
+        StateData state_data = mapGet(states, iterator);
+        assert(state_data != NULL);
 
-void freeString(ListElement str) {
-    free(str);
-}
+        // create the state's sorted vote list:
+        List state_vote = convertVotesToList(state_data->votes);
+        if (!state_vote) {
+            listDestroy(audience_points);
+            return NULL;
+        }
 
-ListElement copyCountData(ListElement elem) {
-    if (elem == NULL) return NULL;
-
-    CountData elem_p = elem;
-    CountData new_elem = malloc(sizeof(*elem_p));
-    if (new_elem == NULL) return NULL;
-
-    new_elem->voteCount = elem_p->voteCount;
-    new_elem->id = elem_p->id;
-
-    return new_elem;
-}
-
-void freeCountData(ListElement elem) {
-    free(elem);
-}
-
-int compareCountData(ListElement data1, ListElement data2) {
-    assert(data1 != NULL && data2 != NULL);
-
-    CountData data1_p = data1;
-    CountData data2_p = data2;
-
-    // if data1 need to come before data2 return FIRST_BEFORE_SECOND, else return SECOND_BEFORE_FIRST
-
-    if (data1_p->voteCount == data2_p->voteCount) {
-        if (data1_p->id < data2_p->id) return FIRST_BEFORE_SECOND;
-        //else
-        return SECOND_BEFORE_FIRST;
+        // update the audience_points list according to the top 10
+        CountData state_vote_iterator = listGetFirst(state_vote);
+        for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+            // if end of state's votes list, break
+            if (state_vote_iterator == NULL) break;
+            // iterate on audience points list & find the state & add the points
+            LIST_FOREACH(CountData, audience_points_iterator, audience_points){
+                if (audience_points_iterator->id == state_vote_iterator->id){
+                    audience_points_iterator->voteCount += audiencePercent*ranking[i];
+                }
+            }
+            state_vote_iterator = listGetNext(state_vote);
+        }
+        // destroy the state_vote list
+        listDestroy(state_vote);
     }
 
-    if (data1_p->voteCount > data2_p->voteCount) return FIRST_BEFORE_SECOND;
-    //else
-    return SECOND_BEFORE_FIRST;
+    return audience_points;
 }
