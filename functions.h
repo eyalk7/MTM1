@@ -9,11 +9,6 @@
 #include "list.h"
 
 /********************** MACROS & ENUMS ***********************/
-/** macros for strings states list */
-#define SPACE " "
-#define DASH "-"
-#define NUM_OF_EXTRA_CHARS 3
-
 /** macro for audience precent */
 #define ONE_HUNDREND_PRECENT 1
 
@@ -92,21 +87,5 @@ List convertToStringList(List finalResults, Map states);
 /** calculate the audience point (multiplied by audience percent)
  * of all states in given States map and returns CountData List */
 List getAudiencePoints(Map states, int audiencePercent);
-
-/********************** FRIENDLY STATE FUNCTIONS ***********************/
-/** string compare function for the state names List sort */
-int stringCompare(void* str1, void* str2);
-
-/** Check if states are friendly by the assigment definition */
-bool checkFriendlyStates(const int *stateId1,const int *favState1,const int *stateId2,const int *favState2);
-
-/** returns a map that shows each state's "favorite state"
- * (key = state's id, value = favorite state's id) */
-Map getStateFavorites(Map states);
-
-/** returns a string of the state names in the format defined in the assigment:
- * "{first state's name} - {second state's name}"
- * (the state names are ordered lexicographically) */
-char *getStatePair(StateData state1, StateData state2);
 
 #endif //FUNCTIONS_H
