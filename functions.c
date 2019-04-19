@@ -28,7 +28,7 @@ bool isLowerCase(char c) {
 bool checkValidName(const  char* name) {
     //check the given string only contains small letters and spaces
     for (int i = 0; i < strlen(name); i++) {
-        if (!isLowerCase(name[i]) && name[i] != SPACECHAR) return false;
+        if (!isLowerCase(name[i]) && name[i] != ' ') return false;
     }
     return true;
 }
@@ -46,7 +46,7 @@ void freeInt(void* integer) {
     free(integer);
 }
 
-int compareInts(void* integer1, void* integer2) {
+int compareInts(MapKeyElement integer1, MapKeyElement integer2) {
     //compare the ints
     //return 0 if equal
     //return bigger than 0 if first is bigger
@@ -56,19 +56,7 @@ int compareInts(void* integer1, void* integer2) {
     return a - b;
 }
 
-bool resultsContain (Map states, Map judges, int judge_id, int state_id) {
-    // assert valid arguments (checked already in the sending function)
-    assert(states != NULL && judges != NULL && isIDValid(states, STATES_MAP, state_id) == EUROVISION_STATE_ALREADY_EXIST);
-
-    // get the judge's data & assert judge_id exist in the map
-    JudgeDataElement tmp_judge = mapGet(judges, &judge_id);
-    assert(tmp_judge != NULL);
-
-    // iterate on the judge's results and check if state_id is there
-    return resultsContainState(tmp_judge, state_id);
-}
-
-List audiencePoints(Map states, int audiencePrecent) {
+List audiencePoints(Map states, int audiencePercent) {
     // create an audience points list with all states
     List audience_points = countListCreate(states);
     if (!audience_points) return NULL;
@@ -95,7 +83,7 @@ List audiencePoints(Map states, int audiencePrecent) {
             // iterate on audience points list & find the state & add the points
             LIST_FOREACH(CountData, audience_points_iterator, audience_points){
                 if (audience_points_iterator->id == state_vote_iterator->id){
-                    audience_points_iterator->count += audiencePrecent*ranking[i];
+                    audience_points_iterator->voteCount += audiencePercent*ranking[i];
                 }
             }
             state_vote_iterator = listGetNext(state_vote);
@@ -161,7 +149,7 @@ List countListCreate(Map map) {
         }
 
         data->id = *key;
-        data->count = 0; // intialize to 0
+        data->voteCount = 0; // intialize to 0
 
         ListResult result = listInsertFirst(list, data);
         freeCountData(data);
@@ -175,7 +163,6 @@ List countListCreate(Map map) {
     return list;
 }
 
-
 List convertVotesToList(Map votes) {
     // check parameter?
 
@@ -187,7 +174,7 @@ List convertVotesToList(Map votes) {
             listDestroy(list);
             return NULL;
         }
-        elem->count = *data;
+        elem->voteCount = *data;
     }
 
     ListResult result = listSort(list, compareCountData);
@@ -241,7 +228,7 @@ ListElement copyCountData(ListElement elem) {
     CountData new_elem = malloc(sizeof(*elem_p));
     if (new_elem == NULL) return NULL;
 
-    new_elem->count = elem_p->count;
+    new_elem->voteCount = elem_p->voteCount;
     new_elem->id = elem_p->id;
 
     return new_elem;
@@ -259,13 +246,13 @@ int compareCountData(ListElement data1, ListElement data2) {
 
     // if data1 need to come before data2 return FIRST_BEFORE_SECOND, else return SECOND_BEFORE_FIRST
 
-    if (data1_p->count == data2_p->count) {
+    if (data1_p->voteCount == data2_p->voteCount) {
         if (data1_p->id < data2_p->id) return FIRST_BEFORE_SECOND;
         //else
         return SECOND_BEFORE_FIRST;
     }
 
-    if (data1_p->count > data2_p->count) return FIRST_BEFORE_SECOND;
+    if (data1_p->voteCount > data2_p->voteCount) return FIRST_BEFORE_SECOND;
     //else
     return SECOND_BEFORE_FIRST;
 }
@@ -274,11 +261,13 @@ int compareCountData(ListElement data1, ListElement data2) {
 int stringCompare(void* str1, void* str2) {
     return strcmp(str1, str2);
 }
+
 bool statesAreFriendly(const int* stateId1,const int* favState1,const int* stateId2,const int* favState2) {
     if (!stateId1 || !favState1 || !stateId2 || !favState2) return false;
 
     return (*stateId1 == *favState2 && *stateId2 == *favState1);
 }
+
 Map getStateFavorites(Map states) {
     //create map state_favorites - key = stateId, value = favStateId
     Map state_favorites = mapCreate(copyInt, copyInt, freeInt, freeInt, compareInts);

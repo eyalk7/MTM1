@@ -124,7 +124,8 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
 
     //iterate on "Judges" map & remove judges that voted for the given stateId
     MAP_FOREACH(int *, iterator, eurovision->Judges) {
-        if (resultsContain(eurovision->States, eurovision->Judges, *iterator, stateId)) {
+        JudgeData judgeData = mapGet(eurovision->Judges, iterator);
+        if (resultsContainState(judgeData, stateId)) {
             eurovisionRemoveJudge(eurovision, *iterator);
         }
     }
@@ -208,29 +209,24 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
 
     // if state map is empty return empty List
-    if (mapGetFirst(eurovision->States) == NULL) {
-        List winners_list = listCreate(copyString, freeString);
-        return winners_list;
-    }
+    if (mapGetFirst(eurovision->States) == NULL) return listCreate(copyString, freeString);
 
     // get the audience points
     List points_list = audiencePoints(eurovision->States, audiencePercent);
     if (!points_list) return NULL;
 
-    // if there are judges, update the points list according to the judges's results
-    if (mapGetFirst(eurovision->Judges) != NULL) {
-        MAP_FOREACH(JudgeData, iterator, eurovision->Judges) {
-            // get the judge's data
-            JudgeData judge_data = mapGet(eurovision->Judges, iterator);
-            assert(judge_data != NULL);
-            // get the judge's results
-            int *judge_results = judge_data->results;
-            // compare each judge's result with all of the states, if match add points
-            for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-                LIST_FOREACH(CountData, points_list_iterator, points_list) {
-                    if (judge_results[i] == points_list_iterator->id) {
-                        points_list_iterator->count += (100-audiencePercent)*ranking[i];
-                    }
+    // update the points list according to the judges's results
+    MAP_FOREACH(JudgeKeyElement, iterator, eurovision->Judges) {
+        // get the judge's data
+        JudgeData judge_data = mapGet(eurovision->Judges, iterator);
+        assert(judge_data != NULL);
+        // get the judge's results
+        int *judge_results = judge_data->results;
+        // compare each judge's result with all of the states, if match add points
+        for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+            LIST_FOREACH(CountData, points_list_iterator, points_list) {
+                if (judge_results[i] == points_list_iterator->id) {
+                    points_list_iterator->voteCount += (100-audiencePercent)*ranking[i];
                 }
             }
         }

@@ -19,6 +19,6 @@ void freeJudgeDataElement(JudgeDataElement data);
 void freeJudgeKeyElement(JudgeKeyElement key);
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2);
 
-bool resultsContainState(JudgeDataElement judge, int stateId);
+bool resultsContainState(JudgeData judge, int stateId);
 
 #endif //JUDGES_H

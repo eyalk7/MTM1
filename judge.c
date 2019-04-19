@@ -51,10 +51,9 @@ int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
     return compareInts(key1, key2);
 }
 
-bool resultsContainState(JudgeDataElement judge, int state_id) {
-    JudgeData tmp_judge = (JudgeData)judge;
+bool resultsContainState(JudgeData judge, int state_id) {
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        if (tmp_judge->results[i] == state_id) {
+        if (judge->results[i] == state_id) {
             return true;
         }
     }
