@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "functions.h"
 
-/***************************************** EUROVISION HELP FUNCTIONS **********************************************************/
+/*********************** EUROVISION HELP FUNCTIONS *******************************/
 EurovisionResult checkIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
     assert(map != NULL);
@@ -68,14 +68,25 @@ void freeString(ListElement str) {
     free(str);
 }
 
-EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference) {
+EurovisionResult eurovisionChangeVote(Map states,
+                                      int stateGiver,
+                                      int stateTaker,
+                                      int difference) {
     // check valid arguments
     if (states == NULL) return EUROVISION_NULL_ARGUMENT;
     EurovisionResult id_validation1 = checkIDValid(states, STATES_MAP, stateGiver);
-    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST || id_validation1 == EUROVISION_INVALID_ID || id_validation1 == EUROVISION_STATE_NOT_EXIST);
+
+    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST ||
+           id_validation1 == EUROVISION_INVALID_ID ||
+           id_validation1 == EUROVISION_STATE_NOT_EXIST);
+
     if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) return id_validation1;
     EurovisionResult id_validation2 = checkIDValid(states, STATES_MAP, stateTaker);
-    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST || id_validation2 == EUROVISION_INVALID_ID || id_validation2 == EUROVISION_STATE_NOT_EXIST);
+
+    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST ||
+           id_validation2 == EUROVISION_INVALID_ID ||
+           id_validation2 == EUROVISION_STATE_NOT_EXIST);
+
     if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) return id_validation2;
 
     // check that stategiver != stateTaker
@@ -101,7 +112,9 @@ EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker
     }
 
     // else update the votes map
-    if (mapPut(giver_data->votes, &stateTaker, &difference) == MAP_OUT_OF_MEMORY) return EUROVISION_OUT_OF_MEMORY;
+    if (mapPut(giver_data->votes, &stateTaker, &difference) == MAP_OUT_OF_MEMORY) {
+        return EUROVISION_OUT_OF_MEMORY;
+    }
 
     return EUROVISION_SUCCESS;
 }
@@ -113,7 +126,7 @@ bool judgeResultsContain(JudgeData judge, int state_id) {
     return false;
 }
 
-/********************************************* COUNT LIST FUNCTIONS **********************************************************/
+/***************************** COUNT LIST FUNCTIONS *****************************/
 ListElement copyCountData(ListElement elem) {
     if (elem == NULL) return NULL;
 
@@ -135,7 +148,8 @@ int compareCountData(ListElement data1, ListElement data2) {
     CountData data1_p = data1;
     CountData data2_p = data2;
 
-    // if data1 need to come before data2 return FIRST_BEFORE_SECOND, else return SECOND_BEFORE_FIRST
+    // if data1 need to come before data2 return FIRST_BEFORE_SECOND,
+    // else return SECOND_BEFORE_FIRST
 
     if (data1_p->voteCount == data2_p->voteCount) {
         if (data1_p->id < data2_p->id) return FIRST_BEFORE_SECOND;
@@ -221,13 +235,17 @@ List convertToStringList(List finalResults, Map states) {
     return state_names;
 }
 
-/********************************************* CONTEST FUNCTIONS **********************************************************/
+/***************************** CONTEST FUNCTIONS ********************************/
 List getAudiencePoints(Map states, int audiencePercent) {
     // create an audience points list with all states
     List audience_points = countListCreate(states);
     if (!audience_points) return NULL;
 
-    Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE, FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE, NINTH_PLACE, TENTH_PLACE};
+    Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE,
+                                                 THIRD_PLACE, FOURTH_PLACE,
+                                                 FIFTH_PLACE, SIXTH_PLACE,
+                                                 SEVENTH_PLACE, EIGHT_PLACE,
+                                                 NINTH_PLACE, TENTH_PLACE};
 
     // iterate on the States map, check each state's top 10 & update the points list
     MAP_FOREACH(int*, iterator, states) {
