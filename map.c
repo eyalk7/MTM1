@@ -51,6 +51,17 @@ static void nodeDestroy (MapNode node);
  * */
 static CompareResult mapIterateAndCompare (Map map, MapKeyElement key, MapNode *iterator);
 
+/** Used in mapPut for updating an existing node
+ *  Updates the node which the map iterator is on with the new data that is received.
+ *  Makes sure to deallocate the data that was in the node beforehand.
+ */
+static void mapUpdateExistingNode(Map map, MapDataElement new_data);
+
+/** Used in mapPut for inserting a new node
+ *  Inserts a new node based on the map iterator's position and the given compare result
+ *  (START_OF_MAP / MIDDLE_OF_MAP / END_OF_MAP)
+ */
+static void mapInsertNewNode(Map map, MapNode new_node, CompareResult position);
 
 /********************** MAP FUNCTIONS ***********************/
 
@@ -126,9 +137,9 @@ bool mapContains(Map map, MapKeyElement element) {
 
     //iterate on the map and check if the given key element is contained
     MapNode ptr = map->head;
-    CompareResult compareResult = mapIterateAndCompare(map, element, &ptr);
+    CompareResult compare_result = mapIterateAndCompare(map, element, &ptr);
 
-    if (compareResult == EQUAL || compareResult == EQUAL_TO_FIRST) return true;   // element found
+    if (compare_result == EQUAL || compare_result == EQUAL_TO_FIRST) return true;   // element found
 
     return false;   // element not found
 }
@@ -142,39 +153,20 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement) 
     if (!new_data) return MAP_OUT_OF_MEMORY;
 
     // iterate on the map and compare
-    MapNode ptr = map->head;
-    CompareResult compareResult = mapIterateAndCompare(map, keyElement, &ptr);
+    mapGetFirst(map);
+    CompareResult compare_result = mapIterateAndCompare(map, keyElement, &(map->iterator));
 
-    MapNode new_node;
-    switch (compareResult) {
-        case EQUAL:                  // if key exist, update the key's data
-            map->freeDataElement(ptr->next->data);
-            ptr->next->data = new_data;
-            break;
-        case EQUAL_TO_FIRST:         // different actions if it is equal to the first
-            map->freeDataElement(ptr->data);
-            ptr->data = new_data;
-            break;
-        default:
-            new_node = nodeCreate(map, keyElement, new_data);   // if key doesn't exist, create new node
-            if (!new_node) {
-                map->freeDataElement(new_data);
-                return MAP_OUT_OF_MEMORY;
-            }
-            switch (compareResult) {
-                case START_OF_MAP:   // if the given key is the smallest key or map is empty, insert the new node to the head
-                    new_node->next = map->head;
-                    map->head = new_node;
-                    break;
-                case END_OF_MAP:    // if the given key is the largest key, insert in the end of map
-                    ptr->next = new_node;
-                    break;
-                default:            // case MIDDLE_OF_MAP: insert the new node where it should be
-                    new_node->next = ptr->next;
-                    ptr->next = new_node;
-                    break;
-            }
-            break;
+    if (compare_result == EQUAL || compare_result == EQUAL_TO_FIRST) {
+        if (compare_result == EQUAL)
+            mapGetNext(map);
+        mapUpdateExistingNode(map, new_data);               // if the node exists, update the data
+    } else {
+        MapNode new_node = nodeCreate(map, keyElement, new_data);   // if the node doesn't exist, create a new one
+        if (!new_node) {
+            map->freeDataElement(new_data);
+            return MAP_OUT_OF_MEMORY;
+        }
+        mapInsertNewNode(map, new_node, compare_result);
     }
 
     return MAP_SUCCESS;
@@ -309,4 +301,28 @@ static CompareResult mapIterateAndCompare (Map map, MapKeyElement key, MapNode *
     if (map->compareKeyElements(key, ptr->next->key) == EQUAL) return EQUAL;
 
     return MIDDLE_OF_MAP;
+}
+
+static void mapUpdateExistingNode(Map map, MapDataElement new_data) {
+    MapNode ptr = map->iterator;
+
+    map->freeDataElement(ptr->data);
+    ptr->data = new_data;
+}
+
+static void mapInsertNewNode(Map map, MapNode new_node, CompareResult position) {
+    MapNode ptr = map->iterator;
+    switch (position) {
+        case START_OF_MAP:   // if the given key is the smallest key or map is empty, insert the new node to the head
+            new_node->next = map->head;
+            map->head = new_node;
+            break;
+        case END_OF_MAP:    // if the given key is the largest key, insert in the end of map
+            ptr->next = new_node;
+            break;
+        default:            // case MIDDLE_OF_MAP: insert the new node where it should be
+            new_node->next = ptr->next;
+            ptr->next = new_node;
+            break;
+    }
 }
