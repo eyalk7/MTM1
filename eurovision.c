@@ -189,7 +189,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
         return EUROVISION_OUT_OF_MEMORY;
     }
 
-    // initalize the tmp_judge_data element
+    // initialize the tmp_judge_data element
     strcpy(tmp_judgeName, judgeName);
     tmp_judge_data->name = tmp_judgeName;
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {

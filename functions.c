@@ -50,7 +50,7 @@ int compareInts(MapKeyElement integer1, MapKeyElement integer2) {
     //compare the ints
     //return 0 if equal
     //return bigger than 0 if first is bigger
-    //else the small than 0
+    //else smaller than 0
     int a = *(int*)integer1;
     int b = *(int*)integer2;
     return a - b;
@@ -176,7 +176,7 @@ List countListCreate(Map map) {
         }
 
         data->id = *key;
-        data->voteCount = 0; // intialize to 0
+        data->voteCount = 0; // initialize to 0
 
         ListResult result = listInsertFirst(list, data);
         freeCountData(data);

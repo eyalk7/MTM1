@@ -197,15 +197,14 @@ MapResult mapRemove(Map map, MapKeyElement keyElement){
     if (!map || !keyElement) return MAP_NULL_ARGUMENT;  // NULL parameter received
 
     // iterate on the map and compare
-    MapNode ptr = map->head;
-    CompareResult compareResult = mapIterateAndCompare(map, keyElement, &ptr);
+    MapNode node = map->head;
+    CompareResult compareResult = mapIterateAndCompare(map, keyElement, &node);
 
     if (compareResult != EQUAL && compareResult != EQUAL_TO_FIRST) {
         return MAP_ITEM_DOES_NOT_EXIST;     // map doesn't contain given key
     }
 
     // if key exists, delete the node & connect the previous and next node
-    MapNode node = map->iterator;
     if (compareResult == EQUAL) {
         MapNode next_node = node->next->next;
         map->freeDataElement(node->next->data);
