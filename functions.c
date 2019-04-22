@@ -74,20 +74,20 @@ EurovisionResult eurovisionChangeVote(Map states,
                                       int difference) {
     // check valid arguments
     if (states == NULL) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation1 = checkIDValid(states, STATES_MAP, stateGiver);
+    EurovisionResult id_validation = checkIDValid(states, STATES_MAP, stateGiver);
 
-    assert(id_validation1 == EUROVISION_STATE_ALREADY_EXIST ||
-           id_validation1 == EUROVISION_INVALID_ID ||
-           id_validation1 == EUROVISION_STATE_NOT_EXIST);
+    assert(id_validation == EUROVISION_STATE_ALREADY_EXIST ||
+           id_validation == EUROVISION_INVALID_ID ||
+           id_validation == EUROVISION_STATE_NOT_EXIST);
 
-    if (id_validation1 != EUROVISION_STATE_ALREADY_EXIST) return id_validation1;
-    EurovisionResult id_validation2 = checkIDValid(states, STATES_MAP, stateTaker);
+    if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
+    id_validation = checkIDValid(states, STATES_MAP, stateTaker);
 
-    assert(id_validation2 == EUROVISION_STATE_ALREADY_EXIST ||
-           id_validation2 == EUROVISION_INVALID_ID ||
-           id_validation2 == EUROVISION_STATE_NOT_EXIST);
+    assert(id_validation == EUROVISION_STATE_ALREADY_EXIST ||
+           id_validation == EUROVISION_INVALID_ID ||
+           id_validation == EUROVISION_STATE_NOT_EXIST);
 
-    if (id_validation2 != EUROVISION_STATE_ALREADY_EXIST) return id_validation2;
+    if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
 
     // check that stategiver != stateTaker
     if (stateGiver == stateTaker) return EUROVISION_SAME_STATE;
@@ -95,14 +95,14 @@ EurovisionResult eurovisionChangeVote(Map states,
     // check current num of votes for stateTaker in stateGiver's votes map
     StateData giver_data = mapGet(states, &stateGiver);
     assert(giver_data != NULL);
-    int *cur_votes_num = mapGet(giver_data->votes, &stateTaker);
+    int *current_votes_num = mapGet(giver_data->votes, &stateTaker);
 
     // if no votes & difference <= 0 just return
-    if (cur_votes_num == NULL && difference <= 0) return EUROVISION_SUCCESS;
+    if (current_votes_num == NULL && difference <= 0) return EUROVISION_SUCCESS;
 
     // if there are votes sum up the current num of votes and wanted difference
-    if (cur_votes_num != NULL) {
-        difference += (*cur_votes_num);
+    if (current_votes_num != NULL) {
+        difference += (*current_votes_num);
 
         // if the sum <= 0 and there are votes - delete the state from the votes map
         if (difference <= 0) {
@@ -131,17 +131,19 @@ ListElement copyCountData(ListElement elem) {
     if (elem == NULL) return NULL;
 
     CountData elem_p = elem;
-    CountData new_elem = malloc(sizeof(*elem_p));
-    if (new_elem == NULL) return NULL;
+    CountData copy = malloc(sizeof(*elem_p));
+    if (copy == NULL) return NULL;
 
-    new_elem->voteCount = elem_p->voteCount;
-    new_elem->id = elem_p->id;
+    copy->voteCount = elem_p->voteCount;
+    copy->id = elem_p->id;
 
-    return new_elem;
+    return copy;
 }
+
 void freeCountData(ListElement elem) {
     free(elem);
 }
+
 int compareCountData(ListElement data1, ListElement data2) {
     assert(data1 != NULL && data2 != NULL);
 
