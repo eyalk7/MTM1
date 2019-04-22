@@ -14,7 +14,7 @@
 typedef struct StateData_t {
     char *name;
     char *song_name;
-    Map votes; // key = stateId, data = no. of votes this state *gives*
+    Map votes; // key = State's ID, data = no. of votes this state *gives*
 } *StateData;
 
 typedef void* StateKeyElement;

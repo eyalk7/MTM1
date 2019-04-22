@@ -266,7 +266,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
         for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
             LIST_FOREACH(CountData, points_list_iterator, points_list) {
                 if (judge_results[i] == points_list_iterator->id) {
-                    points_list_iterator->voteCount += (100-audiencePercent)*ranking[i];
+                    points_list_iterator->vote_count += (100-audiencePercent)*ranking[i];
                 }
             }
         }
