@@ -4,7 +4,7 @@
 #include "functions.h"
 
 /*********************** EUROVISION HELP FUNCTIONS *******************************/
-EurovisionResult checkIDValid(Map map, MapType type, int id) {
+EurovisionResult isIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
     assert(map != NULL);
     assert(type == STATES_MAP || type == JUDGES_MAP);
@@ -21,14 +21,14 @@ EurovisionResult checkIDValid(Map map, MapType type, int id) {
     return EUROVISION_JUDGE_NOT_EXIST;  // else type == JUDGES_MAP
 }
 
-bool checkLowerCase(char c) {
+bool isLowerCase(char c) {
     return ('a' <= c && c <= 'z');
 }
 
-bool checkValidName(const  char* name) {
+bool isValidName(const  char* name) {
     //check the given string only contains small letters and spaces
     for (int i = 0; i < strlen(name); i++) {
-        if (!checkLowerCase(name[i]) && name[i] != ' ') return false;
+        if (!isLowerCase(name[i]) && name[i] != ' ') return false;
     }
     return true;
 }
@@ -66,13 +66,13 @@ EurovisionResult eurovisionChangeVote(Map states,
     // check valid arguments
     if (states == NULL) return EUROVISION_NULL_ARGUMENT;
 
-    EurovisionResult id_validation = checkIDValid(states, STATES_MAP, state_giver);
+    EurovisionResult id_validation = isIDValid(states, STATES_MAP, state_giver);
     assert(id_validation == EUROVISION_STATE_ALREADY_EXIST ||
            id_validation == EUROVISION_INVALID_ID ||
            id_validation == EUROVISION_STATE_NOT_EXIST);
     if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
 
-    id_validation = checkIDValid(states, STATES_MAP, state_taker);
+    id_validation = isIDValid(states, STATES_MAP, state_taker);
     assert(id_validation == EUROVISION_STATE_ALREADY_EXIST ||
            id_validation == EUROVISION_INVALID_ID ||
            id_validation == EUROVISION_STATE_NOT_EXIST);

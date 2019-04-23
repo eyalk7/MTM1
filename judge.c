@@ -6,46 +6,43 @@
 
 /********************** JUDGE MAP FUNCTIONS ***********************/
 JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
-    return copyInt(key);
+    return copyInt(key);    // get a copy of judge's ID
 }
 
 JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
-    // casting
     JudgeData judge_data = (JudgeData)data;
 
-    //memory allocation for the JudgeData and check
+    // create JudgeData copy
     JudgeData copy = malloc(sizeof(*copy));
     if (!copy) return NULL;
-    //memory allocation for name string and check
+
+    // allocate memory for judge's name
     copy->name = malloc(strlen(judge_data->name) + 1);
     if (!copy->name) {
         free(copy);
         return NULL;
     }
-    //copy name and results
-    strcpy(copy->name, judge_data->name);
 
+    strcpy(copy->name, judge_data->name);   // copy the name
+
+    // copy the judge's points/results
     for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
         copy->results[i] = judge_data->results[i];
     }
 
-    //return address
     return copy;
 }
 
 void freeJudgeKeyElement(JudgeKeyElement key) {
-    //free allocation
-    freeInt(key);
+    freeInt(key);   // free memory allocation for judge's ID
 }
 
 void freeJudgeDataElement(JudgeDataElement data) {
-    JudgeData tmp = (JudgeData)data;
-    //free strings allocation
-    free(tmp->name);
-    //free judgeData allocation
-    free(tmp);
+    JudgeData judge_data = (JudgeData)data;
+    free(judge_data->name); // deallocate the judge's name
+    free(judge_data);       // deallocate the JudgeData struct
 }
 
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
-    return compareInts(key1, key2);
+    return compareInts(key1, key2); // compare two judges' IDs
 }

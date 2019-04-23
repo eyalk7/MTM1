@@ -2,10 +2,9 @@
 #define STATES_H
 
 /********************** MACROS & ENUMS ***********************/
-/** macros for strings states list */
-#define SPACE " "
-#define DASH "-"
-#define NUM_OF_EXTRA_CHARS 3
+/** macros for friendly states string */
+#define EXTRA_CHARS " - "
+#define NUM_OF_EXTRA_CHARS 3    // a space, a dash and a space = 3 chars
 
 /** macro for states that dont have a favorite state (no votes) */
 #define NO_FAVORITE_STATE (-1)
@@ -65,7 +64,7 @@ int stringCompare(void* str1, void* str2);
 int getFavoriteState(Map votes);
 
 /** Check if states are friendly by the assigment definition */
-bool checkFriendlyStates(const int *stateId1,const int *favState1,const int *stateId2,const int *favState2);
+bool areFriendlyStates(const int *stateId1,const int *favState1,const int *stateId2,const int *favState2);
 
 /** returns a map that shows each state's "favorite state"
  * (key = state's id, value = favorite state's id) */

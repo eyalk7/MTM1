@@ -34,13 +34,13 @@ typedef enum mapType_t {
 
 /********************** EUROVISION HELP FUNCTIONS ***********************/
 /** Check if given state/judge ID is valid */
-EurovisionResult checkIDValid(Map map, MapType type, int id);
+EurovisionResult isIDValid(Map map, MapType type, int id);
 
 /** check if a given character is a lower case alphabet letter */
-bool checkLowerCase(char c);
+bool isLowerCase(char c);
 
 /** check valid judge/song/state name */
-bool checkValidName(const char* name);
+bool isValidName(const char* name);
 
 /** Map ADT functions for Judge/State/state_favorites keysElements
  * and for votes/state_favorites dataElements */

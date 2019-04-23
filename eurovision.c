@@ -5,10 +5,14 @@
 #include <assert.h>
 #include "map.h"
 #include "eurovision.h"
-#include "list.h"
 #include "functions.h"
-#include "judge.h"
-#include "state.h"
+
+/*
+ * These are included in functions.h:
+ * #include "list.h"
+ * #include "judge.h"
+ * #include "state.h"
+*/
 
 struct eurovision_t {
     Map States; // keys = State ID, data = StateData
@@ -69,7 +73,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
                                     const char *songName) {
     // check valid arguments
     if (!eurovision || !stateName || !songName) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = checkIDValid(eurovision->States,
+    EurovisionResult id_validation = isIDValid(eurovision->States,
                                                   STATES_MAP,
                                                   stateId);
 
@@ -78,7 +82,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
            id_validation == EUROVISION_STATE_NOT_EXIST);
 
     if (id_validation != EUROVISION_STATE_NOT_EXIST) return id_validation;
-    if (!checkValidName(stateName) || !checkValidName(songName)) return EUROVISION_INVALID_NAME;
+    if (!isValidName(stateName) || !isValidName(songName)) return EUROVISION_INVALID_NAME;
 
     // memory alloctation for the tmp_state_data & for names and check
     StateData tmp_state_data = malloc(sizeof(*tmp_state_data));
@@ -133,7 +137,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
 EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     // check valid arguments
     if (!eurovision) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = checkIDValid(eurovision->States,
+    EurovisionResult id_validation = isIDValid(eurovision->States,
                                                   STATES_MAP,
                                                   stateId);
     if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
@@ -164,7 +168,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
                                     int *judgeResults) {
     // check valid arguments
     if (!eurovision || !judgeName || !judgeResults) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = checkIDValid(eurovision->Judges,
+    EurovisionResult id_validation = isIDValid(eurovision->Judges,
                                                   JUDGES_MAP,
                                                   judgeId);
 
@@ -173,9 +177,9 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
            id_validation == EUROVISION_JUDGE_NOT_EXIST);
 
     if (id_validation != EUROVISION_JUDGE_NOT_EXIST) return id_validation;
-    if (!checkValidName(judgeName)) return EUROVISION_INVALID_NAME;
+    if (!isValidName(judgeName)) return EUROVISION_INVALID_NAME;
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-        id_validation = checkIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
+        id_validation = isIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
         assert(id_validation == EUROVISION_STATE_ALREADY_EXIST || id_validation == EUROVISION_INVALID_ID || id_validation == EUROVISION_STATE_NOT_EXIST);
         if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
     }
@@ -212,7 +216,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
 EurovisionResult eurovisionRemoveJudge(Eurovision eurovision, int judgeId) {
     // check valid arguments
     if (!eurovision) return EUROVISION_NULL_ARGUMENT;
-    EurovisionResult id_validation = checkIDValid(eurovision->Judges,
+    EurovisionResult id_validation = isIDValid(eurovision->Judges,
                                                   JUDGES_MAP,
                                                   judgeId);
 
@@ -332,7 +336,7 @@ List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
         int *favState2 = mapGet(state_favorites, stateId2);
 
         // areFriendly also checks if the pointers are NULL ! :)
-        if (checkFriendlyStates(stateId, favState1, stateId2, favState2)) {
+        if (areFriendlyStates(stateId, favState1, stateId2, favState2)) {
             // if it is a match save the states pair names on the list - after lexicographical sort
             StateData state1 = mapGet(eurovision->States, stateId);
             StateData state2 = mapGet(eurovision->States, stateId2);
