@@ -3,12 +3,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
-#include "map.h"
-#include "eurovision.h"
 #include "functions.h"
 
 /*
  * These are included in functions.h:
+ * #include "eurovision.h"
+ * #include "map.h"
  * #include "list.h"
  * #include "judge.h"
  * #include "state.h"

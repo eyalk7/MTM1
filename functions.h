@@ -1,12 +1,17 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include <stdbool.h>
 #include "map.h"
 #include "eurovision.h"
 #include "state.h"
 #include "judge.h"
 #include "list.h"
+
+/*
+ * These are included in judge.h:
+ * #include <stdbool.h>
+ */
+
 
 /********************** MACROS & ENUMS ***********************/
 /** macro for audience precent */

@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
-#include "map.h"
-#include "state.h"
 #include "functions.h"
+
+/*
+ * These are included in functions.h:
+ * #include "map.h"
+ * #include "state.h"
+ * #include <stdbool.h>
+ */
 
 /************************* STATE MAP FUNCTIONS *******************************/
 StateKeyElement copyStateKeyElement(StateKeyElement key) {

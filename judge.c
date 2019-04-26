@@ -2,7 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "functions.h"
-#include "judge.h"
+
+/*
+ * These are included in functions.h:
+ * #include "judge.h"
+ */
+
 
 /********************** JUDGE MAP FUNCTIONS ***********************/
 JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {

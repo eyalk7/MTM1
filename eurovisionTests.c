@@ -67,22 +67,22 @@ static int *makeJudgeResults(int id0, int id1, int id2, int id3, int id4,
 }
 
 /** total judge result: (stateid: score)
- * 0:  12 + 2  + 0  = 14
- * 1:  10 + 0  + 0  = 10
- * 2:  8  + 1  + 0  = 9
- * 3:  7  + 0  + 7  = 14
- * 4:  6  + 6  + 6  = 18
- * 5:  5  + 5  + 5  = 15
- * 6:  4  + 4  + 4  = 12
- * 7:  3  + 0  + 3  = 6
- * 8:  2  + 0  + 2  = 4
- * 9:  1  + 0  + 1  = 2
- * 10: 0  + 8  + 12 = 20
- * 11: 0  + 0  + 10 = 10
- * 12: 0  + 0  + 8  = 8
- * 13: 0  + 10 + 0  = 12
- * 14: 0  + 12 + 0  = 12
- * 15: 0  + 3  + 0  = 3
+ * 0: (12 + 2  + 0) / 3  = 14 / 3 = 4.6667
+ * 1: (10 + 0  + 0) / 3  = 10 / 3 = 3.3333
+ * 2: (8  + 1  + 0) / 3  =  9 / 3 = 3
+ * 3: (7  + 0  + 7) / 3  = 14 / 3 = 4.6667
+ * 4: (6  + 6  + 6) / 3  = 18 / 3 = 6
+ * 5: (5  + 5  + 5) / 3  = 15 / 3 = 5
+ * 6: (4  + 4  + 4) / 3  = 12 / 3 = 4
+ * 7: (3  + 0  + 3) / 3  =  6 / 3 = 2
+ * 8: (2  + 7  + 2) / 3  = 11 / 3 = 3.6667
+ * 9: (1  + 0  + 1) / 3  =  2 / 3 = 0.6667
+ * 10:(0  + 8  + 12) / 3 = 20 / 3 = 6.6667
+ * 11:(0  + 0  + 10) / 3 = 10 / 3 = 3.3333
+ * 12:(0  + 0  + 8) / 3  =  8 / 3 = 2.6667
+ * 13:(0  + 10 + 0) / 3  = 10 / 3 = 3.3333
+ * 14:(0  + 12 + 0) / 3  = 12 / 3 = 4
+ * 15:(0  + 3  + 0) / 3  =  3 / 3 = 1
  */
 static void setupEurovisionJudges(Eurovision eurovision) {
   int *results;
@@ -112,19 +112,19 @@ static void setupEurovisionVotes(Eurovision eurovision) {
 }
 
 /** total voters result:
- * 1:  12 + 0  + 0       = 12
- * 2:  12 + 0  + 8       = 20
- * 3:  10 + 6  + 0  + 12 = 28
- * 4:  7  + 7  + 12      = 26
- * 5:  8  + 8  + 4       = 20
- * 6:  6  + 10 + 7       = 23
- * 7:  5  + 5  + 5       = 15
- * 8:  4  + 0  + 6       = 10
- * 9:  3  + 0  + 3       = 6
- * 10: 2  + 0  + 10      = 12
- * 11: 1  + 0  + 0       = 1
- * 13: 0  + 0  + 1       = 1
- * 14: 0  + 0  + 2       = 2
+ * 1:  (0  + 12 + 0  + 0) / 16  = 12 / 16 = 0.75
+ * 2:  (12 + 0  + 8  + 0) / 16  = 20 / 16 = 1.25
+ * 3:  (10 + 6  + 0  + 12) / 16 = 28 / 16 = 1.75
+ * 4:  (8  + 7  + 12 + 0) / 16  = 27 / 16 = 1.6875
+ * 5:  (7  + 8  + 4  + 0) / 16  = 19 / 16 = 1.1875
+ * 6:  (6  + 10 + 7  + 0) / 16  = 23 / 16 = 1.4375
+ * 7:  (5  + 5  + 5  + 0) / 16  = 15 / 16 = 0.9375
+ * 8:  (4  + 0  + 6  + 0) / 16  = 10 / 16 = 0.625
+ * 9:  (3  + 0  + 3  + 0) / 16  =  6 / 16 = 0.375
+ * 10: (2  + 0  + 10 + 0) / 16  = 12 / 16 = 0.75
+ * 11: (1  + 0  + 0  + 0) / 16  =  1 / 16 = 0.0625
+ * 13: (0  + 0  + 1  + 0) / 16  =  1 / 16 = 0.0625
+ * 14: (0  + 0  + 2  + 0) / 16  =  2 / 16 = 0.125
  */
 static void setupEurovisionVotes2(Eurovision eurovision) {
   giveVotes(eurovision, 1, 2, 20);
@@ -252,22 +252,22 @@ bool testRemoveVote() {
 }
 
 /** combined scores:
- * 4:  18 * 0.6 + 26 * 0.4 = 21.2 (moldova)
- * 3:  14 * 0.6 + 28 * 0.4 = 19.6 (russia)
- * 5:  15 * 0.6 + 20 * 0.4 = 17.0 (cyprus)
- * 10: 20 * 0.6 + 12 * 0.4 = 16.8 (united kingdom)
- * 6:  12 * 0.6 + 23 * 0.4 = 16.4 (spain)
- * 2:   9 * 0.6 + 20 * 0.4 = 13.4 (croatia)
- * 1:  10 * 0.6 + 12 * 0.4 = 10.8 (malta)
- * 7:   6 * 0.6 + 15 * 0.4 = 9.6 (italy)
- * 0:  14 * 0.6 +  0 * 0.4 = 8.4 (israel)
- * 14: 12 * 0.6 +  2 * 0.4 = 8.0 (netherlands)
- * 13: 12 * 0.6 +  1 * 0.4 = 7.6 (ireland)
- * 8:   4 * 0.6 + 10 * 0.4 = 6.4 (france)
- * 11: 10 * 0.6 +  1 * 0.4 = 6.4 (armenia)
- * 12:  8 * 0.6 +  0 * 0.4 = 4.8 (austria)
- * 9:   2 * 0.6 +  6 * 0.4 = 3.6 (germany)
- * 15:  3 * 0.6 +  0 * 0.4 = 1.8 (sweden)
+ * 10: 0.75   * 0.4 + 6.6667 * 0.6 = 4.3 (united kingdom)
+ * 4:  1.6875 * 0.4 + 6      * 0.6 = 4.275 (moldova)
+ * 3:  1.75   * 0.4 + 4.6667 * 0.6 = 3.5 (russia)
+ * 5:  1.1875 * 0.4 + 5      * 0.6 = 3.475 (cyprus)
+ * 6:  1.4375 * 0.4 + 4      * 0.6 = 2.975 (spain)
+ * 0:  0      * 0.4 + 4.6667 * 0.6 = 2.8 (israel)
+ * 8:  0.625  * 0.4 + 3.6667 * 0.6 = 2.45 (france)
+ * 14: 0.125  * 0.4 + 4      * 0.6 = 2.45 (netherlands)
+ * 1:  0.75   * 0.4 + 3.3333 * 0.6 = 2.3 (malta)
+ * 2:  1.25   * 0.4 + 3      * 0.6 = 2.3 (croatia)
+ * 11: 0.0625 * 0.4 + 3.3333 * 0.6 = 2.025 (armenia)
+ * 13: 0.0625 * 0.4 + 3.3333 * 0.6 = 2.025 (ireland)
+ * 12: 0      * 0.4 + 2.6667 * 0.6 = 1.6 (austria)
+ * 7:  0.9375 * 0.4 + 2      * 0.6 = 1.575 (italy)
+ * 15: 0      * 0.4 + 1      * 0.6 = 0.6 (sweden)
+ * 9:  0.375  * 0.4 + 0.6667 * 0.6 = 0.55 (germany)
  */
 bool testRunContest() {
   Eurovision eurovision = setupEurovision();
@@ -278,13 +278,13 @@ bool testRunContest() {
   List ranking = eurovisionRunContest(eurovision, 40);
   CHECK(listGetSize(ranking), 16);
   char *current = (char*)listGetFirst(ranking);
+  CHECK(strcmp(current, "united kingdom"), 0);
+  current = (char*)listGetNext(ranking);
   CHECK(strcmp(current, "moldova"), 0);
   current = (char*)listGetNext(ranking);
   CHECK(strcmp(current, "russia"), 0);
   current = (char*)listGetNext(ranking);
   CHECK(strcmp(current, "cyprus"), 0);
-  current = (char*)listGetNext(ranking);
-  CHECK(strcmp(current, "united kingdom"), 0);
   current = (char*)listGetNext(ranking);
   CHECK(strcmp(current, "spain"), 0);
 
