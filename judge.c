@@ -30,7 +30,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data) {
     strcpy(copy->name, judge_data->name);   // copy the name
 
     // copy the judge's points/results
-    for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+    for (int i = 0; i < JUDGE_RESULTS_LENGTH; i++) {
         copy->results[i] = judge_data->results[i];
     }
 
@@ -69,7 +69,7 @@ JudgeData createJudgeData(const char *judge_name, const int *judge_results) {
     // set the JudgeData's fields accordingly
     data->name = name;
 
-    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+    for (int i=0; i < JUDGE_RESULTS_LENGTH; i++) {
         data->results[i] = judge_results[i];
     }
 

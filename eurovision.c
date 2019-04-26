@@ -127,7 +127,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
     if (!isValidName(judgeName)) return EUROVISION_INVALID_NAME;    // judge name not valid
 
     // check valid judge results
-    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+    for (int i=0; i < JUDGE_RESULTS_LENGTH; i++) {
         result = isIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
         if (result != EUROVISION_STATE_ALREADY_EXIST) return result;        // invalid state ID in judge's results
     }
@@ -182,119 +182,60 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     List points_list = getAudiencePoints(eurovision->States, audiencePercent);
     if (!points_list) return NULL;
 
-    // update the points list according to the judges's results
-    MAP_FOREACH(JudgeKeyElement, iterator, eurovision->Judges) {
-        // get the judge's data
-        JudgeData judge_data = mapGet(eurovision->Judges, iterator);
-        assert(judge_data != NULL);
-        // get the judge's results
-        int *judge_results = judge_data->results;
-        // compare each judge's result with all of the states, if match add points
-        for (int i = 0; i < NUMBER_OF_STATES_TO_RANK; i++) {
-            LIST_FOREACH(CountData, points_list_iterator, points_list) {
-                if (judge_results[i] == points_list_iterator->id) {
-                    points_list_iterator->vote_count += (100-audiencePercent)* getRanking(i);
-                }
-            }
-        }
-    }
 
-    // sort the final list
-    if (listSort(points_list, compareCountData) != LIST_SUCCESS){
+
+    // calculate judge's percentage
+    int judge_percent = 100 - audiencePercent;
+
+    // Distribute the judge's points to the states (in points_list)
+    distributeJudgePoints(eurovision->Judges, points_list, judge_percent);
+
+    // sort the final points list
+    if (listSort(points_list, compareCountData) != LIST_SUCCESS) {
         listDestroy(points_list);
-        return NULL;
+        return NULL;                // sort failed
     }
 
-    // convert to names list & destroy & return
-    List winners_list = convertToStringList(points_list, eurovision->States);
-    listDestroy(points_list);
-    return winners_list;
+    // convert sorted points list to sorted string list of states' names
+    List final_results = convertToStringList(points_list, eurovision->States);
+
+    listDestroy(points_list);       // deallocate the points list
+
+    return final_results;
 }
 
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
-    // check valid arguments
-    if (!eurovision) return NULL;
+    if (!eurovision) return NULL;   // NULL pointer received
 
-    // get audience Points
-    List audience_points = getAudiencePoints(eurovision->States, ONE_HUNDREND_PRECENT);
-    if (!audience_points) return NULL;
+    // get the audience points each state received
+    List audience_points = getAudiencePoints(eurovision->States, ONE_HUNDREND_PERCENT);
+    if (!audience_points) return NULL;  // error in getAudiencePoints function
 
-    // sort the final list
+    // sort the list
     if (listSort(audience_points, compareCountData) != LIST_SUCCESS) {
         listDestroy(audience_points);
-        return NULL;
+        return NULL;                    // list sort failed
     }
 
-    // convert to names list & destroy list & return
-    List winners_list = convertToStringList(audience_points, eurovision->States);
-    listDestroy(audience_points);
-    return winners_list;
+    // convert sorted points list to sorted string list of states' names
+    List final_results = convertToStringList(audience_points, eurovision->States);
+
+    listDestroy(audience_points);       // deallocate the audience points list
+
+    return final_results;
 }
 
 List eurovisionRunGetFriendlyStates(Eurovision eurovision) {
-    //getSize of States map - num_of_states
-    int num_of_states = mapGetSize(eurovision->States);
-
-    List friendly_states = listCreate(copyString, freeString);
-    if (!friendly_states) return NULL;  // allocation failed
-
     // if state map is empty return empty List
-    if (num_of_states == 0) return friendly_states;
+    if (mapGetSize(eurovision->States) == 0) return listCreate(copyString, freeString);
 
-    //create map state_favorites - key = stateId, value = favStateId
-    /// OUTSIDE FUNCTION ///
-    Map state_favorites = getStateFavorites(eurovision->States);
-    /// OUTSIDE FUNCTION ///
+    List friendly_states = getFriendlyStates(eurovision->States);
+    if (!friendly_states) return NULL;      // error in getFriendlyStates function
 
-    if (!state_favorites) {
-        listDestroy(friendly_states);
-        return NULL;
-    }
-
-    //iterate on the array, in each row:
-    MAP_FOREACH(int*, stateId, state_favorites) {
-        // iterate on the entire array and check if "it's a match", skip on "-1"
-        int *favState1 = mapGet(state_favorites, stateId);
-        int *stateId2 = favState1;
-        int *favState2 = mapGet(state_favorites, stateId2);
-
-        // areFriendly also checks if the pointers are NULL ! :)
-        if (areFriendlyStates(stateId, favState1, stateId2, favState2)) {
-            // if it is a match save the states pair names on the list - after lexicographical sort
-            StateData state1 = mapGet(eurovision->States, stateId);
-            StateData state2 = mapGet(eurovision->States, stateId2);
-
-            // change both rows to "-1" => prevent the same pair from being chosen
-            *favState1 = NO_FAVORITE_STATE;
-            *favState2 = NO_FAVORITE_STATE;
-
-            /// OUTSIDE FUNCTION ///
-            char *statePair = getStatePair(state1, state2);
-            /// OUTSIDE FUNCTION ///
-
-            if (!statePair) {
-                mapDestroy(state_favorites);
-                listDestroy(friendly_states);
-                return NULL;
-            }
-
-            ListResult result = listInsertLast(friendly_states, statePair);
-            free(statePair);
-            if (result != LIST_SUCCESS) {
-                mapDestroy(state_favorites);
-                listDestroy(friendly_states);
-                return NULL;
-            }
-
-        }
-    }
-
-    mapDestroy(state_favorites);
-
-    // sort the strings array lexicorgraphically
+    // sort the strings array lexicographically
     if (listSort(friendly_states, stringCompare) != LIST_SUCCESS) {
         listDestroy(friendly_states);
-        return NULL;
+        return NULL;                        // list sort failed
     }
 
     return friendly_states;

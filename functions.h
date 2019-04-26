@@ -14,7 +14,10 @@
 
 /********************** MACROS & ENUMS ***********************/
 /** macro for audience precent */
-#define ONE_HUNDREND_PRECENT 1
+#define ONE_HUNDREND_PERCENT 1
+
+/** macro for how many point quantities can be given (= Ranking enum size) */
+#define NUMBER_OF_RANKINGS 10
 
 /**  enum for number of points in each rank */
 typedef enum {
@@ -40,9 +43,6 @@ typedef enum mapType_t {
 /** Check if given state/judge ID is valid */
 EurovisionResult isIDValid(Map map, MapType type, int id);
 
-/** check if a given character is a lower case alphabet letter */
-bool isLowerCase(char c);
-
 /** check valid judge/song/state name */
 bool isValidName(const char* name);
 
@@ -66,7 +66,7 @@ bool judgeResultsContain(JudgeData judge, int stateId);
 /********************** COUNT LIST FUNCTIONS & STRUCTS ***********************
 * Count List is a List of CountData for saving the points/votes of each state/judge */
 
-/** struct for summing up the amount of votes a state gives or receives */
+/** struct for summing up the amount of votes/points a state gives or receives */
 typedef struct countData_t {
     int id;
     unsigned int vote_count;
@@ -108,5 +108,15 @@ void distributeStateVotes(List audience_points, List state_votes,
 
 /** Adds given amount of points to the state with the given ID in the given list */
 void addStatePoints(List audience_points, int state_taker, int points);
+
+/** Distributes the points of the judges in given map to the states in points_list
+ * The functions also takes into account the judge percentage */
+void distributeJudgePoints(Map judges, List points_list, int judge_percent);
+
+/** Returns a list of "friendly" states as defined in the assignment:
+ *  A list of strings of state name pairs in which each state's most votes went to the other state
+ *  in the pair. Each string is ordered lexicographically (not the list)
+ * */
+List getFriendlyStates(Map states);
 
 #endif //FUNCTIONS_H
