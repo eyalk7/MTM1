@@ -73,6 +73,50 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareInts(key1, key2);     // compare two states' IDs
 }
 
+StateData createStateData(const char *state_name, const char *song_name) {
+    // allocate memory for a StateData struct as well as the state's name and song name
+    // on each allocation check if allocation failed
+    StateData data = malloc(sizeof(*data));
+    if (!data) return NULL;
+
+    char *name = malloc(strlen(state_name) + 1);
+    if (!name) {
+        free(data);
+        return NULL;
+    }
+
+    char *song = malloc(strlen(song_name) + 1);
+    if (!song) {
+        free(data);
+        free(name);
+        return NULL;
+    }
+
+    // Create an empty votes map using appropriate vote copy, free and compare functions
+    Map votes = mapCreate(copyVoteDataElement,
+                          copyVoteKeyElement,
+                          freeVoteDataElement,
+                          freeVoteKeyElement,
+                          compareVoteKeyElements);
+    if (!votes) {
+        free(data);
+        free(name);
+        free(song);
+        return NULL;
+    }
+
+    // copy the state and song names
+    strcpy(name, state_name);
+    strcpy(song, song_name);
+
+    // set the StateData's fields accordingly
+    data->name = name;
+    data->song_name = song;
+    data->votes = votes;
+
+    return data;
+}
+
 /************************* VOTE MAP FUNCTIONS *******************************/
 VoteKeyElement copyVoteKeyElement(VoteKeyElement key) {
     return copyInt(key);    // get a copy of the state_taker's ID
@@ -117,7 +161,8 @@ int getFavoriteState(Map votes) {
     return *(int*)favState;     // ID of most voted state
 }
 
-bool areFriendlyStates(const int* stateId1,const int* favState1,const int* stateId2,const int* favState2) {
+bool areFriendlyStates(const int *stateId1, const int *favState1,
+                       const int *stateId2, const int *favState2) {
     // if received NULL pointer return false
     if (!stateId1 || !favState1 || !stateId2 || !favState2) return false;
 
@@ -128,7 +173,9 @@ bool areFriendlyStates(const int* stateId1,const int* favState1,const int* state
 Map getStateFavorites(Map states) {
     // create a map that matches each state to its most voted state
     // (key = state ID, value = favorite state ID)
-    Map state_favorites = mapCreate(copyInt, copyInt, freeInt, freeInt, compareInts);
+    Map state_favorites = mapCreate(copyInt, copyInt,
+                                    freeInt, freeInt,
+                                    compareInts);
     if (!state_favorites) return NULL;
 
     // initialize the favorite states map
@@ -159,8 +206,12 @@ char *getStatePair(StateData state1, StateData state2) {
     char *name1 = state1->name;
     char *name2 = state2->name;
 
+    // get the lengths of the states' names
+    int len1 = strlen(name1);
+    int len2 = strlen(name2);
+
     // allocate memory for the friendly states string
-    char *statePair = malloc(strlen(name1) + strlen(name2) + NUM_OF_EXTRA_CHARS + 1);
+    char *statePair = malloc(len1 + len2 + NUM_OF_EXTRA_CHARS + 1);
     if (!statePair) return NULL;
     statePair[0] = '\0';    // initialize as empty string
 

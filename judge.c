@@ -8,7 +8,6 @@
  * #include "judge.h"
  */
 
-
 /********************** JUDGE MAP FUNCTIONS ***********************/
 JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
     return copyInt(key);    // get a copy of judge's ID
@@ -50,4 +49,29 @@ void freeJudgeDataElement(JudgeDataElement data) {
 
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
     return compareInts(key1, key2); // compare two judges' IDs
+}
+
+JudgeData createJudgeData(const char *judge_name, const int *judge_results) {
+    // allocate memory for a JudgeData struct as well as judge's name
+    // on each allocation check if allocation failed
+    JudgeData data = malloc(sizeof(*data));
+    if (!data) return NULL;
+
+    char *name = malloc(strlen(judge_name) + 1);
+    if (!name) {
+        free(data);
+        return NULL;
+    }
+
+    // copy the judge name
+    strcpy(name, judge_name);
+
+    // set the JudgeData's fields accordingly
+    data->name = name;
+
+    for (int i=0; i < NUMBER_OF_STATES_TO_RANK; i++) {
+        data->results[i] = judge_results[i];
+    }
+
+    return data;
 }

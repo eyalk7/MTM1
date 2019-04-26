@@ -12,7 +12,6 @@
  * #include <stdbool.h>
  */
 
-
 /********************** MACROS & ENUMS ***********************/
 /** macro for audience precent */
 #define ONE_HUNDREND_PRECENT 1
@@ -58,7 +57,8 @@ ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
 /** change the vote count from state to state by a given amount */
-EurovisionResult eurovisionChangeVote(Map states, int stateGiver, int stateTaker, int difference);
+EurovisionResult eurovisionChangeVote(Map states, int stateGiver,
+                                      int stateTaker, int difference);
 
 /** checks if a judge gave points to the given state */
 bool judgeResultsContain(JudgeData judge, int stateId);
@@ -92,6 +92,9 @@ List convertVotesToList(Map votes);
 List convertToStringList(List finalResults, Map states);
 
 /********************** CONTEST FUNCTIONS ***********************/
+/** Gets the amount points for a certain ranking based on the Ranking enum */
+Ranking getRanking(int place);
+
 /** Calculates the audience points of all states in given States map
  *  Returns a list of each state's points given by the audience */
 List getAudiencePoints(Map states, int audience_percent);
@@ -100,7 +103,8 @@ List getAudiencePoints(Map states, int audience_percent);
  *  and calculates the points to give to each state based on said order.
  *  The function also takes into account the audience percentage
  *  */
-void distributeStateVotes(List audience_points, List state_votes, int audience_percent);
+void distributeStateVotes(List audience_points, List state_votes,
+                          int audience_percent);
 
 /** Adds given amount of points to the state with the given ID in the given list */
 void addStatePoints(List audience_points, int state_taker, int points);

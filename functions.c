@@ -59,24 +59,16 @@ void freeString(ListElement str) {
     free(str);
 }
 
-EurovisionResult eurovisionChangeVote(Map states,
-                                      int state_giver,
-                                      int state_taker,
-                                      int difference) {
+EurovisionResult eurovisionChangeVote(Map states, int state_giver,
+                                      int state_taker, int difference) {
     // check valid arguments
     if (states == NULL) return EUROVISION_NULL_ARGUMENT;
 
-    EurovisionResult id_validation = isIDValid(states, STATES_MAP, state_giver);
-    assert(id_validation == EUROVISION_STATE_ALREADY_EXIST ||
-           id_validation == EUROVISION_INVALID_ID ||
-           id_validation == EUROVISION_STATE_NOT_EXIST);
-    if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
+    EurovisionResult result = isIDValid(states, STATES_MAP, state_giver);
+    if (result != EUROVISION_STATE_ALREADY_EXIST) return result;
 
-    id_validation = isIDValid(states, STATES_MAP, state_taker);
-    assert(id_validation == EUROVISION_STATE_ALREADY_EXIST ||
-           id_validation == EUROVISION_INVALID_ID ||
-           id_validation == EUROVISION_STATE_NOT_EXIST);
-    if (id_validation != EUROVISION_STATE_ALREADY_EXIST) return id_validation;
+    result = isIDValid(states, STATES_MAP, state_taker);
+    if (result != EUROVISION_STATE_ALREADY_EXIST) return result;
 
     // check that it's the same state
     if (state_giver == state_taker) return EUROVISION_SAME_STATE;
@@ -89,8 +81,8 @@ EurovisionResult eurovisionChangeVote(Map states,
     if (current_votes_num == NULL) { // no votes
         if (difference > 0) {
             // add state_taker to state's vote map along with the number of votes
-            MapResult result = mapPut(giver_data->votes, &state_taker, &difference);
-            if (result == MAP_OUT_OF_MEMORY) return EUROVISION_OUT_OF_MEMORY;
+            MapResult put_result = mapPut(giver_data->votes, &state_taker, &difference);
+            if (put_result == MAP_OUT_OF_MEMORY) return EUROVISION_OUT_OF_MEMORY;
         }
         // if difference <= 0 nothing is done (no votes added or removed)
     } else {
@@ -223,6 +215,16 @@ List convertToStringList(List finalResults, Map states) {
 }
 
 /***************************** CONTEST FUNCTIONS ********************************/
+Ranking getRanking(int place) {
+    static const Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {
+            FIRST_PLACE, SECOND_PLACE, THIRD_PLACE, FOURTH_PLACE,
+            FIFTH_PLACE, SIXTH_PLACE, SEVENTH_PLACE, EIGHT_PLACE,
+            NINTH_PLACE, TENTH_PLACE
+    };
+
+    return ranking[place];
+}
+
 List getAudiencePoints(Map states, int audience_percent) {
     // create an audience points list with all states
     List audience_points = countListCreate(states);
@@ -248,18 +250,13 @@ List getAudiencePoints(Map states, int audience_percent) {
     return audience_points;
 }
 
-void distributeStateVotes(List audience_points, List state_votes, int audience_percent) {
-    static const Ranking ranking[NUMBER_OF_STATES_TO_RANK] = {FIRST_PLACE, SECOND_PLACE,
-                                                              THIRD_PLACE, FOURTH_PLACE,
-                                                              FIFTH_PLACE, SIXTH_PLACE,
-                                                              SEVENTH_PLACE, EIGHT_PLACE,
-                                                              NINTH_PLACE, TENTH_PLACE};
-
+void distributeStateVotes(List audience_points, List state_votes,
+                          int audience_percent) {
     // iterate on the giver state's votes and update the audience points list accordingly
     CountData vote_data = listGetFirst(state_votes);
     for (int i=0; i < NUMBER_OF_STATES_TO_RANK && vote_data != NULL; i++) {
         int state_taker = vote_data->id;                // the state being given the points
-        int points = audience_percent * ranking[i];      // amount of points to give
+        int points = audience_percent * getRanking(i);      // amount of points to give
 
         addStatePoints(audience_points, state_taker, points);
 

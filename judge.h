@@ -32,4 +32,6 @@ void freeJudgeDataElement(JudgeDataElement data);
 /** compare between two judge's ids */
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2);
 
+JudgeData createJudgeData(const char *name, const int *results);
+
 #endif //JUDGES_H

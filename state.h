@@ -38,6 +38,10 @@ void freeStateDataElement(StateDataElement data);
 /** compare between two state's ids */
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
 
+/** Create a StateData struct with the given state name and song name
+ *  Returns NULL if a memory allocation failed */
+StateData createStateData(const char *state_name, const char *song_name);
+
 /********************** VOTE MAP FUNCTIONS ***********************/
 
 /** returns a copy of the id of the state that receives the votes */
@@ -64,7 +68,8 @@ int stringCompare(void* str1, void* str2);
 int getFavoriteState(Map votes);
 
 /** Check if states are friendly by the assigment definition */
-bool areFriendlyStates(const int *stateId1,const int *favState1,const int *stateId2,const int *favState2);
+bool areFriendlyStates(const int *stateId1, const int *favState1,
+                       const int *stateId2, const int *favState2);
 
 /** returns a map that shows each state's "favorite state"
  * (key = state's id, value = favorite state's id) */
