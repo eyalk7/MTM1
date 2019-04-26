@@ -80,4 +80,10 @@ Map getStateFavorites(Map states);
  * (the state names are ordered lexicographically) */
 char *getStatePair(StateData state1, StateData state2);
 
+/** Returns a list of "friendly" states as defined in the assignment:
+ *  A list of strings of state name pairs in which each state's most votes went to the other state
+ *  in the pair. Each string is ordered lexicographically (not the list)
+ * */
+List getFriendlyStates(Map states);
+
 #endif //STATES_H

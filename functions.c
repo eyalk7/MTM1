@@ -3,6 +3,8 @@
 #include <assert.h>
 #include "functions.h"
 
+
+
 /*********************** EUROVISION HELP FUNCTIONS *******************************/
 EurovisionResult isIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
@@ -21,13 +23,11 @@ EurovisionResult isIDValid(Map map, MapType type, int id) {
     return EUROVISION_JUDGE_NOT_EXIST;  // else type == JUDGES_MAP
 }
 
-/** check if a given character is a lower case alphabet letter */
-static bool isLowerCase(char c) {
+bool isLowerCase(char c) {
     return ('a' <= c && c <= 'z');
 }
 
 bool isValidName(const  char* name) {
-    //check the given string only contains small letters and spaces
     for (int i = 0; i < strlen(name); i++) {
         if (!isLowerCase(name[i]) && name[i] != ' ') return false;
     }
@@ -99,64 +99,63 @@ EurovisionResult eurovisionChangeVote(Map states, int state_giver,
 }
 
 bool judgeResultsContain(JudgeData judge, int state_id) {
-    for (int i=0; i < JUDGE_RESULTS_LENGTH; i++) {
+    for (int i=0; i < NUMBER_OF_RANKINGS; i++) {
         if (judge->results[i] == state_id) return true;
     }
     return false;
 }
 
 /***************************** COUNT LIST FUNCTIONS *****************************/
-ListElement copyCountData(ListElement element) {
+ListElement copyStatePoints(ListElement element) {
     if (element == NULL) return NULL;
 
-    CountData copy = malloc(sizeof(*copy));
+    StatePoints copy = malloc(sizeof(*copy));
     if (copy == NULL) return NULL;
 
-    CountData data = element;
+    StatePoints data = element;
     copy->id = data->id;
-    copy->vote_count = data->vote_count;
+    copy->points = data->points;
 
     return copy;
 }
-
-void freeCountData(ListElement element) {
+void freeStatePoints(ListElement element) {
     free(element);
 }
-
-int compareCountData(ListElement element1, ListElement element2) {
-    // if state in element 1 ranks higher than state in element2
+int compareStatePoints(ListElement element1, ListElement element2) {
+    // if state in element1 ranks higher than state in element2
     // returns negative
+    // (therefore state1 < state2 in final list)
     // else return positive (NEVER returns 0)
 
     assert(element1 != NULL && element2 != NULL);
 
-    CountData data1 = element1;
-    CountData data2 = element2;
+    StatePoints data1 = element1;
+    StatePoints data2 = element2;
 
-    if (data1->vote_count == data2->vote_count) {
+    if (data1->points == data2->points) {
         return data1->id - data2->id;       // IDs are always different
     }
-    return data2->vote_count - data1->vote_count;
+    return (int)(data2->points - data1->points);
 }
 
-List countListCreate(Map map) {
-    assert(map != NULL);
+List pointListCreate(Map states) {
+    assert(states != NULL);
 
-    List list = listCreate(copyCountData, freeCountData);
+    List list = listCreate(copyStatePoints, freeStatePoints);
     if (!list) return NULL;
 
-    MAP_FOREACH(int*, key, map) {
-        CountData data = malloc(sizeof(*data));
+    MAP_FOREACH(int*, id, states) {
+        StatePoints data = malloc(sizeof(*data));
         if (!data) {
             listDestroy(list);
             return NULL;
         }
 
-        data->id = *key;
-        data->vote_count = 0; // initialize to 0
+        data->id = *id;
+        data->points = 0.0; // initialize to zero
 
         ListResult result = listInsertFirst(list, data);
-        freeCountData(data);
+        freeStatePoints(data);
 
         if (result != LIST_SUCCESS) {
             listDestroy(list);
@@ -167,36 +166,54 @@ List countListCreate(Map map) {
     return list;
 }
 
-List convertVotesToList(Map votes) {
+int *convertVotesToIDArray(Map votes, int *array_size) {
     assert(votes != NULL);
 
-    // create the list
-    List list = countListCreate(votes);     // IDs are set here
-    LIST_FOREACH(CountData, element, list) {
+    *array_size = 0;    // return 0 if error occurs
+
+    // Convert to points list first (using votes instead of points)
+    List list = pointListCreate(votes);     // IDs are set here
+    LIST_FOREACH(StatePoints, element, list) {
         int* vote_count = mapGet(votes, &(element->id));
         if (!vote_count) {
             listDestroy(list);
             return NULL;
         }
-        element->vote_count = *vote_count;  // number of votes is set here
+        element->points = *vote_count;      // number of votes is set here
     }
 
-    // sort the list based on vote counts
-    ListResult result = listSort(list, compareCountData);
+    // Use list sort to sort based on vote counts
+    ListResult result = listSort(list, compareStatePoints);
     if (result != LIST_SUCCESS) {
         listDestroy(list);
         return NULL;
     }
 
-    return list;
+    int num_of_votes = mapGetSize(votes);
+    int len = (num_of_votes < NUMBER_OF_RANKINGS ? num_of_votes : NUMBER_OF_RANKINGS);
+
+    int *state_results = malloc(sizeof(int) * len);
+    if (!state_results) {
+        listDestroy(list);
+        return NULL;        // allocation failed
+    }
+
+    StatePoints ptr = listGetFirst(list);
+    for (int i = 0; i < len; i++) {
+        state_results[i] = ptr->id;
+        ptr = listGetNext(list);
+    }
+
+    *array_size = len;      // return array size
+    return state_results;
 }
 
-List convertToStringList(List finalResults, Map states) {
-    assert(finalResults != NULL && states != NULL);
+List convertToStringList(List final_results, Map states) {
+    assert(final_results != NULL && states != NULL);
 
     // Create a list of names of the sates that are in given list
     List state_names = listCreate(copyString, freeString);
-    LIST_FOREACH(CountData, element, finalResults) {
+    LIST_FOREACH(StatePoints, element, final_results) {
         int stateId = element->id;
         StateData data = mapGet(states, &stateId);
         if (!data) {
@@ -226,9 +243,9 @@ Ranking getRanking(int place) {
     return ranking[place];
 }
 
-List getAudiencePoints(Map states, int audience_percent) {
+List getAudiencePoints(Map states) {
     // create an audience points list with all states
-    List audience_points = countListCreate(states);
+    List audience_points = pointListCreate(states);
     if (!audience_points) return NULL;
 
     // distribute each states votes accordingly in audience_points
@@ -237,121 +254,52 @@ List getAudiencePoints(Map states, int audience_percent) {
         assert(giver_data != NULL);
 
         // get the state's sorted vote list
-        List state_votes = convertVotesToList(giver_data->votes);
-        if (!state_votes) {
+        int results_size = 0;
+        int *state_results = convertVotesToIDArray(giver_data->votes, &results_size);
+        if (!state_results) {
             listDestroy(audience_points);
             return NULL;
         }
 
-        distributeStateVotes(audience_points, state_votes, audience_percent);
+        // distribute points to the states in state_results
+        // (according to their order in the array)
+        distributePoints(audience_points, state_results, results_size);
 
-        listDestroy(state_votes);   // deallocate the state_votes list
+        free(state_results);   // deallocate the state_results array
     }
 
     return audience_points;
 }
 
-void distributeStateVotes(List audience_points, List state_votes,
-                          int audience_percent) {
-    // iterate on the giver state's votes and update the audience points list accordingly
-    CountData vote_data = listGetFirst(state_votes);
-    for (int i=0; i < NUMBER_OF_RANKINGS && vote_data != NULL; i++) {
-        int state_taker = vote_data->id;                // the state being given the points
-        int points = audience_percent * getRanking(i);      // amount of points to give
+List getJudgesPoints(Map judges, Map states) {
+    List judge_points = pointListCreate(states);
+    if (!judges) return NULL;
 
-        addStatePoints(audience_points, state_taker, points);
-
-        vote_data = listGetNext(state_votes);           // go to next "given votes" node
-    }
-}
-
-void addStatePoints(List audience_points, int state_taker, int points) {
-    // iterate on audience points list & find the state to give points to
-    LIST_FOREACH(CountData, data, audience_points){
-        if (data->id == state_taker) {
-            data->vote_count += points;      // update the state_taker's points
-        }
-    }
-}
-
-void distributeJudgePoints(Map judges, List points_list, int judge_percent) {
-    // update the points list according to each judge's results
+    // for each judge
     MAP_FOREACH(int *, judge_id, judges) {
         // get the judge's data
         JudgeData judge_data = mapGet(judges, judge_id);
         assert(judge_data != NULL);
 
-        // get the judge's results
-        int *judge_results = judge_data->results;
-
-        // for each state in judge's results
-        for (int i = 0; i < JUDGE_RESULTS_LENGTH; i++) {
-            int state_id = judge_results[i];
-            int points = judge_percent * getRanking(i);     // calculate points to add
-
-            // find the state to give points to in the points_list
-            LIST_FOREACH(CountData, data, points_list) {
-                if (state_id == data->id) {
-                    data->vote_count += points;
-                }
-            }
-        }
+        // distribute points to the states in judge_results
+        // (according to their order in the array)
+        distributePoints(judge_points, judge_data->results, NUMBER_OF_RANKINGS);
     }
+
+    return judge_points;
 }
 
-List getFriendlyStates(Map states) {
-    // create empty string list
-    List friendly_states = listCreate(copyString, freeString);
-    if (!friendly_states) return NULL;  // allocation failed
+void distributePoints(List points_list, const int *results, int results_size) {
+    // for each state in results
+    for (int i=0; i < results_size; i++) {
+        int state_id = results[i];          // ID of the state to give points to
+        int points = getRanking(i);         // get points to give
 
-    // get state favorites map - key = state's ID, value = favorite state's ID
-    Map state_favorites = getStateFavorites(states);
-    if (!state_favorites) {
-        listDestroy(friendly_states);
-        return NULL;                    // allocation failed
-    }
-
-    // for each state in state favorites
-    MAP_FOREACH(int*, stateId, state_favorites) {
-        // get its favorite state's ID
-        int *favState1 = mapGet(state_favorites, stateId);
-        // get the ID of the favorite state's favorite state
-        int *stateId2 = favState1;
-        int *favState2 = mapGet(state_favorites, stateId2);
-
-        // check if the states are favorites of each other
-        // (outside function also checks if pointer are NULL)
-        if (areFriendlyStates(stateId, favState1, stateId2, favState2)) {
-            // if states are a pair get their data
-            StateData state1 = mapGet(states, stateId);
-            StateData state2 = mapGet(states, stateId2);
-
-            /// mark as if they have no favorite state **to prevent duplicates**
-            *favState1 = NO_FAVORITE_STATE;
-            *favState2 = NO_FAVORITE_STATE;
-
-            // create the string that contains the state names (ordered lexicographically)
-            char *statePair = getStatePair(state1, state2);
-            if (!statePair) {
-                mapDestroy(state_favorites);
-                listDestroy(friendly_states);
-                return NULL;            // allocation failed
-            }
-
-            // add the string to the list
-            ListResult result = listInsertLast(friendly_states, statePair);
-
-            free(statePair);        // deallocate the string with the state names
-
-            if (result != LIST_SUCCESS) {
-                mapDestroy(state_favorites);
-                listDestroy(friendly_states);
-                return NULL;            // list insert failed
+        // iterate on points list & find the state to give points to
+        LIST_FOREACH(StatePoints, state_points, points_list){
+            if (state_points->id == state_id) {
+                state_points->points += points;      // update the state's points
             }
         }
     }
-
-    mapDestroy(state_favorites);    // destroy state favorites map
-
-    return friendly_states;
 }

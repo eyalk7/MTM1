@@ -5,12 +5,12 @@
 
 /********************** MACROS & ENUMS ***********************/
 /** number of states the judge has to rank */
-#define JUDGE_RESULTS_LENGTH 10
+#define NUMBER_OF_RANKINGS 10
 
 /********************** JUDGE MAP DEFINITIONS ***********************/
 typedef struct JudgeData_t {
     char *name;
-    int results[JUDGE_RESULTS_LENGTH];   // list of state IDs in the order of points to give
+    int results[NUMBER_OF_RANKINGS];   // list of state IDs in the order of points to give
 } *JudgeData;
 
 typedef void* JudgeDataElement;

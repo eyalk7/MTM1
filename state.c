@@ -230,3 +230,61 @@ char *getStatePair(StateData state1, StateData state2) {
 
     return statePair;
 }
+
+List getFriendlyStates(Map states) {
+    // create empty string list
+    List friendly_states = listCreate(copyString, freeString);
+    if (!friendly_states) return NULL;  // allocation failed
+
+    // get state favorites map - key = state's ID, value = favorite state's ID
+    Map state_favorites = getStateFavorites(states);
+    if (!state_favorites) {
+        listDestroy(friendly_states);
+        return NULL;                    // allocation failed
+    }
+
+    // for each state in state favorites
+    MAP_FOREACH(int*, stateId, state_favorites) {
+        // get its favorite state's ID
+        int *favState1 = mapGet(state_favorites, stateId);
+        // get the ID of the favorite state's favorite state
+        int *stateId2 = favState1;
+        int *favState2 = mapGet(state_favorites, stateId2);
+
+        // check if the states are favorites of each other
+        // (outside function also checks if pointer are NULL)
+        if (areFriendlyStates(stateId, favState1, stateId2, favState2)) {
+            // if states are a pair get their data
+            StateData state1 = mapGet(states, stateId);
+            StateData state2 = mapGet(states, stateId2);
+
+            /// mark as if they have no favorite state **to prevent duplicates**
+            *favState1 = NO_FAVORITE_STATE;
+            *favState2 = NO_FAVORITE_STATE;
+
+            // create the string that contains the state names (ordered lexicographically)
+            char *statePair = getStatePair(state1, state2);
+            if (!statePair) {
+                mapDestroy(state_favorites);
+                listDestroy(friendly_states);
+                return NULL;            // allocation failed
+            }
+
+            // add the string to the list
+            ListResult result = listInsertLast(friendly_states, statePair);
+
+            free(statePair);        // deallocate the string with the state names
+
+            if (result != LIST_SUCCESS) {
+                mapDestroy(state_favorites);
+                listDestroy(friendly_states);
+                return NULL;            // list insert failed
+            }
+        }
+    }
+
+    mapDestroy(state_favorites);    // destroy state favorites map
+
+    return friendly_states;
+}
+

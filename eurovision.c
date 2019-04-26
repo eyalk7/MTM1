@@ -127,7 +127,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
     if (!isValidName(judgeName)) return EUROVISION_INVALID_NAME;    // judge name not valid
 
     // check valid judge results
-    for (int i=0; i < JUDGE_RESULTS_LENGTH; i++) {
+    for (int i=0; i < NUMBER_OF_RANKINGS; i++) {
         result = isIDValid(eurovision->States, STATES_MAP, judgeResults[i]);
         if (result != EUROVISION_STATE_ALREADY_EXIST) return result;        // invalid state ID in judge's results
     }
@@ -178,25 +178,51 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     // if state map is empty return empty string List
     if (mapGetFirst(eurovision->States) == NULL) return listCreate(copyString, freeString);
 
-    // get the audience points
-    List points_list = getAudiencePoints(eurovision->States, audiencePercent);
+    // get the points each state got from the audience
+    List points_list = getAudiencePoints(eurovision->States);
     if (!points_list) return NULL;
 
+    // get the list of points each state got from the judges
+    List judge_points = getJudgesPoints(eurovision->Judges, eurovision->States);
+    if (!judge_points) {
+        listDestroy(points_list);
+        return NULL;
+    }
 
-
-    // calculate judge's percentage
     int judge_percent = 100 - audiencePercent;
+    int num_of_states = mapGetSize(eurovision->States);
+    int num_of_judges = mapGetSize(eurovision->Judges);
 
-    // Distribute the judge's points to the states (in points_list)
-    distributeJudgePoints(eurovision->Judges, points_list, judge_percent);
+    // Add judge points to audience points
+    StatePoints judge_points_ptr = listGetFirst(judge_points);
+    LIST_FOREACH(StatePoints, state_points, points_list) {
+        assert(judge_points_ptr != NULL);
+
+        // Divide each state's audience points by the number of states
+        state_points->points /= num_of_states;
+        // Multiply each state's audience points by audience percentage
+        state_points->points *= audiencePercent;
+        // Divide each state's judge points by the number of judges
+        judge_points_ptr->points /= num_of_judges;
+        // Multiply each state's judge points by audience percentage
+        judge_points_ptr->points *= judge_percent;
+
+        // Sum the to get total points
+        state_points->points += judge_points_ptr->points;
+
+        // increment judge_points pointer
+        judge_points_ptr = listGetNext(judge_points);
+    }
+
+    listDestroy(judge_points);      // deallocate the judge points list
 
     // sort the final points list
-    if (listSort(points_list, compareCountData) != LIST_SUCCESS) {
+    if (listSort(points_list, compareStatePoints) != LIST_SUCCESS) {
         listDestroy(points_list);
         return NULL;                // sort failed
     }
 
-    // convert sorted points list to sorted string list of states' names
+    // convert sorted points list to string list of states' names
     List final_results = convertToStringList(points_list, eurovision->States);
 
     listDestroy(points_list);       // deallocate the points list
@@ -207,12 +233,12 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 List eurovisionRunAudienceFavorite(Eurovision eurovision) {
     if (!eurovision) return NULL;   // NULL pointer received
 
-    // get the audience points each state received
-    List audience_points = getAudiencePoints(eurovision->States, ONE_HUNDREND_PERCENT);
+    // get the points each state got from the audience
+    List audience_points = getAudiencePoints(eurovision->States);
     if (!audience_points) return NULL;  // error in getAudiencePoints function
 
     // sort the list
-    if (listSort(audience_points, compareCountData) != LIST_SUCCESS) {
+    if (listSort(audience_points, compareStatePoints) != LIST_SUCCESS) {
         listDestroy(audience_points);
         return NULL;                    // list sort failed
     }

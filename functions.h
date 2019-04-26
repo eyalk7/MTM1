@@ -13,12 +13,6 @@
  */
 
 /********************** MACROS & ENUMS ***********************/
-/** macro for audience precent */
-#define ONE_HUNDREND_PERCENT 1
-
-/** macro for how many point quantities can be given (= Ranking enum size) */
-#define NUMBER_OF_RANKINGS 10
-
 /**  enum for number of points in each rank */
 typedef enum {
     TENTH_PLACE = 1,
@@ -43,7 +37,10 @@ typedef enum mapType_t {
 /** Check if given state/judge ID is valid */
 EurovisionResult isIDValid(Map map, MapType type, int id);
 
-/** check valid judge/song/state name */
+/** Check if a given character is a lower case alphabet letter */
+bool isLowerCase(char c);
+
+/** Check the given string only contains small letters and spaces */
 bool isValidName(const char* name);
 
 /** Map ADT functions for Judge/State/state_favorites keysElements
@@ -56,67 +53,56 @@ int compareInts(MapKeyElement integer1, MapKeyElement integer2);
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
-/** change the vote count from state to state by a given amount */
+/** Change stateGiver's vote point to stateTaker by a given difference */
 EurovisionResult eurovisionChangeVote(Map states, int stateGiver,
                                       int stateTaker, int difference);
 
 /** checks if a judge gave points to the given state */
 bool judgeResultsContain(JudgeData judge, int stateId);
 
-/********************** COUNT LIST FUNCTIONS & STRUCTS ***********************
-* Count List is a List of CountData for saving the points/votes of each state/judge */
+/********************** point LIST FUNCTIONS & STRUCTS ***********************
+* point List is a List of StatePoints for saving the points/votes of each state/judge */
 
-/** struct for summing up the amount of votes/points a state gives or receives */
-typedef struct countData_t {
+/** struct for summing up the amount of points a state receives */
+typedef struct statePoints_t {
     int id;
-    unsigned int vote_count;
-} *CountData;
+    double points;
+} *StatePoints;
 
-/** copy, free & compare functions for CountData element
+/** copy, free & compare functions for StatePoints element
  * Note: compare function only returns positive or negative
- * (two CountData structs can't be equal because IDs are unique)
+ * (two StatePoints structs can't be equal because IDs are unique)
  * */
-ListElement copyCountData(ListElement element);
-void freeCountData(ListElement element);
-int compareCountData(ListElement element1, ListElement element2);
+ListElement copyStatePoints(ListElement element);
+void freeStatePoints(ListElement element);
+int compareStatePoints(ListElement element1, ListElement element2);
 
-/** create CountData List. Initializes vote counts to zero
- * Assumption: Given map has keys of type int* */
-List countListCreate(Map map);
+/** Create StatePoints List. Initializes points to zero
+ * Assumption: Given map has keys of type int* (states' IDs) */
+List pointListCreate(Map states);
 
-/** converts given votes map to CountData List */
-List convertVotesToList(Map votes);
+/** Converts given votes map to an array of IDs
+ *  of the top 10 most voted states */
+int *convertVotesToIDArray(Map votes, int *array_size);
 
-/** Converts final ranking of states (in CountData List)
+/** Converts final ranking of states (in StatePoints List)
  * to list of state names (strings List) */
-List convertToStringList(List finalResults, Map states);
+List convertToStringList(List final_results, Map states);
 
 /********************** CONTEST FUNCTIONS ***********************/
 /** Gets the amount points for a certain ranking based on the Ranking enum */
 Ranking getRanking(int place);
 
-/** Calculates the audience points of all states in given States map
- *  Returns a list of each state's points given by the audience */
-List getAudiencePoints(Map states, int audience_percent);
+/** Returns a list of each state's points given by the audience */
+List getAudiencePoints(Map states);
 
-/** Receives a state's given votes in order from highest to lowest
- *  and calculates the points to give to each state based on said order.
- *  The function also takes into account the audience percentage
+/** Returns a list of each state's points given by the judges */
+List getJudgesPoints(Map judges, Map states);
+
+/** Receives an array of up to 10 state IDs (array size given too)
+ *  and gives each state points according to their order
+ *  using the Ranking enum
  *  */
-void distributeStateVotes(List audience_points, List state_votes,
-                          int audience_percent);
-
-/** Adds given amount of points to the state with the given ID in the given list */
-void addStatePoints(List audience_points, int state_taker, int points);
-
-/** Distributes the points of the judges in given map to the states in points_list
- * The functions also takes into account the judge percentage */
-void distributeJudgePoints(Map judges, List points_list, int judge_percent);
-
-/** Returns a list of "friendly" states as defined in the assignment:
- *  A list of strings of state name pairs in which each state's most votes went to the other state
- *  in the pair. Each string is ordered lexicographically (not the list)
- * */
-List getFriendlyStates(Map states);
+void distributePoints(List points_list, const int *results, int results_size);
 
 #endif //FUNCTIONS_H
