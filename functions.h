@@ -57,7 +57,7 @@ void freeString(ListElement str);
 EurovisionResult eurovisionChangeVote(Map states, int state_giver,
                                       int state_taker, int difference);
 
-/********************** point LIST FUNCTIONS & STRUCTS ***********************
+/********************** POINT LIST FUNCTIONS & STRUCTS ***********************
 * point List is a List of StatePoints for saving the points/votes of each state/judge */
 
 /** struct for summing up the amount of points a state receives */
@@ -105,5 +105,13 @@ List getJudgesPoints(Map judges, Map states);
  *  using the Ranking enum
  *  */
 void distributePoints(List points_list, const int *results, int results_size);
+
+/** Divides each state's audience points by the number of states
+ *  and multiplies it by the audience percentage.
+ *  Does the same things for each state's judge points.
+ *  Finally, it adds to each state's audience points its corresponding judge points. */
+void calculateFinalPoints(List audience_points, List judge_points,
+                          int num_of_states, int num_of_judges,
+                          int audience_percent);
 
 #endif //FUNCTIONS_H

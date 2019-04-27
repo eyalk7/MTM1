@@ -3,8 +3,6 @@
 #include <assert.h>
 #include "functions.h"
 
-
-
 /*********************** EUROVISION HELP FUNCTIONS *******************************/
 EurovisionResult isIDValid(Map map, MapType type, int id) {
     // assert valid arguments (checked already in the sending function)
@@ -97,7 +95,7 @@ EurovisionResult eurovisionChangeVote(Map states, int state_giver,
     return EUROVISION_SUCCESS;
 }
 
-/***************************** VOTES/POINTS LIST FUNCTIONS *****************************/
+/***************************** POINTS LIST FUNCTIONS *****************************/
 ListElement copyStatePoints(ListElement element) {
     if (element == NULL) return NULL;
 
@@ -304,5 +302,32 @@ void distributePoints(List points_list, const int *results, int results_size) {
                 point_data->points += points;      // update the state's points
             }
         }
+    }
+}
+
+void calculateFinalPoints(List audience_points, List judge_points,
+                          int num_of_states, int num_of_judges,
+                          int audience_percent) {
+    int judge_percent = 100 - audience_percent;
+
+    // Add judge points to audience points
+    StatePoints judge_points_ptr = listGetFirst(judge_points);
+    LIST_FOREACH(StatePoints, point_data, audience_points) {
+        assert(judge_points_ptr != NULL);
+
+        // Divide each state's audience points by the number of states
+        point_data->points /= num_of_states;
+        // Multiply each state's audience points by audience percentage
+        point_data->points *= audience_percent;
+        // Divide each state's judge points by the number of judges
+        judge_points_ptr->points /= num_of_judges;
+        // Multiply each state's judge points by audience percentage
+        judge_points_ptr->points *= judge_percent;
+
+        // Add judge points to audience points
+        point_data->points += judge_points_ptr->points;
+
+        // increment judge_points pointer
+        judge_points_ptr = listGetNext(judge_points);
     }
 }
