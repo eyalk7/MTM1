@@ -27,16 +27,7 @@ typedef enum {
     FIRST_PLACE = 12
 } Ranking;
 
-/**  enum for isIDValid function */
-typedef enum mapType_t {
-    STATES_MAP,
-    JUDGES_MAP
-} MapType;
-
 /********************** EUROVISION HELP FUNCTIONS ***********************/
-/** Check if given state/judge ID is valid */
-EurovisionResult isIDValid(Map map, MapType type, int id);
-
 /** Check if a given character is a lower case alphabet letter */
 bool isLowerCase(char c);
 
@@ -58,7 +49,7 @@ EurovisionResult eurovisionChangeVote(Map states, int state_giver,
                                       int state_taker, int difference);
 
 /********************** POINT LIST FUNCTIONS & STRUCTS ***********************
-* point List is a List of StatePoints for saving the points/votes of each state/judge */
+* point List is a List of StatePoints for saving the points/votes of each state */
 
 /** struct for summing up the amount of points a state receives */
 typedef struct statePoints_t {

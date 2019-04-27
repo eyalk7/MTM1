@@ -4,23 +4,6 @@
 #include "functions.h"
 
 /*********************** EUROVISION HELP FUNCTIONS *******************************/
-EurovisionResult isIDValid(Map map, MapType type, int id) {
-    // assert valid arguments (checked already in the sending function)
-    assert(map != NULL);
-    assert(type == STATES_MAP || type == JUDGES_MAP);
-
-    if (id < 0) return EUROVISION_INVALID_ID;   //check ID >= 0
-
-    // check if Id already exist in the given map
-    if (mapContains(map, &id)) {
-        if (type == STATES_MAP) return EUROVISION_STATE_ALREADY_EXIST;
-        return EUROVISION_JUDGE_ALREADY_EXIST;  // else type == JUDGES_MAP
-    }
-
-    if (type == STATES_MAP) return EUROVISION_STATE_NOT_EXIST;
-    return EUROVISION_JUDGE_NOT_EXIST;  // else type == JUDGES_MAP
-}
-
 bool isLowerCase(char c) {
     return ('a' <= c && c <= 'z');
 }
@@ -60,17 +43,14 @@ void freeString(ListElement str) {
 
 EurovisionResult eurovisionChangeVote(Map states, int state_giver,
                                       int state_taker, int difference) {
-    // check valid arguments
+    /// PARAMETER CHECKS ///
     if (states == NULL) return EUROVISION_NULL_ARGUMENT;
-
-    EurovisionResult result = isIDValid(states, STATES_MAP, state_giver);
-    if (result != EUROVISION_STATE_ALREADY_EXIST) return result;
-
-    result = isIDValid(states, STATES_MAP, state_taker);
-    if (result != EUROVISION_STATE_ALREADY_EXIST) return result;
-
-    // check if it's the same state
-    if (state_giver == state_taker) return EUROVISION_SAME_STATE;
+    if (state_giver < 0 || state_taker < 0) return EUROVISION_INVALID_ID;       // ID not valid
+    if (!mapContains(states, &state_giver) || !mapContains(states, &state_taker)) {
+        return EUROVISION_STATE_NOT_EXIST;          // one of the given states doesn't exist
+    }
+    if (state_giver == state_taker) return EUROVISION_SAME_STATE;       // same states given
+    /// PARAMETER CHECKS ///
 
     // get current number of votes for state_taker in state_giver's votes map
     StateData giver_data = mapGet(states, &state_giver);
