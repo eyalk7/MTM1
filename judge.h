@@ -32,6 +32,8 @@ void freeJudgeDataElement(JudgeDataElement data);
 /** compare between two judge's ids */
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2);
 
+/********************** JUDGE DATA FUNCTIONS ***********************/
+
 /** Checks if a judge gave points to the given state */
 bool judgeResultsContain(JudgeData judge, int stateId);
 
