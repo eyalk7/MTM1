@@ -236,9 +236,11 @@ List getAudiencePoints(Map states) {
 
         int results_size = 0;
         int *state_results = getStateResults(votes_list, &results_size);
+
+        listDestroy(votes_list);        // deallocate votes_list
+
         if (!state_results) {
             listDestroy(audience_points);
-            listDestroy(votes_list);
             return NULL;
         }
 
