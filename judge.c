@@ -51,6 +51,8 @@ int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
     return compareInts(key1, key2); // compare two judges' IDs
 }
 
+/********************** JUDGE DATA FUNCTIONS ***********************/
+
 bool judgeResultsContain(JudgeData judge, int state_id) {
     for (int i=0; i < NUMBER_OF_RANKINGS; i++) {
         if (judge->results[i] == state_id) return true;
