@@ -195,20 +195,20 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
 
     // Add judge points to audience points
     StatePoints judge_points_ptr = listGetFirst(judge_points);
-    LIST_FOREACH(StatePoints, state_points, points_list) {
+    LIST_FOREACH(StatePoints, point_data, points_list) {
         assert(judge_points_ptr != NULL);
 
         // Divide each state's audience points by the number of states
-        state_points->points /= num_of_states;
+        point_data->points /= num_of_states;
         // Multiply each state's audience points by audience percentage
-        state_points->points *= audiencePercent;
+        point_data->points *= audiencePercent;
         // Divide each state's judge points by the number of judges
         judge_points_ptr->points /= num_of_judges;
         // Multiply each state's judge points by audience percentage
         judge_points_ptr->points *= judge_percent;
 
-        // Sum the to get total points
-        state_points->points += judge_points_ptr->points;
+        // Add judge points to audience points
+        point_data->points += judge_points_ptr->points;
 
         // increment judge_points pointer
         judge_points_ptr = listGetNext(judge_points);

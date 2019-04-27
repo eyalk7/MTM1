@@ -54,11 +54,8 @@ ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
 /** Change stateGiver's vote point to stateTaker by a given difference */
-EurovisionResult eurovisionChangeVote(Map states, int stateGiver,
-                                      int stateTaker, int difference);
-
-/** checks if a judge gave points to the given state */
-bool judgeResultsContain(JudgeData judge, int stateId);
+EurovisionResult eurovisionChangeVote(Map states, int state_giver,
+                                      int state_taker, int difference);
 
 /********************** point LIST FUNCTIONS & STRUCTS ***********************
 * point List is a List of StatePoints for saving the points/votes of each state/judge */
@@ -81,9 +78,13 @@ int compareStatePoints(ListElement element1, ListElement element2);
  * Assumption: Given map has keys of type int* (states' IDs) */
 List pointListCreate(Map states);
 
-/** Converts given votes map to an array of IDs
- *  of the top 10 most voted states */
-int *convertVotesToIDArray(Map votes, int *array_size);
+/** Converts given votes map to a list of StatePoints struct
+ *  Sorts the list from most voted state to least voted state */
+List convertVotesToList(Map votes);
+
+/** Converts given list of votes to an array of IDs
+ *  The length of the returned array is not higher than the number of rankings (10) */
+int *getStateResults(List votes_list, int *array_size);
 
 /** Converts final ranking of states (in StatePoints List)
  * to list of state names (strings List) */

@@ -32,6 +32,12 @@ void freeJudgeDataElement(JudgeDataElement data);
 /** compare between two judge's ids */
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2);
 
+/** Checks if a judge gave points to the given state */
+bool judgeResultsContain(JudgeData judge, int stateId);
+
+/** Create a JudgeData struct with the given judge name and results
+ *  Returns NULL if a memory allocation failed */
 JudgeData createJudgeData(const char *name, const int *results);
+
 
 #endif //JUDGES_H
