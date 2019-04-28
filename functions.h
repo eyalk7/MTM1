@@ -5,11 +5,11 @@
 #include "eurovision.h"
 #include "state.h"
 #include "judge.h"
-#include "list.h"
 
 /*
  * These are included in judge.h:
  * #include <stdbool.h>
+ * #include "list.h"
  */
 
 /********************** MACROS & ENUMS ***********************/

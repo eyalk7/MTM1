@@ -10,6 +10,16 @@
  * #include <stdbool.h>
  */
 
+/**
+ * Implementation of state.h
+ */
+
+struct StateData_t {
+    char *name;
+    char *song_name;
+    Map votes; // key = State's ID, data = no. of votes this state *gives*
+};
+
 /************************* STATE MAP FUNCTIONS *******************************/
 StateKeyElement copyStateKeyElement(StateKeyElement key) {
     return copyInt(key);    // get a copy of state's ID
@@ -73,6 +83,7 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
     return compareInts(key1, key2);     // compare two states' IDs
 }
 
+/************************* STATE DATA FUNCTIONS *******************************/
 StateData createStateData(const char *state_name, const char *song_name) {
     // allocate memory for a StateData struct as well as the state's name and song name
     // on each allocation check if allocation failed
@@ -115,6 +126,14 @@ StateData createStateData(const char *state_name, const char *song_name) {
     data->votes = votes;
 
     return data;
+}
+
+char *getStateName(StateData data) {
+    return data->name;
+}
+
+Map getStateVotes(StateData data) {
+    return data->votes;
 }
 
 /************************* VOTE MAP FUNCTIONS *******************************/

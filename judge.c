@@ -8,6 +8,15 @@
  * #include "judge.h"
  */
 
+/**
+ * Implementation of state.h
+ */
+
+struct JudgeData_t {
+    char *name;
+    int results[NUMBER_OF_RANKINGS];   // list of state IDs in the order of points to give
+};
+
 /********************** JUDGE MAP FUNCTIONS ***********************/
 JudgeKeyElement copyJudgeKeyElement(JudgeKeyElement key) {
     return copyInt(key);    // get a copy of judge's ID
@@ -51,14 +60,8 @@ int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
     return compareInts(key1, key2); // compare two judges' IDs
 }
 
-bool judgeResultsContain(JudgeData judge, int state_id) {
-    for (int i=0; i < NUMBER_OF_RANKINGS; i++) {
-        if (judge->results[i] == state_id) return true;
-    }
-    return false;
-}
-
-JudgeData createJudgeData(const char *judge_name, const int *judge_results) {
+/********************** JUDGE DATA FUNCTIONS ***********************/
+JudgeData judgeDataCreate(const char *judge_name, const int *judge_results) {
     // allocate memory for a JudgeData struct as well as judge's name
     // on each allocation check if allocation failed
     JudgeData data = malloc(sizeof(*data));
@@ -81,4 +84,15 @@ JudgeData createJudgeData(const char *judge_name, const int *judge_results) {
     }
 
     return data;
+}
+
+int *getJudgeResults(JudgeData data) {
+    return data->results;
+}
+
+bool judgeResultsContain(JudgeData judge, int state_id) {
+    for (int i=0; i < NUMBER_OF_RANKINGS; i++) {
+        if (judge->results[i] == state_id) return true;
+    }
+    return false;
 }
