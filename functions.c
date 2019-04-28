@@ -3,6 +3,11 @@
 #include <assert.h>
 #include "functions.h"
 
+struct statePoints_t {
+    int id;
+    double points;
+};
+
 /*********************** EUROVISION HELP FUNCTIONS *******************************/
 bool isLowerCase(char c) {
     return ('a' <= c && c <= 'z');
@@ -160,15 +165,13 @@ List convertVotesToList(Map votes) {
     return list;
 }
 
-int *getStateResults(List votes_list, int *array_size) {
+int *getStateResults(List votes_list) {
     assert(votes_list != NULL);
-
-    *array_size = 0;    // return 0 if error occurs
 
     int votes_size = listGetSize(votes_list);
     int len = (votes_size < NUMBER_OF_RANKINGS ? votes_size : NUMBER_OF_RANKINGS);
 
-    int *state_results = malloc(sizeof(int) * len);
+    int *state_results = malloc(sizeof(int) * NUMBER_OF_RANKINGS);
     if (!state_results) return NULL;        // allocation failed
 
     StatePoints ptr = listGetFirst(votes_list);
@@ -176,8 +179,10 @@ int *getStateResults(List votes_list, int *array_size) {
         state_results[i] = ptr->id;
         ptr = listGetNext(votes_list);
     }
-
-    *array_size = len;      // return array size
+    // if state voted for less than 10, fill the rest NO_STATE
+    for (int i = len; i < NUMBER_OF_RANKINGS; i++) {
+        state_results[i] = NO_STATE;
+    }
 
     return state_results;
 }
@@ -234,8 +239,7 @@ List getAudiencePoints(Map states) {
             return NULL;
         }
 
-        int results_size = 0;
-        int *state_results = getStateResults(votes_list, &results_size);
+        int *state_results = getStateResults(votes_list);
 
         listDestroy(votes_list);        // deallocate votes_list
 
@@ -246,7 +250,7 @@ List getAudiencePoints(Map states) {
 
         // distribute points to the states in state_results
         // (according to their order in the array)
-        distributePoints(audience_points, state_results, results_size);
+        distributePoints(audience_points, state_results);
 
         free(state_results);   // deallocate the state_results array
     }
@@ -266,15 +270,15 @@ List getJudgesPoints(Map judges, Map states) {
 
         // distribute points to the states in judge_results
         // (according to their order in the array)
-        distributePoints(judge_points, getJudgeResults(judge_data), NUMBER_OF_RANKINGS);
+        distributePoints(judge_points, getJudgeResults(judge_data));
     }
 
     return judge_points;
 }
 
-void distributePoints(List points_list, const int *results, int results_size) {
+void distributePoints(List points_list, const int *results) {
     // for each state in results
-    for (int i=0; i < results_size; i++) {
+    for (int i=0; i < NUMBER_OF_RANKINGS; i++) {
         int state_id = results[i];          // ID of the state to give points to
         int points = getRanking(i);         // get points to give
 
