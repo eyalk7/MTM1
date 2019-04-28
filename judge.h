@@ -35,7 +35,7 @@ JudgeDataElement copyJudgeDataElement(JudgeDataElement data);
 
 /***
  * Function for deallocating a key element in Judges map.
- * @param key  - The judge's ID
+ * @param key - The judge's ID
  */
 void freeJudgeKeyElement(JudgeKeyElement key);
 
@@ -45,7 +45,6 @@ void freeJudgeKeyElement(JudgeKeyElement key);
  */
 void freeJudgeDataElement(JudgeDataElement data);
 
-/** compare between two judge's ids */
 /***
  * Compare function for two keys in Judges map.
  * @param key1 - A judge's ID
@@ -72,7 +71,7 @@ int *getJudgeResults(JudgeData data);
   * @return
   *   A JudgeData struct which values are set to copies of the given parameters
   */
-JudgeData judgeDataCreate(const char *name, const int *results);
+JudgeData createJudgeData(const char *name, const int *results);
 
 /***
  * Checks if a judge gave points to the given state

@@ -144,7 +144,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
     /// PARAMETER CHECKS ///
 
     // temporarily allocate memory for the judge's data
-    JudgeData judge_data = judgeDataCreate(judgeName, judgeResults);
+    JudgeData judge_data = createJudgeData(judgeName, judgeResults);
     if (!judge_data) return EUROVISION_OUT_OF_MEMORY;   // judge's data allocation failed
 
     // add the judge to Eurovision's Judges

@@ -162,17 +162,19 @@ int stringCompare(void* str1, void* str2) {
     return strcmp(str1, str2);  // lexicographical comparison
 }
 
-int getFavoriteState(Map votes) {
+int getFavoriteState(StateData state) {
+    Map votes = getStateVotes(state);
+
     // no votes = no favorite state
-    if(mapGetSize(votes) <= 0) return NO_FAVORITE_STATE;
+    if(mapGetSize(votes) <= 0) return NO_STATE;
 
     VoteKeyElement favState = mapGetFirst(votes);   // state with max no. of votes
     int max = *(int*)mapGet(votes, favState);       // max no. of votes
-    MAP_FOREACH(VoteKeyElement, state, votes) {
-        int num_of_votes = *(int*)mapGet(votes, state);
+    MAP_FOREACH(VoteKeyElement, state_id, votes) {
+        int num_of_votes = *(int*)mapGet(votes, state_id);
         if (num_of_votes > max) {   // compare votes two state's receive
             // update the most voted
-            favState = state;
+            favState = state_id;
             max = num_of_votes;
         }
     }
@@ -207,7 +209,7 @@ Map getStateFavorites(Map states) {
         }
 
         // get the ID of the state's most voted state
-        int favState = getFavoriteState(state->votes);
+        int favState = getFavoriteState(state);
 
         // insert the state along with it's most voted state to the favorite states map
         MapResult result = mapPut(state_favorites, stateId, &favState);
@@ -278,8 +280,8 @@ List getFriendlyStates(Map states) {
             StateData state2 = mapGet(states, stateId2);
 
             /// mark as if they have no favorite state **to prevent duplicates**
-            *favState1 = NO_FAVORITE_STATE;
-            *favState2 = NO_FAVORITE_STATE;
+            *favState1 = NO_STATE;
+            *favState2 = NO_STATE;
 
             // create the string that contains the state names (ordered lexicographically)
             char *statePair = getStatePair(state1, state2);

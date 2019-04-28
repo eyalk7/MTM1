@@ -61,7 +61,7 @@ int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2) {
 }
 
 /********************** JUDGE DATA FUNCTIONS ***********************/
-JudgeData judgeDataCreate(const char *judge_name, const int *judge_results) {
+JudgeData createJudgeData(const char *judge_name, const int *judge_results) {
     // allocate memory for a JudgeData struct as well as judge's name
     // on each allocation check if allocation failed
     JudgeData data = malloc(sizeof(*data));
