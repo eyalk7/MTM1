@@ -179,9 +179,9 @@ int *getStateResults(List votes_list) {
         state_results[i] = ptr->id;
         ptr = listGetNext(votes_list);
     }
+    // if state voted for less than 10, fill the rest NO_STATE
     for (int i = len; i < NUMBER_OF_RANKINGS; i++) {
         state_results[i] = NO_STATE;
-        ptr = listGetNext(votes_list);
     }
 
     return state_results;
@@ -239,8 +239,7 @@ List getAudiencePoints(Map states) {
             return NULL;
         }
 
-        int results_size = 0;
-        int *state_results = getStateResults(votes_list, &results_size);
+        int *state_results = getStateResults(votes_list);
 
         listDestroy(votes_list);        // deallocate votes_list
 
@@ -251,7 +250,7 @@ List getAudiencePoints(Map states) {
 
         // distribute points to the states in state_results
         // (according to their order in the array)
-        distributePoints(audience_points, state_results, results_size);
+        distributePoints(audience_points, state_results);
 
         free(state_results);   // deallocate the state_results array
     }
@@ -271,7 +270,7 @@ List getJudgesPoints(Map judges, Map states) {
 
         // distribute points to the states in judge_results
         // (according to their order in the array)
-        distributePoints(judge_points, getJudgeResults(judge_data), NUMBER_OF_RANKINGS);
+        distributePoints(judge_points, getJudgeResults(judge_data));
     }
 
     return judge_points;
