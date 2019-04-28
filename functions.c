@@ -3,6 +3,11 @@
 #include <assert.h>
 #include "functions.h"
 
+struct statePoints_t {
+    int id;
+    double points;
+};
+
 /*********************** EUROVISION HELP FUNCTIONS *******************************/
 bool isLowerCase(char c) {
     return ('a' <= c && c <= 'z');
