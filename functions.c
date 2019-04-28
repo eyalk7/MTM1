@@ -55,12 +55,12 @@ EurovisionResult eurovisionChangeVote(Map states, int state_giver,
     // get current number of votes for state_taker in state_giver's votes map
     StateData giver_data = mapGet(states, &state_giver);
     assert(giver_data != NULL);
-    int *current_votes_num = mapGet(giver_data->votes, &state_taker);
+    int *current_votes_num = mapGet(getStateVotes(giver_data), &state_taker);
 
     if (current_votes_num == NULL) { // no votes
         if (difference > 0) {
             // add state_taker to state's vote map along with the number of votes
-            MapResult put_result = mapPut(giver_data->votes, &state_taker, &difference);
+            MapResult put_result = mapPut(getStateVotes(giver_data), &state_taker, &difference);
             if (put_result == MAP_OUT_OF_MEMORY) return EUROVISION_OUT_OF_MEMORY;
         }
         // if difference <= 0 nothing is done (no votes added or removed)
@@ -68,7 +68,7 @@ EurovisionResult eurovisionChangeVote(Map states, int state_giver,
         // if there are votes for this state already:
         (*current_votes_num) += difference;             // update the number of votes
         if ((*current_votes_num) <= 0) {                // if, after the update, number of votes <= 0
-            mapRemove(giver_data->votes, &state_taker); // remove the votes from the votes map
+            mapRemove(getStateVotes(giver_data), &state_taker); // remove the votes from the votes map
         }
     }
 
@@ -196,7 +196,7 @@ List convertToStringList(List final_results, Map states) {
         }
 
         // Keep the same order they have in given list
-        ListResult result = listInsertLast(state_names, data->name);
+        ListResult result = listInsertLast(state_names, getStateName(data));
         if (result != LIST_SUCCESS) {
             listDestroy(state_names);
             return NULL;
@@ -228,7 +228,7 @@ List getAudiencePoints(Map states) {
         assert(giver_data != NULL);
 
         // get the state's sorted vote list
-        List votes_list = convertVotesToList(giver_data->votes);
+        List votes_list = convertVotesToList(getStateVotes(giver_data));
         if (!votes_list) {
             listDestroy(audience_points);
             return NULL;
@@ -266,7 +266,7 @@ List getJudgesPoints(Map judges, Map states) {
 
         // distribute points to the states in judge_results
         // (according to their order in the array)
-        distributePoints(judge_points, judge_data->results, NUMBER_OF_RANKINGS);
+        distributePoints(judge_points, getJudgeResults(judge_data), NUMBER_OF_RANKINGS);
     }
 
     return judge_points;

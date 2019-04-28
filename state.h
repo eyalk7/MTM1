@@ -1,6 +1,13 @@
 #ifndef STATES_H
 #define STATES_H
 
+#include "list.h"
+
+/**
+ *  File containing all macros, enums, structs and functions
+ *  related to the States map and the data element in said map.
+ */
+
 /********************** MACROS & ENUMS ***********************/
 /** macros for friendly states string */
 #define EXTRA_CHARS " - "
@@ -10,11 +17,13 @@
 #define NO_FAVORITE_STATE (-1)
 
 /********************** STATE MAP DEFINITIONS ***********************/
-typedef struct StateData_t {
+/*typedef struct StateData_t {
     char *name;
     char *song_name;
     Map votes; // key = State's ID, data = no. of votes this state *gives*
-} *StateData;
+} *StateData;*/
+
+typedef struct StateData_t * StateData;
 
 typedef void* StateKeyElement;
 typedef void* StateDataElement;
@@ -38,9 +47,24 @@ void freeStateDataElement(StateDataElement data);
 /** compare between two state's ids */
 int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2);
 
+/************************* STATE DATA FUNCTIONS *******************************/
 /** Create a StateData struct with the given state name and song name
  *  Returns NULL if a memory allocation failed */
 StateData createStateData(const char *state_name, const char *song_name);
+
+/***
+ * Get the state's name
+ * @param data - State data element (StateData struct)
+ * @return The state's name
+ */
+char *getStateName(StateData data);
+
+/***
+ * Get the votes the state gives
+ * @param data - Data Element in State's map (StateData struct)
+ * @return
+ */
+Map getStateVotes(StateData data);
 
 /********************** VOTE MAP FUNCTIONS ***********************/
 
@@ -67,7 +91,16 @@ int stringCompare(void* str1, void* str2);
  *  returns the id of the state which got the most votes from that state */
 int getFavoriteState(Map votes);
 
-/** Check if states are friendly by the assigment definition */
+/***
+ * Check if states are friendly by the assigment definition
+ * @param stateId1 - first state's id
+ * @param favState1 - first state's "favorite state"'s id
+ * @param stateId2 - second state's id
+ * @param favState2 - second state's "favorite state"'s id
+ * @return
+ *   false if one of the given pointers is NULL or states are not friendly
+ *   true if states are friendly
+ */
 bool areFriendlyStates(const int *stateId1, const int *favState1,
                        const int *stateId2, const int *favState2);
 
