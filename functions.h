@@ -28,16 +28,47 @@ typedef enum {
 } Ranking;
 
 /********************** EUROVISION HELP FUNCTIONS ***********************/
-/** Check if a given character is a lower case alphabet letter */
+/***
+ * Check if a given character is a lower case alphabet letter
+ * @param c charecter to check
+ * @return true if lower case, false if not
+ */
 bool isLowerCase(char c);
 
-/** Check the given string only contains small letters and spaces */
+/***
+ * Check that the given string contains only small letters and spaces
+ * @param name string to check
+ * @return true if the string contains only small letters and spaces, false else
+ */
 bool isValidName(const char* name);
 
-/** Map ADT functions for Judge/State/state_favorites keysElements
- * and for votes/state_favorites dataElements */
+/***
+ * copy function for integer elements that used in:
+ * Judge/State/state_favorites Maps keysElements
+ * and in votes/state_favorites Maps dataElements
+ * @param integer pointer for int element to copy
+ * @return a pointer for the new int element
+ */
 void* copyInt(void* integer);
+
+/***
+ * free function for integer elements that used in:
+ * Judge/State/state_favorites Maps keysElements
+ * and in votes/state_favorites Maps dataElements
+ * @param integer pointer for int element to free
+ */
 void freeInt(void* integer);
+
+/***
+ * compare function for integer elements that used in:
+ * Judge/State/state_favorites Maps keysElements
+ * and in votes/state_favorites Maps dataElements
+ * @param integer1 first integer to compare
+ * @param integer2 second integer to compare
+ * @return positive number if the first integer is bigger,
+ * negative number if the second number is bigger,
+ * 0 if the numbers are equal
+ */
 int compareInts(MapKeyElement integer1, MapKeyElement integer2);
 
 /** List ADT functions for using a string list of state names */
@@ -85,7 +116,11 @@ List convertToStringList(List final_results, Map states);
 /** Gets the amount points for a certain ranking based on the Ranking enum */
 Ranking getRanking(int place);
 
-/** Returns a list of each state's points given by the audience */
+/***
+ * Returns a list of each state's points given by the audience
+ * @param states
+ * @return
+ */
 List getAudiencePoints(Map states);
 
 /** Returns a list of each state's points given by the judges */
