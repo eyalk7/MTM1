@@ -165,15 +165,13 @@ List convertVotesToList(Map votes) {
     return list;
 }
 
-int *getStateResults(List votes_list, int *array_size) {
+int *getStateResults(List votes_list) {
     assert(votes_list != NULL);
-
-    *array_size = 0;    // return 0 if error occurs
 
     int votes_size = listGetSize(votes_list);
     int len = (votes_size < NUMBER_OF_RANKINGS ? votes_size : NUMBER_OF_RANKINGS);
 
-    int *state_results = malloc(sizeof(int) * len);
+    int *state_results = malloc(sizeof(int) * NUMBER_OF_RANKINGS);
     if (!state_results) return NULL;        // allocation failed
 
     StatePoints ptr = listGetFirst(votes_list);
@@ -181,8 +179,10 @@ int *getStateResults(List votes_list, int *array_size) {
         state_results[i] = ptr->id;
         ptr = listGetNext(votes_list);
     }
-
-    *array_size = len;      // return array size
+    for (int i = len; i < NUMBER_OF_RANKINGS; i++) {
+        state_results[i] = NO_STATE;
+        ptr = listGetNext(votes_list);
+    }
 
     return state_results;
 }
@@ -277,9 +277,9 @@ List getJudgesPoints(Map judges, Map states) {
     return judge_points;
 }
 
-void distributePoints(List points_list, const int *results, int results_size) {
+void distributePoints(List points_list, const int *results) {
     // for each state in results
-    for (int i=0; i < results_size; i++) {
+    for (int i=0; i < NUMBER_OF_RANKINGS; i++) {
         int state_id = results[i];          // ID of the state to give points to
         int points = getRanking(i);         // get points to give
 

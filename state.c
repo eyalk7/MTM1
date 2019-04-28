@@ -164,7 +164,7 @@ int stringCompare(void* str1, void* str2) {
 
 int getFavoriteState(Map votes) {
     // no votes = no favorite state
-    if(mapGetSize(votes) <= 0) return NO_FAVORITE_STATE;
+    if(mapGetSize(votes) <= 0) return NO_STATE;
 
     VoteKeyElement favState = mapGetFirst(votes);   // state with max no. of votes
     int max = *(int*)mapGet(votes, favState);       // max no. of votes
@@ -278,8 +278,8 @@ List getFriendlyStates(Map states) {
             StateData state2 = mapGet(states, stateId2);
 
             /// mark as if they have no favorite state **to prevent duplicates**
-            *favState1 = NO_FAVORITE_STATE;
-            *favState2 = NO_FAVORITE_STATE;
+            *favState1 = NO_STATE;
+            *favState2 = NO_STATE;
 
             // create the string that contains the state names (ordered lexicographically)
             char *statePair = getStatePair(state1, state2);

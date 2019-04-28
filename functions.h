@@ -159,7 +159,7 @@ List convertVotesToList(Map votes);
  * @param votes_list statePoints list
  * @return pointer to the new IDs array
  */
-int *getStateResults(List votes_list, int *array_size);
+int *getStateResults(List votes_list);
 
 /***
  * Converts final ranking of states (in StatePoints List)
@@ -200,7 +200,7 @@ List getJudgesPoints(Map judges, Map states);
  * @param points_list pointer to a statePoints list to fill with the given points
  * @param results sorted array of up to 10 state IDs that need to get the points
  */
-void distributePoints(List points_list, const int *results, int results_size);
+void distributePoints(List points_list, const int *results);
 
 /***
  *  Divides each state's audience points by the number of states minus one

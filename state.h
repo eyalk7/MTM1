@@ -14,7 +14,7 @@
 #define NUM_OF_EXTRA_CHARS 3    // a space, a dash and a space = 3 chars
 
 /** macro for states that dont have a favorite state (no votes) */
-#define NO_FAVORITE_STATE (-1)
+#define NO_STATE (-1)
 
 /********************** STATE MAP DEFINITIONS ***********************/
 /*typedef struct StateData_t {
