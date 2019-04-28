@@ -72,6 +72,11 @@ void freeInt(void* integer);
 int compareInts(MapKeyElement integer1, MapKeyElement integer2);
 
 /** List ADT functions for using a string list of state names */
+/***
+ * copy function for a strings list to use for states names list
+ * @param str
+ * @return
+ */
 ListElement copyString(ListElement str);
 void freeString(ListElement str);
 
