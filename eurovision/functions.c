@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 #include "functions.h"
 
 struct statePoints_t {
@@ -312,8 +313,9 @@ void calculateFinalPoints(List audience_points, List judge_points,
 
         // Add judge points to audience points
         point_data->points += judge_points_ptr->points;
-
+        printf("id: %d, points: %f\n", point_data->id, point_data->points);
         // increment judge_points pointer
         judge_points_ptr = listGetNext(judge_points);
+
     }
 }
