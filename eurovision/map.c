@@ -223,14 +223,16 @@ MapResult mapRemove(Map map, MapKeyElement keyElement) {
         prev_node->next = next_node;    // otherwise, connect the previous and next node
     }
 
+    // if empty map, reset iterator
+    if (map->head == NULL) {
+        map->iterator = NULL;
+    }
+
     return MAP_SUCCESS;
 }
 
 MapKeyElement mapGetFirst(Map map) {
-    if (!map || map->head == NULL) {
-        map->iterator = NULL;
-        return NULL; // map is empty or NULL pointer received
-    }
+    if (!map || map->head == NULL) return NULL; // map is empty or NULL pointer received
 
     map->iterator = map->head;  // set iterator to first node
 
@@ -263,6 +265,7 @@ MapResult mapClear(Map map) {
     }
 
     map->head = NULL;   // set map as empty
+    map->iterator = NULL; // set map as empty
 
     return MAP_SUCCESS;
 }
