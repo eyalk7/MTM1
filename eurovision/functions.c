@@ -111,7 +111,7 @@ int compareStatePoints(ListElement element1, ListElement element2) {
     if (data1->points == data2->points) {
         return data1->id - data2->id;       // IDs are always different
     }
-    return (int)(data2->points - data1->points);
+    return (data2->points > data1->points) ? 1 : -1;
 }
 
 List pointListCreate(Map states) {
@@ -319,10 +319,10 @@ void calculateFinalPoints(List audience_points, List judge_points,
     }
 
     listSort(audience_points, compareStatePoints);
-/*
+
     int place = 0;
     LIST_FOREACH(StatePoints, points, audience_points) {
         printf("%d) state: %d - points: %f\n", place, points->id, points->points);
         place++;
-    }*/
+    }
 }
