@@ -107,12 +107,20 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
         mapRemove(getStateVotes(state_data), &stateId);
     }
 
+    List judges_to_remove = listCreate(copyInt, freeInt);
+    if (!judges_to_remove) return EUROVISION_OUT_OF_MEMORY;
+
+
     // for each judge in Eurovision, remove it if it voted for the given stateId
     MAP_FOREACH(int *, judge_id, eurovision->Judges) {
         JudgeData judgeData = mapGet(eurovision->Judges, judge_id);
         if (judgeResultsContain(judgeData, stateId)) {
-            eurovisionRemoveJudge(eurovision, *judge_id);
+            listInsertFirst(judges_to_remove, judge_id);
         }
+    }
+
+    LIST_FOREACH(int *, judge_id, judges_to_remove) {
+        eurovisionRemoveJudge(eurovision, *judge_id);
     }
 
     // Remove the state from Eurovision's States

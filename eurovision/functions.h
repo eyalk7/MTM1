@@ -13,7 +13,7 @@
  */
 
 /**
- * file containing helper Macros, Enumes, Structs & Functions for eurovision
+ * File containing helper Macros, Enums, Structs & Functions for Eurovision
  */
 
 /********************** MACROS & ENUMS ***********************/
