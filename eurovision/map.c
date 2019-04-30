@@ -227,7 +227,10 @@ MapResult mapRemove(Map map, MapKeyElement keyElement) {
 }
 
 MapKeyElement mapGetFirst(Map map) {
-    if (!map || map->head == NULL) return NULL; // map is empty or NULL pointer received
+    if (!map || map->head == NULL) {
+        map->iterator = NULL;
+        return NULL; // map is empty or NULL pointer received
+    }
 
     map->iterator = map->head;  // set iterator to first node
 
