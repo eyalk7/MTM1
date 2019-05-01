@@ -57,13 +57,6 @@ void freeJudgeDataElement(JudgeDataElement data);
 int compareJudgeKeyElements(JudgeKeyElement key1, JudgeKeyElement key2);
 
 /********************** JUDGE DATA FUNCTIONS ***********************/
-/***
- * Get the judge's results
- * @param data - JudgeData struct with judge's results
- * @return Return an int array representing the judge's results
- */
-int *getJudgeResults(JudgeData data);
-
  /***
   * Creates a JudgeData struct with given paremeters.
   * @param name - Judge's name
@@ -71,7 +64,14 @@ int *getJudgeResults(JudgeData data);
   * @return
   *   A JudgeData struct which values are set to copies of the given parameters
   */
-JudgeData createJudgeData(const char *name, const int *results);
+JudgeData judgeDataCreate(const char *name, const int *results);
+
+/***
+ * Get the judge's results
+ * @param data - JudgeData struct with judge's results
+ * @return Return an int array representing the judge's results
+ */
+int *judgeGetResults(JudgeData data);
 
 /***
  * Checks if a judge gave points to the given state

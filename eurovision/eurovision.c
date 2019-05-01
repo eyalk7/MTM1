@@ -77,7 +77,7 @@ EurovisionResult eurovisionAddState(Eurovision eurovision, int stateId,
     /// PARAMETER CHECKS ///
 
     // temporarily allocate memory for the state's data
-    StateData state_data = createStateData(stateName, songName);
+    StateData state_data = stateDataCreate(stateName, songName);
     if (!state_data) return EUROVISION_OUT_OF_MEMORY;   // state's data allocation failed
 
     // add the state to Eurovision's States
@@ -103,8 +103,8 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
     // for each state in Eurovision, remove the votes that state has for given stateId
     MAP_FOREACH(int *, id, eurovision->States) {
         StateData state_data = mapGet(eurovision->States, id);
-        assert(getStateVotes(state_data) != NULL);
-        mapRemove(getStateVotes(state_data), &stateId);
+        assert(stateGetVotes(state_data) != NULL);
+        mapRemove(stateGetVotes(state_data), &stateId);
     }
 
     // make helper int list for saving the IDs of judges we want to remove
@@ -156,7 +156,7 @@ EurovisionResult eurovisionAddJudge(Eurovision eurovision, int judgeId,
     /// PARAMETER CHECKS ///
 
     // temporarily allocate memory for the judge's data
-    JudgeData judge_data = createJudgeData(judgeName, judgeResults);
+    JudgeData judge_data = judgeDataCreate(judgeName, judgeResults);
     if (!judge_data) return EUROVISION_OUT_OF_MEMORY;   // judge's data allocation failed
 
     // add the judge to Eurovision's Judges

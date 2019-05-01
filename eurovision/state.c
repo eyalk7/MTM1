@@ -84,7 +84,7 @@ int compareStateKeyElements(StateKeyElement key1, StateKeyElement key2) {
 }
 
 /************************* STATE DATA FUNCTIONS *******************************/
-StateData createStateData(const char *state_name, const char *song_name) {
+StateData stateDataCreate(const char *state_name, const char *song_name) {
     // allocate memory for a StateData struct as well as the state's name and song name
     // on each allocation check if allocation failed
     StateData data = malloc(sizeof(*data));
@@ -128,12 +128,32 @@ StateData createStateData(const char *state_name, const char *song_name) {
     return data;
 }
 
-char *getStateName(StateData data) {
+char *stateGetName(StateData data) {
     return data->name;
 }
 
-Map getStateVotes(StateData data) {
+Map stateGetVotes(StateData data) {
     return data->votes;
+}
+
+int stateGetFavorite(StateData state) {
+    Map votes = stateGetVotes(state);
+
+    // no votes = no favorite state
+    if(mapGetSize(votes) <= 0) return NO_STATE;
+
+    VoteKeyElement favState = mapGetFirst(votes);   // state with max no. of votes
+    int max = *(int*)mapGet(votes, favState);       // max no. of votes
+    MAP_FOREACH(VoteKeyElement, state_id, votes) {
+        int num_of_votes = *(int*)mapGet(votes, state_id);
+        if (num_of_votes > max) {   // compare votes two state's receive
+            // update the most voted
+            favState = state_id;
+            max = num_of_votes;
+        }
+    }
+
+    return *(int*)favState;     // ID of most voted state
 }
 
 /************************* VOTE MAP FUNCTIONS *******************************/
@@ -157,155 +177,4 @@ int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2) {
     return compareInts(key1, key2);     // compare two state_takers' IDs
 }
 
-/********************** FRIENDLY STATE FUNCTIONS ***********************/
-int stringCompare(void* str1, void* str2) {
-    return strcmp(str1, str2);  // lexicographical comparison
-}
-
-int getFavoriteState(StateData state) {
-    Map votes = getStateVotes(state);
-
-    // no votes = no favorite state
-    if(mapGetSize(votes) <= 0) return NO_STATE;
-
-    VoteKeyElement favState = mapGetFirst(votes);   // state with max no. of votes
-    int max = *(int*)mapGet(votes, favState);       // max no. of votes
-    MAP_FOREACH(VoteKeyElement, state_id, votes) {
-        int num_of_votes = *(int*)mapGet(votes, state_id);
-        if (num_of_votes > max) {   // compare votes two state's receive
-            // update the most voted
-            favState = state_id;
-            max = num_of_votes;
-        }
-    }
-
-    return *(int*)favState;     // ID of most voted state
-}
-
-bool areFriendlyStates(const int *stateId1, const int *favState1,
-                       const int *stateId2, const int *favState2) {
-    // if received NULL pointer return false
-    if (!stateId1 || !favState1 || !stateId2 || !favState2) return false;
-
-    // check if first state's most voted state is the second state and vice-versa
-    return (*stateId1 == *favState2 && *stateId2 == *favState1);
-}
-
-Map getStateFavorites(Map states) {
-    // create a map that matches each state to its most voted state
-    // (key = state ID, value = favorite state ID)
-    Map state_favorites = mapCreate(copyInt, copyInt,
-                                    freeInt, freeInt,
-                                    compareInts);
-    if (!state_favorites) return NULL;
-
-    // initialize the favorite states map
-    MAP_FOREACH(int*, stateId, states) {
-        // for each state
-        StateData state = mapGet(states, stateId);
-        if (!state) {
-            mapDestroy(state_favorites);
-            return NULL;
-        }
-
-        // get the ID of the state's most voted state
-        int favState = getFavoriteState(state);
-
-        // insert the state along with it's most voted state to the favorite states map
-        MapResult result = mapPut(state_favorites, stateId, &favState);
-        if (result != MAP_SUCCESS) {
-            mapDestroy(state_favorites);
-            return NULL;
-        }
-    }
-
-    return state_favorites;
-}
-
-char *getStatePair(StateData state1, StateData state2) {
-    // get the states' names
-    char *name1 = state1->name;
-    char *name2 = state2->name;
-
-    // get the lengths of the states' names
-    int len1 = strlen(name1);
-    int len2 = strlen(name2);
-
-    // allocate memory for the friendly states string
-    char *statePair = malloc(len1 + len2 + NUM_OF_EXTRA_CHARS + 1);
-    if (!statePair) return NULL;
-    statePair[0] = '\0';    // initialize as empty string
-
-    // order the states' names lexicographically
-    char *min = name2, *max = name1;
-    if (strcmp(name1, name2) < 0) {
-        min = name1;
-        max = name2;
-    }
-
-    // build the friendly states string
-    // FORMAT = "{smaller state's name} - {bigger state's name}"
-    strcat(statePair, min);
-    strcat(statePair, EXTRA_CHARS);
-    strcat(statePair, max);
-
-    return statePair;
-}
-
-List getFriendlyStates(Map states) {
-    // create empty string list
-    List friendly_states = listCreate(copyString, freeString);
-    if (!friendly_states) return NULL;  // allocation failed
-
-    // get state favorites map - key = state's ID, value = favorite state's ID
-    Map state_favorites = getStateFavorites(states);
-    if (!state_favorites) {
-        listDestroy(friendly_states);
-        return NULL;                    // allocation failed
-    }
-
-    // for each state in state favorites
-    MAP_FOREACH(int*, stateId, state_favorites) {
-        // get its favorite state's ID
-        int *favState1 = mapGet(state_favorites, stateId);
-        // get the ID of the favorite state's favorite state
-        int *stateId2 = favState1;
-        int *favState2 = mapGet(state_favorites, stateId2);
-
-        // check if the states are favorites of each other
-        // (outside function also checks if pointer are NULL)
-        if (areFriendlyStates(stateId, favState1, stateId2, favState2)) {
-            // if states are a pair get their data
-            StateData state1 = mapGet(states, stateId);
-            StateData state2 = mapGet(states, stateId2);
-
-            /// mark as if they have no favorite state **to prevent duplicates**
-            *favState1 = NO_STATE;
-            *favState2 = NO_STATE;
-
-            // create the string that contains the state names (ordered lexicographically)
-            char *statePair = getStatePair(state1, state2);
-            if (!statePair) {
-                mapDestroy(state_favorites);
-                listDestroy(friendly_states);
-                return NULL;            // allocation failed
-            }
-
-            // add the string to the list
-            ListResult result = listInsertLast(friendly_states, statePair);
-
-            free(statePair);        // deallocate the string with the state names
-
-            if (result != LIST_SUCCESS) {
-                mapDestroy(state_favorites);
-                listDestroy(friendly_states);
-                return NULL;            // list insert failed
-            }
-        }
-    }
-
-    mapDestroy(state_favorites);    // destroy state favorites map
-
-    return friendly_states;
-}
 
