@@ -303,9 +303,7 @@ void calculateFinalPoints(List audience_points, List judge_points,
         assert(judge_points_ptr != NULL);
 
         // Divide each state's audience points by the number of states
-        if (num_of_states > 0) {
-            point_data->points /= num_of_states;
-        }
+        point_data->points /= num_of_states;
         // Multiply each state's audience points by audience percentage
         point_data->points *= audience_percent;
         // Divide each state's judge points by the number of judges
