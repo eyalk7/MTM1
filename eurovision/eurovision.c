@@ -212,9 +212,7 @@ List eurovisionRunContest(Eurovision eurovision, int audiencePercent) {
     }
 
     // get number of states and judges for the final calculation
-    // num_of_states is number of states that give points to a state
-    // so it doesn't count the state itself
-    int num_of_states = mapGetSize(eurovision->States) - 1;
+    int num_of_states = mapGetSize(eurovision->States);
     int num_of_judges = mapGetSize(eurovision->Judges);
 
     // Calculate the final points for each state

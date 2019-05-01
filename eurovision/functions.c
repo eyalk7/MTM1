@@ -297,7 +297,17 @@ void calculateFinalPoints(List audience_points, List judge_points,
                           int audience_percent) {
     int judge_percent = 100 - audience_percent;
 
-    // Add judge points to audience points
+    // num_of_states is number of states that give points to a state
+    // so it doesn't count the state itself
+    num_of_states -= 1;
+
+    // Make sure not to divide by 0 in case there is only 1 state
+    if (num_of_states == 0) {
+        num_of_states = 1;
+    }
+
+    // Iterate through the points each state got and calculate their final points
+    // If there are no states the point lists will be empty so the loop won't iterate
     StatePoints judge_points_ptr = listGetFirst(judge_points);
     LIST_FOREACH(StatePoints, point_data, audience_points) {
         assert(judge_points_ptr != NULL);
@@ -306,25 +316,19 @@ void calculateFinalPoints(List audience_points, List judge_points,
         point_data->points /= num_of_states;
         // Multiply each state's audience points by audience percentage
         point_data->points *= audience_percent;
-        // Divide each state's judge points by the number of judges
+
+        // if there are judges we have to take the judge points into account
         if (num_of_judges > 0) {
+            // Divide each state's judge points by the number of judges
             judge_points_ptr->points /= num_of_judges;
+            // Multiply each state's judge points by audience percentage
+            judge_points_ptr->points *= judge_percent;
+
+            // Add judge points to audience points
+            point_data->points += judge_points_ptr->points;
+
+            // increment judge_points pointer
+            judge_points_ptr = listGetNext(judge_points);
         }
-        // Multiply each state's judge points by audience percentage
-        judge_points_ptr->points *= judge_percent;
-
-        // Add judge points to audience points
-        point_data->points += judge_points_ptr->points;
-        // increment judge_points pointer
-        judge_points_ptr = listGetNext(judge_points);
-
     }
-
-//    listSort(audience_points, compareStatePoints);
-//
-//    int place = 0;
-//    LIST_FOREACH(StatePoints, points, audience_points) {
-//        printf("%d) state: %d - points: %f\n", place, points->id, points->points);
-//        place++;
-//    }
 }
