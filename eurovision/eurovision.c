@@ -120,11 +120,12 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
         }
     }
 
-    listDestroy(judges_to_remove);  // deallocate the helper list
-
+    // remove the judges
     LIST_FOREACH(int *, judge_id, judges_to_remove) {
         eurovisionRemoveJudge(eurovision, *judge_id);
     }
+
+    listDestroy(judges_to_remove);  // deallocate the helper list
 
     // Remove the state from Eurovision's States
     mapRemove(eurovision->States, &stateId);
