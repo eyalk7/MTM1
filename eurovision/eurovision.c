@@ -107,6 +107,7 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
         mapRemove(getStateVotes(state_data), &stateId);
     }
 
+    // make helper int list for saving the IDs of judges we want to remove
     List judges_to_remove = listCreate(copyInt, freeInt);
     if (!judges_to_remove) return EUROVISION_OUT_OF_MEMORY;
 
@@ -118,6 +119,8 @@ EurovisionResult eurovisionRemoveState(Eurovision eurovision, int stateId) {
             listInsertFirst(judges_to_remove, judge_id);
         }
     }
+
+    listDestroy(judges_to_remove);  // deallocate the helper list
 
     LIST_FOREACH(int *, judge_id, judges_to_remove) {
         eurovisionRemoveJudge(eurovision, *judge_id);
