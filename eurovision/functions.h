@@ -179,6 +179,15 @@ List convertToStringList(List final_results, Map states);
 Ranking getRanking(int place);
 
 /***
+ *  Receives an array of up to 10 state IDs
+ *  and gives each state points according to their order
+ *  using the Ranking enum
+ * @param points_list pointer to a statePoints list to fill with the given points
+ * @param results sorted array of up to 10 state IDs that need to get the points
+ */
+void distributePoints(List points_list, const int *results);
+
+/***
  * Returns a statePoints list of each state's points given by the audience
  * @param states states map that contains the needed states
  * @return pointer to the new statePoints list
@@ -194,15 +203,6 @@ List getAudiencePoints(Map states);
 List getJudgesPoints(Map judges, Map states);
 
 /***
- *  Receives an array of up to 10 state IDs
- *  and gives each state points according to their order
- *  using the Ranking enum
- * @param points_list pointer to a statePoints list to fill with the given points
- * @param results sorted array of up to 10 state IDs that need to get the points
- */
-void distributePoints(List points_list, const int *results);
-
-/***
  *  Divides each state's audience points by the number of states minus one
  *  and multiplies it by the audience percentage.
  *  Does the same things for each state's judge points (not minus one).
@@ -216,5 +216,61 @@ void distributePoints(List points_list, const int *results);
 void calculateFinalPoints(List audience_points, List judge_points,
                           int num_of_states, int num_of_judges,
                           int audience_percent);
+
+/********************** FRIENDLY STATE FUNCTIONS ***********************/
+/**
+ * String compare function for string list lexicographical sort
+ * @param str1
+ * @param str2
+ * @return
+ *   Positive integer if first string is after the second in the dictionary
+ *   Negative integer if first string is before the second in the dictionary
+ *   0 if strings are equal
+ */
+int stringCompare(void* str1, void* str2);
+
+/**
+ * Get a map that shows each state's "favorite state"
+ * (key = state's id, value = favorite state's id)
+ * @param states - A map of states
+ * @return Returns a map that matches each state's ID
+ *   to the ID of the state that they gave most votes to
+ */
+Map getStateFavorites(Map states);
+
+/***
+ * Check if states are friendly by the assigment definition
+ * @param stateId1 - first state's id
+ * @param favState1 - first state's "favorite state"'s id
+ * @param stateId2 - second state's id
+ * @param favState2 - second state's "favorite state"'s id
+ * @return
+ *   false if one of the given pointers is NULL or states are not friendly
+ *   true if states are friendly
+ */
+bool statesAreFriendly(const int *stateId1, const int *favState1,
+                       const int *stateId2, const int *favState2);
+
+/**
+ * Returns a string of two states that are "friendly".
+ * (the state names are ordered lexicographically)
+ * @param state1 - The first state's data
+ * @param state2 - The first state's data
+ * @return Return a string of the two states' names
+ *   in the format defined in the assigment:
+ *   "{first state's name} - {second state's name}"
+ */
+char *getStatePair(StateData state1, StateData state2);
+
+/**
+ * Get a string list of states that are "friendly".
+ * Each string is ordered lexicographically (not the list)
+ * @param states - Map of states
+ * @return
+ *   Returns a list of "friendly" states as defined in the assignment:
+ *   A list of strings of state name pairs in which each state's most votes went to the other state
+ *   in the pair.
+ */
+List getFriendlyStates(Map states);
 
 #endif //FUNCTIONS_H
