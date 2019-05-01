@@ -307,7 +307,9 @@ void calculateFinalPoints(List audience_points, List judge_points,
         // Multiply each state's audience points by audience percentage
         point_data->points *= audience_percent;
         // Divide each state's judge points by the number of judges
-        judge_points_ptr->points /= num_of_judges;
+        if (num_of_judges > 0) {
+            judge_points_ptr->points /= num_of_judges;
+        }
         // Multiply each state's judge points by audience percentage
         judge_points_ptr->points *= judge_percent;
 
@@ -317,12 +319,12 @@ void calculateFinalPoints(List audience_points, List judge_points,
         judge_points_ptr = listGetNext(judge_points);
 
     }
-//
-//    listSort(audience_points, compareStatePoints);
-//
-//    int place = 0;
-//    LIST_FOREACH(StatePoints, points, audience_points) {
-//        printf("%d) state: %d - points: %f\n", place, points->id, points->points);
-//        place++;
-//    }
+
+    listSort(audience_points, compareStatePoints);
+
+    int place = 0;
+    LIST_FOREACH(StatePoints, points, audience_points) {
+        printf("%d) state: %d - points: %f\n", place, points->id, points->points);
+        place++;
+    }
 }
