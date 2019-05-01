@@ -32,6 +32,12 @@ typedef enum {
 } Ranking;
 
 /********************** EUROVISION HELP FUNCTIONS ***********************/
+/***
+ * Check if a given character is a lower case alphabet letter
+ * @param c charecter to check
+ * @return true if lower case, false if not
+ */
+bool isLowerCase(char c);
 
 /***
  * Check that the given string contains only small letters and spaces
@@ -132,6 +138,30 @@ void freeStatePoints(ListElement element);
 int compareStatePoints(ListElement element1, ListElement element2);
 
 /***
+ * Create StatePoints List. Initializes points to zero
+ * @param states states/votes map to create the StatePoints list from
+ * @return pointer to the new statePoints list
+ */
+List pointListCreate(Map states);
+
+/***
+ * Converts given votes map to a list of StatePoints,
+ * fill the statePoints list with the votes counts from the votes map
+ *  Sorts the list from most voted state to least voted state
+ * @param votes votes map to create the statePoints list from
+ * @return pointer to the new sorted statePoints list
+ */
+List convertVotesToList(Map votes);
+
+/***
+ * Converts given sorted list of statePoints to a sorted array
+ * of 10 IDs (integers) of the first 10 states in the statePoints list
+ * @param votes_list statePoints list
+ * @return pointer to the new IDs array
+ */
+int *getStateResults(List votes_list);
+
+/***
  * Converts final ranking of states (in StatePoints List)
  * to list of states names (strings List)
  * @param final_results the final sorted statePoints list
@@ -141,6 +171,22 @@ int compareStatePoints(ListElement element1, ListElement element2);
 List convertToStringList(List final_results, Map states);
 
 /********************** CONTEST FUNCTIONS ***********************/
+/***
+ * Gets the amount points for a certain ranking based on the Ranking enum
+ * @param place the place of the state in the ranking from first to tenth
+ * @return the number of points to give to that state
+ */
+Ranking getRanking(int place);
+
+/***
+ *  Receives an array of up to 10 state IDs
+ *  and gives each state points according to their order
+ *  using the Ranking enum
+ * @param points_list pointer to a statePoints list to fill with the given points
+ * @param results sorted array of up to 10 state IDs that need to get the points
+ */
+void distributePoints(List points_list, const int *results);
+
 /***
  * Returns a statePoints list of each state's points given by the audience
  * @param states states map that contains the needed states
@@ -183,7 +229,6 @@ void calculateFinalPoints(List audience_points, List judge_points,
  */
 int stringCompare(void* str1, void* str2);
 
-
 /**
  * Get a map that shows each state's "favorite state"
  * (key = state's id, value = favorite state's id)
@@ -192,6 +237,30 @@ int stringCompare(void* str1, void* str2);
  *   to the ID of the state that they gave most votes to
  */
 Map getStateFavorites(Map states);
+
+/***
+ * Check if states are friendly by the assigment definition
+ * @param stateId1 - first state's id
+ * @param favState1 - first state's "favorite state"'s id
+ * @param stateId2 - second state's id
+ * @param favState2 - second state's "favorite state"'s id
+ * @return
+ *   false if one of the given pointers is NULL or states are not friendly
+ *   true if states are friendly
+ */
+bool statesAreFriendly(const int *stateId1, const int *favState1,
+                       const int *stateId2, const int *favState2);
+
+/**
+ * Returns a string of two states that are "friendly".
+ * (the state names are ordered lexicographically)
+ * @param state1 - The first state's data
+ * @param state2 - The first state's data
+ * @return Return a string of the two states' names
+ *   in the format defined in the assigment:
+ *   "{first state's name} - {second state's name}"
+ */
+char *getStatePair(StateData state1, StateData state2);
 
 /**
  * Get a string list of states that are "friendly".

@@ -22,9 +22,6 @@ typedef struct StateData_t * StateData;
 typedef void* StateKeyElement;
 typedef void* StateDataElement;
 
-typedef void* VoteKeyElement;
-typedef void* VoteDataElement;
-
 /********************** STATE MAP FUNCTIONS ***********************/
 /***
  * Copy function for the key in States map.
@@ -96,44 +93,6 @@ Map stateGetVotes(StateData data);
  *   in the given StateData's votes map
  */
 int stateGetFavorite(StateData state);
-
-/********************** VOTE MAP FUNCTIONS ***********************/
-/**
- * Copy function for the key element in the Votes map.
- * @param key - ID of the state that receives the votes
- * @return A copy of the state ID
- */
-VoteKeyElement copyVoteKeyElement(VoteKeyElement key);
-
-/**
- * Copy function for the data element in the Votes map.
- * @param data - The amount of votes to give
- * @return A copy of the amount of votes
- */
-VoteDataElement copyVoteDataElement(VoteDataElement data);
-
-/**
- * Function for deallocating the key element in the Votes map.
- * @param key - ID of the state that receives the votes
- */
-void freeVoteKeyElement(VoteKeyElement key);
-
-/**
- * Function for deallocating the data element in the Votes map.
- * @param data - The amount of votes to give
- */
-void freeVoteDataElement(VoteDataElement data);
-
-/***
- * Compare function for two keys in Votes map.
- * @param key1 - A state's ID
- * @param key2 - A state's ID
- * @return
- *   Positive integer if first key is bigger than the second
- *   Negative integer if first key is smaller than the second
- *   0 if keys are equal
- */
-int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2);
 
 
 #endif //STATES_H

@@ -20,6 +20,47 @@ struct StateData_t {
     Map votes; // key = State's ID, data = no. of votes this state *gives*
 };
 
+/************************* VOTE MAP DEFINITIONS AND FUNCTION DECLARATIONS (STATIC) *******************************/
+typedef void* VoteKeyElement;
+typedef void* VoteDataElement;
+
+/**
+ * Copy function for the key element in the Votes map.
+ * @param key - ID of the state that receives the votes
+ * @return A copy of the state ID
+ */
+static VoteKeyElement copyVoteKeyElement(VoteKeyElement key);
+
+/**
+ * Copy function for the data element in the Votes map.
+ * @param data - The amount of votes to give
+ * @return A copy of the amount of votes
+ */
+
+static VoteDataElement copyVoteDataElement(VoteDataElement data);
+
+/**
+ * Function for deallocating the key element in the Votes map.
+ * @param key - ID of the state that receives the votes
+ */
+static void freeVoteKeyElement(VoteKeyElement key);
+/**
+ * Function for deallocating the data element in the Votes map.
+ * @param data - The amount of votes to give
+ */
+static void freeVoteDataElement(VoteDataElement data);
+
+/***
+ * Compare function for two keys in Votes map.
+ * @param key1 - A state's ID
+ * @param key2 - A state's ID
+ * @return
+ *   Positive integer if first key is bigger than the second
+ *   Negative integer if first key is smaller than the second
+ *   0 if keys are equal
+ */
+static int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2);
+
 /************************* STATE MAP FUNCTIONS *******************************/
 StateKeyElement copyStateKeyElement(StateKeyElement key) {
     return copyInt(key);    // get a copy of state's ID
@@ -156,25 +197,23 @@ int stateGetFavorite(StateData state) {
     return *(int*)favState;     // ID of most voted state
 }
 
-/************************* VOTE MAP FUNCTIONS *******************************/
-VoteKeyElement copyVoteKeyElement(VoteKeyElement key) {
+/************************* VOTE MAP FUNCTIONS IMPLEMENTATION *******************************/
+static VoteKeyElement copyVoteKeyElement(VoteKeyElement key) {
     return copyInt(key);    // get a copy of the state_taker's ID
 }
 
-VoteDataElement copyVoteDataElement(VoteDataElement data) {
+static VoteDataElement copyVoteDataElement(VoteDataElement data) {
     return copyInt(data);   // get a copy of the no. of votes
 }
 
-void freeVoteKeyElement(VoteKeyElement key) {
+static void freeVoteKeyElement(VoteKeyElement key) {
     freeInt(key);           // deallocate the state_taker's ID
 }
 
-void freeVoteDataElement(VoteDataElement data) {
+static void freeVoteDataElement(VoteDataElement data) {
     freeInt(data);          // deallocate the no. of votes
 }
 
-int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2) {
+static int compareVoteKeyElements(VoteKeyElement key1, VoteKeyElement key2) {
     return compareInts(key1, key2);     // compare two state_takers' IDs
 }
-
-
