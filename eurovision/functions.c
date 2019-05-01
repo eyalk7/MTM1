@@ -331,11 +331,4 @@ void calculateFinalPoints(List audience_points, List judge_points,
             judge_points_ptr = listGetNext(judge_points);
         }
     }
-    listSort(audience_points, compareStatePoints);
-
-    int place = 0;
-    LIST_FOREACH(StatePoints, points, audience_points) {
-        printf("%d) state: %d - points: %f\n", place, points->id, points->points);
-        place++;
-    }
 }
